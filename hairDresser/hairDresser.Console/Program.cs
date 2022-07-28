@@ -7,18 +7,20 @@ Console.WriteLine(c.Password);
 Console.WriteLine(c.Email);
 */
 
-
-Appointment app1 = new Appointment("Mircea", "Andrei", "wash", new DateTime(2022, 12, 31, 5, 10, 20), new DateTime(2022, 11, 29, 4, 10, 20));
-CheckIfAppointmentValid(app1);
-
-void CheckIfAppointmentValid(Appointment app1)
+try
 {
-    int res = DateTime.Compare(app1.StartDate, app1.EndDate);
-    Console.WriteLine(res);
-    if (res > 0)
-    {
-        throw new InvalidAppointmentException();
-    }
+    Console.WriteLine("try");
+    Appointment app1 = new Appointment("Mircea", "Andrei", "wash", new DateTime(2022, 12, 31, 5, 10, 20), new DateTime(2022, 11, 29, 4, 10, 20));
+    app1.CheckIfAppointmentValid(app1);
+}
+catch (InvalidAppointmentException ex)
+{
+    Console.WriteLine("catch");
+    Console.WriteLine(ex.Message);
+}
+finally
+{
+    Console.WriteLine("set wrong dates");
 }
 
 /*
