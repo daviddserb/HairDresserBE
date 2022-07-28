@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hairDresser", "hairDresser\hairDresser.csproj", "{6CFB3D4D-F7A6-48AF-B660-EA61293E5DFC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hairDresser.Domain", "hairDresser.Domain\hairDresser.Domain.csproj", "{CC08CDF8-95A0-4377-9516-80D5B1ADE861}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hairDresser.Console", "hairDresser.Console\hairDresser.Console.csproj", "{EBB7365A-3976-4E48-B8FC-25BD5A494BFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6CFB3D4D-F7A6-48AF-B660-EA61293E5DFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6CFB3D4D-F7A6-48AF-B660-EA61293E5DFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6CFB3D4D-F7A6-48AF-B660-EA61293E5DFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6CFB3D4D-F7A6-48AF-B660-EA61293E5DFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC08CDF8-95A0-4377-9516-80D5B1ADE861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC08CDF8-95A0-4377-9516-80D5B1ADE861}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC08CDF8-95A0-4377-9516-80D5B1ADE861}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC08CDF8-95A0-4377-9516-80D5B1ADE861}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBB7365A-3976-4E48-B8FC-25BD5A494BFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBB7365A-3976-4E48-B8FC-25BD5A494BFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBB7365A-3976-4E48-B8FC-25BD5A494BFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBB7365A-3976-4E48-B8FC-25BD5A494BFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser
+namespace hairDresser.Domain.Models
 {
-    public class HairServices
+    public class InvalidAppointmentException : Exception
     {
     }
 }
