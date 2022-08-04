@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hairDresser.Domain", "hairDresser.Domain\hairDresser.Domain.csproj", "{CC08CDF8-95A0-4377-9516-80D5B1ADE861}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hairDresser.Domain", "hairDresser.Domain\hairDresser.Domain.csproj", "{CC08CDF8-95A0-4377-9516-80D5B1ADE861}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hairDresser.Console", "hairDresser.Console\hairDresser.Console.csproj", "{EBB7365A-3976-4E48-B8FC-25BD5A494BFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hairDresser.Console", "hairDresser.Console\hairDresser.Console.csproj", "{EBB7365A-3976-4E48-B8FC-25BD5A494BFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -19,7 +19,36 @@ namespace hairDresser.Domain.Models
             this.EndDate = EndDate;
 
         }
+        public string CustomerName { get; set; }
+        public string EmployeeName { get; set; }
+        public string HairServiceName { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
 
+        // Set the actual date and time.
+        public void CreateAppointment()
+        {
+
+        }
+
+        // View the appointment (??? probably in the Appointment's History...?)
+        public void ReadAppointment()
+        {
+
+        }
+
+        public void UpdateAppointment()
+        {
+
+        }
+
+        public void DeleteAppointment()
+        {
+
+        }
+
+        /*
+        // Asta a fost pt. Assignment de la Exception.
         public void CheckIfAppointmentValid(Appointment app1)
         {
             Console.WriteLine("s-a intrat in CheckIfAppointmentValid()");
@@ -30,11 +59,6 @@ namespace hairDresser.Domain.Models
                 throw new InvalidAppointmentException();
             }
         }
-
-        public string CustomerName { get; set; }
-        public string EmployeeName { get; set; }
-        public string HairServiceName { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        */
     }
 }

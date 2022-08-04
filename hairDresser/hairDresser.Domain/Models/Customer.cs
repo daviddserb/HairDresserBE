@@ -17,7 +17,6 @@ namespace hairDresser.Domain.Models
             Phone = phone;
             Address = address;
         }
-
         public string Name { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
@@ -27,28 +26,6 @@ namespace hairDresser.Domain.Models
 
         // A Customer can request one or multiple hair services (some want maybe only a cut, but others maybe a cut and a dye, etc...).
         public void RequestHairServices()
-        {
-
-        }
-
-        // Set the actual date and time.
-        public void CreateAppointment()
-        {
-
-        }
-
-        // View the appointment (??? probably in the Appointment's History...?)
-        public void ReadAppointment()
-        {
-
-        }
-
-        public void UpdateAppointment()
-        {
-
-        }
-
-        public void DeleteAppointment()
         {
 
         }
