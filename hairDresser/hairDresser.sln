@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hairDresser.Domain", "hairD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hairDresser.Console", "hairDresser.Console\hairDresser.Console.csproj", "{EBB7365A-3976-4E48-B8FC-25BD5A494BFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hairDresser.Infrastructure", "hairDresser.Infrastructure\hairDresser.Infrastructure.csproj", "{D18B0960-6E46-4226-B518-AFE47A35E374}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{EBB7365A-3976-4E48-B8FC-25BD5A494BFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBB7365A-3976-4E48-B8FC-25BD5A494BFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBB7365A-3976-4E48-B8FC-25BD5A494BFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D18B0960-6E46-4226-B518-AFE47A35E374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D18B0960-6E46-4226-B518-AFE47A35E374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D18B0960-6E46-4226-B518-AFE47A35E374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D18B0960-6E46-4226-B518-AFE47A35E374}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

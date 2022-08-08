@@ -23,6 +23,9 @@ namespace hairDresser.Domain.Models
                 new WorkingDays { Name = "Wednesday", startTime = new TimeSpan(09, 00, 00), endTime = new TimeSpan(17, 00, 00)},
                 new WorkingDays { Name = "Thursday", startTime = new TimeSpan(09, 30, 00), endTime = new TimeSpan(17, 30, 00)},
                 new WorkingDays { Name = "Friday", startTime = new TimeSpan(10, 00, 00), endTime = new TimeSpan(18, 00, 00)},
+                // just for testing (working in weekend)
+                new WorkingDays { Name = "Saturday", startTime = new TimeSpan(10, 30, 00), endTime = new TimeSpan(18, 30, 00)},
+                new WorkingDays { Name = "Sunday", startTime = new TimeSpan(11, 00, 00), endTime = new TimeSpan(19, 00, 00)},
             };
         }
     }

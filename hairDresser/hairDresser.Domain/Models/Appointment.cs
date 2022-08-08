@@ -17,35 +17,13 @@ namespace hairDresser.Domain.Models
             this.HairServiceName = HairServiceName;
             this.StartDate = StartDate;
             this.EndDate = EndDate;
-
         }
+
         public string CustomerName { get; set; }
         public string EmployeeName { get; set; }
         public string HairServiceName { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-
-        // Set the actual date and time.
-        public void CreateAppointment()
-        {
-
-        }
-
-        // View the appointment (??? probably in the Appointment's History...?)
-        public void ReadAppointment()
-        {
-
-        }
-
-        public void UpdateAppointment()
-        {
-
-        }
-
-        public void DeleteAppointment()
-        {
-
-        }
 
         /*
         // Asta a fost pt. Assignment de la Exception.

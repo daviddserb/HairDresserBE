@@ -1,4 +1,6 @@
-﻿using hairDresser.Domain.Models;
+﻿/*
+
+using hairDresser.Domain.Models;
 using hairDresser.Infrastructure.Repositories;
 
 // global variables:
@@ -12,21 +14,19 @@ foreach (var app in appointmentRepository.GetAllAppointments())
 }
 
 // Testing:
-/*
-var x = appointmentRepository.GetAllAppointmentsByCustomerName("Serb David");
-Console.WriteLine("GetAllAppointmentsByCustomerName");
-foreach (var e in x)
-{
-    Console.WriteLine($"CustomerName: '{e.CustomerName}', EmployeeName: '{e.EmployeeName}', StartDate: '{e.StartDate}'");
-}
+//var x = appointmentRepository.GetAllAppointmentsByCustomerName("Serb David");
+//Console.WriteLine("GetAllAppointmentsByCustomerName");
+//foreach (var e in x)
+//{
+//    Console.WriteLine($"CustomerName: '{e.CustomerName}', EmployeeName: '{e.EmployeeName}', StartDate: '{e.StartDate}'");
+//}
 
-var y = appointmentRepository.GetInWorkAppointmentsByEmployeeName("Onofras Rica");
-Console.WriteLine("GetInWorkAppointmentsByEmployeeName");
-foreach (var e in y)
-{
-    Console.WriteLine($"CustomerName: '{e.CustomerName}', EmployeeName: '{e.EmployeeName}', StartDate: '{e.StartDate}'");
-}
-*/
+//var y = appointmentRepository.GetInWorkAppointmentsByEmployeeName("Onofras Rica");
+//Console.WriteLine("GetInWorkAppointmentsByEmployeeName");
+//foreach (var e in y)
+//{
+//    Console.WriteLine($"CustomerName: '{e.CustomerName}', EmployeeName: '{e.EmployeeName}', StartDate: '{e.StartDate}'");
+//}
 
 
 // get all employees ->
@@ -46,13 +46,15 @@ var availableIntervalsForAppointment = new List<(DateTime startDate, DateTime en
 // start:
 CreateAppointment();
 
-void CreateAppointment() {
+void CreateAppointment()
+{
     // STEPS:
     // 1. Let the customer choose what hair services he wants.
     // 2. Based on what he chose, give him all the Employees names that are valid for him (which means that each one of them can do all of his requirements).
     // 3. Let the customer look through each Employee's available dates so he can pick a valid interval for the appointment.
+
     LetCustomerChooseHairServices();
-    GetInWorkAppointmentsFromValidEmployees(CheckWhichEmployeesAreValidForHairServicesRequirements());
+    GetCurrentAppointmentsFromValidEmployees(CheckWhichEmployeesAreValid());
     //FinalizeAppointment(availableIntervalsForAppointment);
 }
 
@@ -68,9 +70,9 @@ void LetCustomerChooseHairServices()
     }
 }
 
-List<string> CheckWhichEmployeesAreValidForHairServicesRequirements()
+List<string> CheckWhichEmployeesAreValid()
 {
-    Console.WriteLine("-> CheckWhichEmployeesAreValidForHairServicesRequirements()");
+    Console.WriteLine("-> CheckWhichEmployeesAreValid()");
 
     List<string> ValidEmployees = new List<string>();
     int cnt_notValidEmployee = 0;
@@ -96,7 +98,8 @@ List<string> CheckWhichEmployeesAreValidForHairServicesRequirements()
         if (cnt_validServices == cnt_validEmployee)
         {
             ValidEmployees.Add(employee.Name);
-        } else
+        }
+        else
         {
             ++cnt_notValidEmployee;
         }
@@ -118,7 +121,7 @@ List<string> CheckWhichEmployeesAreValidForHairServicesRequirements()
     return ValidEmployees;
 }
 
-void GetInWorkAppointmentsFromValidEmployees(List <string> ValidEmployees)
+void GetCurrentAppointmentsFromValidEmployees(List<string> ValidEmployees)
 {
     Console.WriteLine("-> getListOfAppointmentsFromValidEmployee()");
 
@@ -130,26 +133,27 @@ void GetInWorkAppointmentsFromValidEmployees(List <string> ValidEmployees)
         Console.WriteLine("valid employee name:");
         Console.WriteLine(validEmployees);
 
-        foreach (var appointments in appointmentRepository.GetInWorkAppointmentsByEmployeeName(validEmployees))
+        foreach (var appointments in appointmentRepository.GetAllAppointments())
         {
-            if (appointments.EmployeeName.Contains(validEmployees)) {
+            if (appointments.EmployeeName.Contains(validEmployees))
+            {
                 ValidEmployeesAppointments.Add((appointments.StartDate, appointments.EndDate));
             }
         }
-        
-        Console.WriteLine("in work appointments:");
+
+        Console.WriteLine("current appointments from the current valid empoyee:");
         foreach (var employeeDates in ValidEmployeesAppointments)
         {
             Console.WriteLine($"startDate= '{employeeDates.Item1}' -> endDate= '{employeeDates.Item2}'");
         }
 
-        GetPossibleIntervalsForAppointment(SortInWorkAppointmentsFromValidEmployees(ValidEmployeesAppointments));
+        GetPossibleIntervalsForAppointment(SortCurrentAppointmentsFromValidEmployees(ValidEmployeesAppointments));
     }
 }
 
-List<(DateTime, DateTime)> SortInWorkAppointmentsFromValidEmployees(List<(DateTime, DateTime)> ValidEmployeesAppointments)
+List<(DateTime, DateTime)> SortCurrentAppointmentsFromValidEmployees(List<(DateTime, DateTime)> ValidEmployeesAppointments)
 {
-    Console.WriteLine("-> SortInWorkAppointmentsFromValidEmployees()");
+    Console.WriteLine("-> SortCurrentAppointmentsFromValidEmployees()");
     var sorted_ValidEmployeesAppointments = ValidEmployeesAppointments.OrderBy(s => s.Item1);
 
     Console.WriteLine("sorted current appointments from the current valid empoyee:");
@@ -204,13 +208,15 @@ WorkingDays GetCurrentDayOfTheWorkingDays()
     return currentWorkingDay;
 }
 
-TimeSpan GetStartTimeOfCurrentWorkingDay() {
+TimeSpan GetStartTimeOfCurrentWorkingDay()
+{
     Console.WriteLine("-> GetStartTimeOfCurrentWorkingDay:");
     TimeSpan startTimeCurrentWorkingDay = GetCurrentDayOfTheWorkingDays().startTime;
     return startTimeCurrentWorkingDay;
 }
 
-TimeSpan GetEndTimeOfCurrentWorkingDay() {
+TimeSpan GetEndTimeOfCurrentWorkingDay()
+{
     Console.WriteLine("-> GetStartTimeOfCurrentWorkingDay:");
     TimeSpan endTimeCurrentWorkingDay = GetCurrentDayOfTheWorkingDays().endTime;
     return endTimeCurrentWorkingDay;
@@ -298,7 +304,7 @@ TimeSpan GetTotalDurationForCustomerHairServices()
 //    }
 //}
 
-// Asta a fost pt. Assignment de la Exception.
+//Asta a fost pt. Assignment de la Exception.
 //try
 //{
 //    Console.WriteLine("try");
@@ -314,3 +320,5 @@ TimeSpan GetTotalDurationForCustomerHairServices()
 //{
 //    Console.WriteLine("set wrong dates");
 //}
+
+*/
