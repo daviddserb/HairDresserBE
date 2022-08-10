@@ -10,7 +10,7 @@ namespace hairDresser.Domain.Interfaces
     public interface ICustomerRepository
     {
         void CreateCustomer(Customer customer);
-        public Customer GetCustomerByCustomerName(string customerName);
+        public Customer GetCustomerByCustomerUsername(string customerUsername);
         IEnumerable<Customer> GetCustomers();
         void UpdateCustomer(Customer customer);
         void DeleteCustomer(Customer customer);

@@ -1,316 +1,556 @@
 ﻿using hairDresser.Domain.Models;
 using hairDresser.Infrastructure.Repositories;
 
-// global variables:
+// global variables
+bool showMenu = true;
+int cnt = 0; // ??? am nevoie de asta sau tre sa folosesc Console.Clear()?
+List<string> hairServices = new List<string>();
+TimeSpan durationHairServices = new TimeSpan(00, 00, 00);
+int employeeId = 0;
+var validIntervals = new List<(DateTime startDate, DateTime endDate)>();
+string customerName = "";
 
-// get all appointments ->
-var appointmentRepository = new AppointmentRepository();
-Console.WriteLine("allAppointments: ");
-foreach (var app in appointmentRepository.GetAllAppointments())
+while (showMenu) // (showMenu) == (showMenu == true)
 {
-    Console.WriteLine($"customerName: '{app.CustomerName}', employeeName: '{app.EmployeeName}', start: '{app.StartDate}', end: '{app.EndDate}'.");
+    showMenu = MainMenu();
 }
 
-// Testing:
-/*
-var x = appointmentRepository.GetAllAppointmentsByCustomerName("Serb David");
-Console.WriteLine("GetAllAppointmentsByCustomerName");
-foreach (var e in x)
+bool MainMenu()
 {
-    Console.WriteLine($"CustomerName: '{e.CustomerName}', EmployeeName: '{e.EmployeeName}', StartDate: '{e.StartDate}'");
-}
-
-var y = appointmentRepository.GetInWorkAppointmentsByEmployeeName("Onofras Rica");
-Console.WriteLine("GetInWorkAppointmentsByEmployeeName");
-foreach (var e in y)
-{
-    Console.WriteLine($"CustomerName: '{e.CustomerName}', EmployeeName: '{e.EmployeeName}', StartDate: '{e.StartDate}'");
-}
-*/
-
-
-// get all employees ->
-var employeeRepository = new EmployeeRepository();
-Console.WriteLine("employeeRepository: ");
-foreach (var e in employeeRepository.GetAllEmployees())
-{
-    Console.WriteLine($"employeeName: '{e.Name}', specialization: '{e.Specialization}'");
-}
-
-// get all customers (acum nu cred ca ma ajuta) ->
-
-string[] service = new string[3]; // (wash + cut + dye)
-
-var availableIntervalsForAppointment = new List<(DateTime startDate, DateTime endDate)>();
-
-// start:
-CreateAppointment();
-
-void CreateAppointment() {
-    // STEPS:
-    // 1. Let the customer choose what hair services he wants.
-    // 2. Based on what he chose, give him all the Employees names that are valid for him (which means that each one of them can do all of his requirements).
-    // 3. Let the customer look through each Employee's available dates so he can pick a valid interval for the appointment.
-    LetCustomerChooseHairServices();
-    GetInWorkAppointmentsFromValidEmployees(CheckWhichEmployeesAreValidForHairServicesRequirements());
-    //FinalizeAppointment(availableIntervalsForAppointment);
-}
-
-void LetCustomerChooseHairServices()
-{
-    Console.WriteLine("-> LetCustomerChooseHairServices()");
-
-    Console.WriteLine("Hi customer, what services do you want from: wash, cut and dye?");
-    for (int i = 0; i < service.Length; i++)
+    if (cnt++ == 0)
     {
-        // Type (wash/cut/dye) each on a new line.
-        service[i] = Console.ReadLine();
+        Console.WriteLine("What you wanna do?");
+        Console.WriteLine("1 - Create Appointment");
+        Console.WriteLine("2 - Read App");
+        Console.WriteLine("3 - Update App");
+        Console.WriteLine("4 - Delete App");
+    }
+
+    var userInput = Console.ReadLine();
+    switch (userInput)
+    {
+        case "1":
+            GetAllHairServices();
+            PickHairServices();
+            GetAllEmpoyeesForServices(hairServices);
+            GetAvailableTimeSpotsForEmployee(employeeId, PickDateForAppointment(), durationHairServices);
+            SaveAppointment(SelectDateForAppointment(validIntervals), employeeId, customerName, hairServices);
+            return true;
+        case "2":
+            return false;
+        case "3":
+            return true;
+        case "4":
+            return true;
+        default:
+            return true;
     }
 }
 
-List<string> CheckWhichEmployeesAreValidForHairServicesRequirements()
+void GetAllHairServices()
 {
-    Console.WriteLine("-> CheckWhichEmployeesAreValidForHairServicesRequirements()");
-
-    List<string> ValidEmployees = new List<string>();
-    int cnt_notValidEmployee = 0;
-
-    foreach (var employee in employeeRepository.GetAllEmployees())
+    foreach (var s in HairService.GenerateHairServices())
     {
-        Console.WriteLine("employeeName: " + employee.Name);
-        int cnt_validServices = 0;
-        int cnt_validEmployee = 0;
+        Console.WriteLine($"'{s.ServiceName}' - '{s.Duration}' - '{s.Price}'");
+    }
+}
 
-        for (int i = 0; i < service.Length; i++)
+void PickHairServices()
+{
+    Console.WriteLine("\nWhat hair services you want? Type each one on a new line.");
+    Console.WriteLine("1 - wash");
+    Console.WriteLine("2 - cut");
+    Console.WriteLine("3 - dye");
+    Console.WriteLine("0 - exit");
+    for (int i = 0; i <= HairService.GenerateHairServices().Count(); ++i)
+    {
+        var userInput = Console.ReadLine();
+        if (userInput == "1")
         {
-            if (!(String.IsNullOrEmpty(service[i])))
-            {
-                ++cnt_validServices;
-            }
-            if (employee.Specialization.Contains(service[i]) && !(String.IsNullOrEmpty(service[i])))
-            {
-                ++cnt_validEmployee;
-            }
-        }
-
-        if (cnt_validServices == cnt_validEmployee)
+            Console.WriteLine("You selected wash.");
+            hairServices.Add("wash");
+            durationHairServices += new TimeSpan(00, 30, 00);
+        } else if (userInput == "2")
         {
-            ValidEmployees.Add(employee.Name);
+            Console.WriteLine("You selected cut.");
+            hairServices.Add("cut");
+            durationHairServices += new TimeSpan(01, 00, 00);
+        } else if (userInput == "3")
+        {
+            Console.WriteLine("You selected dye.");
+            hairServices.Add("dye");
+            durationHairServices += new TimeSpan(01, 30, 00);
         } else
         {
-            ++cnt_notValidEmployee;
+            break;
+        }
+    }
+}
+
+void GetAllEmpoyeesForServices(List<string> hairServices)
+{
+    var validEmployees = new List<Employee>();
+
+    foreach (var employee in new EmployeeRepository().GetAllEmployees())
+    {
+        var invariantText = employee.Specialization.ToUpperInvariant();
+        bool matches = hairServices.All(hs => invariantText.Contains(hs.ToUpperInvariant()));
+        if (matches)
+        {
+            validEmployees.Add(employee);
         }
     }
 
-    if (cnt_notValidEmployee == employeeRepository.GetAllEmployees().Count())
+    if (validEmployees.Count() == 0)
     {
-        Console.WriteLine($"Sorry, can't help you, because not a single employee can do all the hair services together.");
+        Console.WriteLine("\nNobody can help you.");
     }
     else
     {
-        Console.WriteLine("All valid employees:");
-        foreach (var validEmployees in ValidEmployees)
+        Console.WriteLine("\nSelect which employee you want:");
+        for (int i = 0; i < validEmployees.Count(); ++i)
         {
-            Console.WriteLine($"'{validEmployees}'");
+            Console.WriteLine(validEmployees[i].Id + " - " + validEmployees[i].Name);
         }
-        Console.WriteLine("---");
+        employeeId = Int32.Parse(Console.ReadLine());
     }
-    return ValidEmployees;
 }
 
-void GetInWorkAppointmentsFromValidEmployees(List <string> ValidEmployees)
+DateTime PickDateForAppointment()
 {
-    Console.WriteLine("-> getListOfAppointmentsFromValidEmployee()");
+    Console.WriteLine("In what day do you want the appointment?");
+    var userInput = Console.ReadLine();
+    DateTime dateOfAppointment = new DateTime(DateTime.Now.Year, DateTime.Now.Month, Int32.Parse(userInput));
+    return dateOfAppointment;
+}
 
-    foreach (var validEmployees in ValidEmployees)
+void GetAvailableTimeSpotsForEmployee(int employeeId, DateTime date, TimeSpan durationHairServices)
+{
+    Console.WriteLine("-> GetAvailableTimeSpotsForEmployee");
+    Console.WriteLine(" --- ");
+    var employeeName = new EmployeeRepository().GetEmployeeById(employeeId).Name;
+    Console.WriteLine(employeeName);
+    Console.WriteLine(date);
+    Console.WriteLine(durationHairServices);
+    Console.WriteLine(" --- ");
+
+    var appointments = new List<(DateTime startDate, DateTime endDate)>();
+    Console.WriteLine("All appointments from the selected customer and the selected day:");
+    foreach (var app in new AppointmentRepository().GetInWorkAppointmentsByEmployeeNameAndDate(employeeName, date))
     {
-        List<(DateTime, DateTime)> ValidEmployeesAppointments = new List<(DateTime startDate, DateTime endDate)>();
+        appointments.Add((app.StartDate, app.EndDate));
+        Console.WriteLine(app.CustomerName + " - " + app.EmployeeName + " - " + app.StartDate + " - " + app.EndDate);
+    }
 
-        Console.WriteLine("\n@@@@@@@@@@@@@@@@@@@@@@@@ foreach repetitiv @@@@@@@@@@@@@@@@@");
-        Console.WriteLine("valid employee name:");
-        Console.WriteLine(validEmployees);
+    var sortedAppointments = appointments.OrderBy(s => s.startDate);
+    Console.WriteLine("All appointments from the selected customer and the selected day sorted:");
+    foreach(var sortedApp in sortedAppointments)
+    {
+        Console.WriteLine(sortedApp.startDate + " - " + sortedApp.endDate);
+    }
 
-        foreach (var appointments in appointmentRepository.GetInWorkAppointmentsByEmployeeName(validEmployees))
+    // initialize just to don't get error
+    DateTime dayStart = new DateTime();
+    var dayFinish = new DateTime();
+    foreach (var time in GetTimeByNameOfDay(date))
+    {
+        dayStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, date.Day, time.Item1.Hours, time.Item1.Minutes, time.Item1.Seconds);
+        dayFinish = new DateTime(DateTime.Now.Year, DateTime.Now.Month, date.Day, time.Item2.Hours, time.Item2.Minutes, time.Item2.Seconds);
+    }
+    Console.WriteLine("time start + finish:");
+    Console.WriteLine(dayStart + " - " + dayFinish);
+
+    var possibleIntervals = new List<DateTime>();
+    possibleIntervals.Add(dayStart);
+    foreach (var sortedApp in sortedAppointments)
+    {
+        possibleIntervals.Add(sortedApp.startDate);
+        possibleIntervals.Add(sortedApp.endDate);
+    }
+    possibleIntervals.Add(dayFinish);
+    Console.WriteLine("Possible intervals:");
+    foreach (var intervals in possibleIntervals)
+    {
+        Console.WriteLine(intervals);
+    }
+
+    Console.WriteLine("Check for valid intervals:");
+    for (int i = 0; i < possibleIntervals.Count - 1; i += 2)
+    {
+        var startOfInterval = possibleIntervals[i];
+        var copy_startOfInterval = startOfInterval;
+        var endOfInterval = possibleIntervals[i + 1];
+        Console.WriteLine("startOfInterval= " + startOfInterval);
+        Console.WriteLine("endOfInterval= " + endOfInterval);
+
+        while ((startOfInterval += durationHairServices) <= endOfInterval)
         {
-            if (appointments.EmployeeName.Contains(validEmployees)) {
-                ValidEmployeesAppointments.Add((appointments.StartDate, appointments.EndDate));
-            }
+            Console.WriteLine("good date:");
+            Console.WriteLine(startOfInterval);
+
+            // vreau sa salvez (start, start + durata), (start + durata, start + durata + durata), (start + durata + durata, start + durata + durata + durata), etc...
+            validIntervals.Add((copy_startOfInterval, startOfInterval));
+            copy_startOfInterval = startOfInterval;
         }
-        
-        Console.WriteLine("in work appointments:");
-        foreach (var employeeDates in ValidEmployeesAppointments)
+    }
+
+    //SelectDateForAppointment(validIntervals);
+}
+
+Tuple<DateTime, DateTime> SelectDateForAppointment(List<(DateTime startDate, DateTime endDate)>  validIntervals) {
+    Console.WriteLine("Pick an interval for your appointment from this list:");
+    for (int i = 0; i < validIntervals.Count; ++i)
+    {
+        Console.WriteLine(i + " -> " + validIntervals[i].startDate + " - " + validIntervals[i].endDate);
+    }
+    var userInput = Int32.Parse(Console.ReadLine());
+    return Tuple.Create(validIntervals[userInput].startDate, validIntervals[userInput].endDate);
+}
+
+// employeeId, customerName, hairServices
+void SaveAppointment(Tuple<DateTime, DateTime> pickedInterval, int employeeId, string customerName, List<string> hairServices)
+{
+    Console.WriteLine("Under what name you want to save the appointment?");
+    customerName = Console.ReadLine();
+
+    Console.WriteLine("--- start for testing ---");
+    Console.WriteLine("pickedInterval= " + pickedInterval.Item1 + " - " + pickedInterval.Item2);
+    Console.WriteLine("employeeId= " + employeeId);
+    Console.WriteLine("customerName= " + customerName);
+    Console.WriteLine("hairsevices:");
+    foreach(var services in hairServices)
+    {
+        Console.WriteLine(services);
+    }
+    Console.WriteLine("--- end for testing ---");
+
+    var app = new Appointment();
+    app.CustomerName = customerName;
+    app.EmployeeName = new EmployeeRepository().GetEmployeeById(employeeId).Name;
+    for (int i = 0; i < hairServices.Count; ++i)
+    {
+        app.HairServiceName += hairServices[i];
+        if (i < hairServices.Count - 1)
         {
-            Console.WriteLine($"startDate= '{employeeDates.Item1}' -> endDate= '{employeeDates.Item2}'");
+            app.HairServiceName += ", ";
         }
-
-        GetPossibleIntervalsForAppointment(SortInWorkAppointmentsFromValidEmployees(ValidEmployeesAppointments));
     }
-}
+    app.StartDate = pickedInterval.Item1;
+    app.EndDate = pickedInterval.Item2;
+    new AppointmentRepository().CreateAppointment(app);
 
-List<(DateTime, DateTime)> SortInWorkAppointmentsFromValidEmployees(List<(DateTime, DateTime)> ValidEmployeesAppointments)
-{
-    Console.WriteLine("-> SortInWorkAppointmentsFromValidEmployees()");
-    var sorted_ValidEmployeesAppointments = ValidEmployeesAppointments.OrderBy(s => s.Item1);
+    // ??? Cum sa imi parsez aici obiectul, ca sa vad cum s-au salvat lucrurile in el? Nu ma ajuta, dar de curiozitate.
+    // Asa am incercat dar erau ceva erori, adica nu puteam sa printez employeeName ci employeeId si nu inteleg de ce si proprietatile de startDate si endDate nici nu le gasea.
+    //Console.WriteLine("@@@@@@@@@@@@@@@            merg prin obiectul in care am salvat:");
+    //foreach(var ap in app.GetType().GetProperties())
+    //{
+    //    Console.WriteLine(ap.GetValue(customerName) + " - " + ap.GetValue(employeeId) + " - " + ap.GetValue(hairServices));
+    //}
 
-    Console.WriteLine("sorted current appointments from the current valid empoyee:");
-    foreach (var x in sorted_ValidEmployeesAppointments)
+    // ??? Nu imi vad appointment-ul salvat in lista.
+    Console.WriteLine("--- start for testing ---");
+    Console.WriteLine("new list of appointments:");
+    foreach (var apps in new AppointmentRepository().GetAllAppointments())
     {
-        Console.WriteLine($"startDate= '{x.Item1}' -> endDate= '{x.Item2}'");
+        Console.WriteLine($"'{apps.CustomerName}', '{apps.EmployeeName}', '{apps.HairServiceName}', '{apps.StartDate}', '{apps.EndDate}'.");
     }
-
-    return sorted_ValidEmployeesAppointments.ToList();
+    Console.WriteLine("--- end for testing ---");
 }
 
-void GetPossibleIntervalsForAppointment(List<(DateTime, DateTime)> sorted_ValidEmployeesAppointments)
+List<(TimeSpan, TimeSpan)> GetTimeByNameOfDay(DateTime date)
 {
-    Console.WriteLine("-> GetPossibleIntervalsForAppointment()");
+    Console.WriteLine("-> GetTimeByNameOfDay");
+    var timeOfDay = new List<(TimeSpan startTime, TimeSpan endTime)>();
+    var nameOfDay = date.ToString("dddd");
+    Console.WriteLine("nameOfDay= " + nameOfDay);
 
-    var todayStart = DateTime.Now.Date + GetStartTimeOfCurrentWorkingDay();
-    var todayFinish = DateTime.Now.Date + GetEndTimeOfCurrentWorkingDay();
-    Console.WriteLine("start: " + todayStart + "-> finish: " + todayFinish);
-
-    List<DateTime> possibleIntervals = new List<DateTime>();
-
-    possibleIntervals.Add(todayStart);
-    foreach (var sortedAppointments in sorted_ValidEmployeesAppointments)
-    {
-        possibleIntervals.Add(sortedAppointments.Item1);
-        possibleIntervals.Add(sortedAppointments.Item2);
-    }
-    possibleIntervals.Add(todayFinish);
-
-    Console.WriteLine(" start time of current day + all appointments sorted (can be multiple) + end time of current day: ");
-    foreach (var p in possibleIntervals)
-    {
-        Console.WriteLine(p);
-    }
-
-    CheckWhichIntervalsAreValidForAppointments(possibleIntervals);
-}
-
-DayOfWeek GetCurrentDayOfTheWeek()
-{
-    //Console.WriteLine("-> GetCurrentDayOfTheWeek:");
-    var currentDayOfTheWeek = DateTime.Today.DayOfWeek;
-    return currentDayOfTheWeek;
-}
-
-WorkingDays GetCurrentDayOfTheWorkingDays()
-{
-    Console.WriteLine("-> GetCurrentDayOfTheWorkingDays:");
     var workingDays = WorkingDays.GenerateWorkingDays();
-
-    var currentWorkingDay = workingDays.Find(cwd => cwd.Name.Equals(GetCurrentDayOfTheWeek().ToString()));
-    return currentWorkingDay;
-}
-
-TimeSpan GetStartTimeOfCurrentWorkingDay() {
-    Console.WriteLine("-> GetStartTimeOfCurrentWorkingDay:");
-    TimeSpan startTimeCurrentWorkingDay = GetCurrentDayOfTheWorkingDays().startTime;
-    return startTimeCurrentWorkingDay;
-}
-
-TimeSpan GetEndTimeOfCurrentWorkingDay() {
-    Console.WriteLine("-> GetStartTimeOfCurrentWorkingDay:");
-    TimeSpan endTimeCurrentWorkingDay = GetCurrentDayOfTheWorkingDays().endTime;
-    return endTimeCurrentWorkingDay;
-}
-
-void CheckWhichIntervalsAreValidForAppointments(List<DateTime> dates)
-{
-    Console.WriteLine("-> CheckWhichIntervalsAreValidForAppointments()");
-
-    Console.WriteLine("time for the customer hair services: ");
-    Console.WriteLine(GetTotalDurationForCustomerHairServices());
-
-    for (int i = 0; i < dates.Count - 1; i += 2)
+    foreach (var w in workingDays)
     {
-        Console.WriteLine("possible intervals for appointments:");
-        Console.WriteLine(dates[i]);
-        Console.WriteLine(dates[i + 1]);
-
-        Console.WriteLine("available time for appointment:");
-        var availableTimeForAppointment = dates[i + 1] - dates[i];
-        Console.WriteLine(availableTimeForAppointment);
-
-        var compareAvailableTimeWithAppointmentTime = TimeSpan.Compare(availableTimeForAppointment, GetTotalDurationForCustomerHairServices());
-        if (compareAvailableTimeWithAppointmentTime != -1)
+        if (w.Name == nameOfDay)
         {
-            availableIntervalsForAppointment.Add((dates[i], dates[i + 1]));
-            Console.WriteLine("############### BINGO ############# You can make an appointment in this interval of time.");
+            timeOfDay.Add((w.startTime, w.endTime));
+        }
+    }
+    return timeOfDay;
+}
+
+/* COPY OF WORKING LAST VERSION:
+using hairDresser.Domain.Models;
+using hairDresser.Infrastructure.Repositories;
+
+// global variables
+bool showMenu = true;
+int cnt = 0; // ??? am nevoie de asta sau tre sa folosesc Console.Clear()?
+List<string> hairServices = new List<string>();
+TimeSpan durationHairServices = new TimeSpan(00, 00, 00);
+int employeeId = 0;
+var validIntervals = new List<(DateTime startDate, DateTime endDate)>();
+string customerName = "";
+
+while (showMenu) // (showMenu) == (showMenu == true)
+{
+    showMenu = MainMenu();
+}
+
+bool MainMenu()
+{
+    if (cnt++ == 0)
+    {
+        Console.WriteLine("What you wanna do?");
+        Console.WriteLine("1 - Create Appointment");
+        Console.WriteLine("2 - Read App");
+        Console.WriteLine("3 - Update App");
+        Console.WriteLine("4 - Delete App");
+    }
+
+    var userInput = Console.ReadLine();
+    switch (userInput)
+    {
+        case "1":
+            GetAllHairServices();
+            PickHairServices();
+            GetAllEmpoyeesForServices(hairServices);
+            GetAvailableTimeSpotsForEmployee(employeeId, PickDateForAppointment(), durationHairServices);
+            SaveAppointment(SelectDateForAppointment(validIntervals), employeeId, customerName, hairServices);
+            return true;
+        case "2":
+            return false;
+        case "3":
+            return true;
+        case "4":
+            return true;
+        default:
+            return true;
+    }
+}
+
+void GetAllHairServices()
+{
+    foreach (var s in HairService.GenerateHairServices())
+    {
+        Console.WriteLine($"'{s.ServiceName}' - '{s.Duration}' - '{s.Price}'");
+    }
+}
+
+void PickHairServices()
+{
+    Console.WriteLine("\nWhat hair services you want? Type each one on a new line.");
+    Console.WriteLine("1 - wash");
+    Console.WriteLine("2 - cut");
+    Console.WriteLine("3 - dye");
+    Console.WriteLine("0 - exit");
+    for (int i = 0; i <= HairService.GenerateHairServices().Count(); ++i)
+    {
+        var userInput = Console.ReadLine();
+        if (userInput == "1")
+        {
+            Console.WriteLine("You selected wash.");
+            hairServices.Add("wash");
+            durationHairServices += new TimeSpan(00, 30, 00);
+        } else if (userInput == "2")
+        {
+            Console.WriteLine("You selected cut.");
+            hairServices.Add("cut");
+            durationHairServices += new TimeSpan(01, 00, 00);
+        } else if (userInput == "3")
+        {
+            Console.WriteLine("You selected dye.");
+            hairServices.Add("dye");
+            durationHairServices += new TimeSpan(01, 30, 00);
+        } else
+        {
+            break;
         }
     }
 }
 
-TimeSpan GetTotalDurationForCustomerHairServices()
+void GetAllEmpoyeesForServices(List<string> hairServices)
 {
-    Console.WriteLine("-> GetTotalDurationForCustomerHairServices()");
+    var validEmployees = new List<Employee>();
 
-    TimeSpan totalDurationTime = new TimeSpan(00, 00, 00);
-    foreach (var services in service)
+    foreach (var employee in new EmployeeRepository().GetAllEmployees())
     {
-        if (services == "wash")
+        var invariantText = employee.Specialization.ToUpperInvariant();
+        bool matches = hairServices.All(hs => invariantText.Contains(hs.ToUpperInvariant()));
+        if (matches)
         {
-            TimeSpan durationTimeForWash = new TimeSpan(00, 30, 00);
-            totalDurationTime += durationTimeForWash;
-        }
-        else if (services == "cut")
-        {
-            TimeSpan durationTimeForCut = new TimeSpan(01, 00, 00);
-            totalDurationTime += durationTimeForCut;
-        }
-        else if (services == "dye")
-        {
-            TimeSpan durationTimeForDye = new TimeSpan(01, 30, 00);
-            totalDurationTime += durationTimeForDye;
+            validEmployees.Add(employee);
         }
     }
-    return totalDurationTime;
+
+    if (validEmployees.Count() == 0)
+    {
+        Console.WriteLine("\nNobody can help you.");
+    }
+    else
+    {
+        Console.WriteLine("\nSelect which employee you want:");
+        for (int i = 0; i < validEmployees.Count(); ++i)
+        {
+            Console.WriteLine(validEmployees[i].Id + " - " + validEmployees[i].Name);
+        }
+        employeeId = Int32.Parse(Console.ReadLine());
+    }
 }
 
-//void FinalizeAppointment(List<(DateTime, DateTime)> availableIntervalsForAppointment)
-//{
-//    Console.WriteLine("-> FinalizeAppointment()");
+DateTime PickDateForAppointment()
+{
+    Console.WriteLine("In what day do you want the appointment?");
+    var userInput = Console.ReadLine();
+    DateTime dateOfAppointment = new DateTime(DateTime.Now.Year, DateTime.Now.Month, Int32.Parse(userInput));
+    return dateOfAppointment;
+}
 
-//    Console.WriteLine(" all possible intervals from all employees:");
-//    foreach (var app in availableIntervalsForAppointment)
-//    {
-//        Console.WriteLine(app);
-//    }
+void GetAvailableTimeSpotsForEmployee(int employeeId, DateTime date, TimeSpan durationHairServices)
+{
+    Console.WriteLine("-> GetAvailableTimeSpotsForEmployee");
+    Console.WriteLine(" --- ");
+    var employeeName = new EmployeeRepository().GetEmployeeById(employeeId).Name;
+    Console.WriteLine(employeeName);
+    Console.WriteLine(date);
+    Console.WriteLine(durationHairServices);
+    Console.WriteLine(" --- ");
 
-//    Console.WriteLine(" Under what name do you want to save the appointment?");
-//    var customerName = Console.ReadLine();
+    var appointments = new List<(DateTime startDate, DateTime endDate)>();
+    Console.WriteLine("All appointments from the selected customer and the selected day:");
+    foreach (var app in new AppointmentRepository().GetInWorkAppointmentsByEmployeeNameAndDate(employeeName, date))
+    {
+        appointments.Add((app.StartDate, app.EndDate));
+        Console.WriteLine(app.CustomerName + " - " + app.EmployeeName + " - " + app.StartDate + " - " + app.EndDate);
+    }
 
-//    Console.WriteLine(" Type the full name of the employee:");
-//    var selectedEmployee = Console.ReadLine();
+    var sortedAppointments = appointments.OrderBy(s => s.startDate);
+    Console.WriteLine("All appointments from the selected customer and the selected day sorted:");
+    foreach(var sortedApp in sortedAppointments)
+    {
+        Console.WriteLine(sortedApp.startDate + " - " + sortedApp.endDate);
+    }
 
-//    Console.WriteLine(" Pick a interval and type it's position from the interval (starting from 0):");
-//    var selectedAppointment = Console.ReadLine();
-//    DateTime startAppointment = availableIntervalsForAppointment[Int32.Parse(selectedAppointment)].Item1;
-//    DateTime endAppointment = availableIntervalsForAppointment[Int32.Parse(selectedAppointment)].Item2;
+    // initialize just to don't get error
+    DateTime dayStart = new DateTime();
+    var dayFinish = new DateTime();
+    foreach (var time in GetTimeByNameOfDay(date))
+    {
+        dayStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, date.Day, time.Item1.Hours, time.Item1.Minutes, time.Item1.Seconds);
+        dayFinish = new DateTime(DateTime.Now.Year, DateTime.Now.Month, date.Day, time.Item2.Hours, time.Item2.Minutes, time.Item2.Seconds);
+    }
+    Console.WriteLine("time start + finish:");
+    Console.WriteLine(dayStart + " - " + dayFinish);
 
-//    AppointmentList.Add(new Appointment(customerName, selectedEmployee, "yyy", startAppointment, endAppointment));
+    var possibleIntervals = new List<DateTime>();
+    possibleIntervals.Add(dayStart);
+    foreach (var sortedApp in sortedAppointments)
+    {
+        possibleIntervals.Add(sortedApp.startDate);
+        possibleIntervals.Add(sortedApp.endDate);
+    }
+    possibleIntervals.Add(dayFinish);
+    Console.WriteLine("Possible intervals:");
+    foreach (var intervals in possibleIntervals)
+    {
+        Console.WriteLine(intervals);
+    }
 
-//    Console.WriteLine("Appointments updated:");
-//    foreach (var app in AppointmentList)
-//    {
-//        Console.WriteLine($"customerName: '{app.CustomerName}', employeeName: '{app.EmployeeName}', start: '{app.StartDate}', end: '{app.EndDate}'.");
-//    }
-//}
+    Console.WriteLine("Check for valid intervals:");
+    for (int i = 0; i < possibleIntervals.Count - 1; i += 2)
+    {
+        var startOfInterval = possibleIntervals[i];
+        var copy_startOfInterval = startOfInterval;
+        var endOfInterval = possibleIntervals[i + 1];
+        Console.WriteLine("startOfInterval= " + startOfInterval);
+        Console.WriteLine("endOfInterval= " + endOfInterval);
 
-// Asta a fost pt. Assignment de la Exception.
-//try
-//{
-//    Console.WriteLine("try");
-//    Appointment app1 = new Appointment("Mircea", "Andrei", "wash", new DateTime(2022, 12, 31, 5, 10, 20), new DateTime(2022, 11, 29, 4, 10, 20));
-//    app1.CheckIfAppointmentValid(app1);
-//}
-//catch (InvalidAppointmentException ex)
-//{
-//    Console.WriteLine("catch");
-//    Console.WriteLine(ex.Message);
-//}
-//finally
-//{
-//    Console.WriteLine("set wrong dates");
-//}
+        while ((startOfInterval += durationHairServices) <= endOfInterval)
+        {
+            Console.WriteLine("good date:");
+            Console.WriteLine(startOfInterval);
+
+            // vreau sa salvez (start, start + durata), (start + durata, start + durata + durata), (start + durata + durata, start + durata + durata + durata), etc...
+            validIntervals.Add((copy_startOfInterval, startOfInterval));
+            copy_startOfInterval = startOfInterval;
+        }
+    }
+
+    //SelectDateForAppointment(validIntervals);
+}
+
+Tuple<DateTime, DateTime> SelectDateForAppointment(List<(DateTime startDate, DateTime endDate)>  validIntervals) {
+    Console.WriteLine("Pick an interval for your appointment from this list:");
+    for (int i = 0; i < validIntervals.Count; ++i)
+    {
+        Console.WriteLine(i + " -> " + validIntervals[i].startDate + " - " + validIntervals[i].endDate);
+    }
+    var userInput = Int32.Parse(Console.ReadLine());
+    return Tuple.Create(validIntervals[userInput].startDate, validIntervals[userInput].endDate);
+}
+
+// employeeId, customerName, hairServices
+void SaveAppointment(Tuple<DateTime, DateTime> pickedInterval, int employeeId, string customerName, List<string> hairServices)
+{
+    Console.WriteLine("-> SaveAppointment()");
+    Console.WriteLine("Under what name you want to save the appointment?");
+    var userInput = Console.ReadLine();
+    customerName = userInput;
+
+    Console.WriteLine("---");
+    Console.WriteLine("pickedInterval= " + pickedInterval.Item1 + " - " + pickedInterval.Item2);
+    Console.WriteLine("employeeId= " + employeeId);
+    Console.WriteLine("customerName= " + customerName);
+    Console.WriteLine("hairsevices:");
+    foreach(var services in hairServices)
+    {
+        Console.WriteLine(services);
+    }
+    Console.WriteLine("---");
+
+    var app = new Appointment();
+    app.CustomerName = customerName;
+    app.EmployeeName = new EmployeeRepository().GetEmployeeById(employeeId).Name;
+    for (int i = 0; i < hairServices.Count; ++i)
+    {
+        app.HairServiceName += hairServices[i];
+        if (i < hairServices.Count - 1)
+        {
+            app.HairServiceName += ", ";
+        }
+    }
+    app.StartDate = pickedInterval.Item1;
+    app.EndDate = pickedInterval.Item2;
+
+    new AppointmentRepository().CreateAppointment(app);
+
+    // ??? Cum sa imi parsez aici obiectul, ca sa vad cum s-au salvat lucrurile in el? Nu ma ajuta, dar de curiozitate.
+    // Asa am incercat dar erau ceva erori, adica nu puteam sa printez employeeName ci employeeId si nu inteleg de ce si proprietatile de startDate si endDate nici nu le gasea.
+    //Console.WriteLine("@@@@@@@@@@@@@@@            merg prin obiectul in care am salvat:");
+    //foreach(var ap in app.GetType().GetProperties())
+    //{
+    //    Console.WriteLine(ap.GetValue(customerName) + " - " + ap.GetValue(employeeId) + " - " + ap.GetValue(hairServices));
+    //}
+
+    // ??? Nu imi vad appointment-ul salvat.
+    Console.WriteLine("new list of appointments:");
+    foreach (var apps in new AppointmentRepository().GetAllAppointments())
+    {
+        Console.WriteLine($"'{apps.CustomerName}', '{apps.EmployeeName}', '{apps.HairServiceName}', '{apps.StartDate}', '{apps.EndDate}'.");
+    }
+}
+
+List<(TimeSpan, TimeSpan)> GetTimeByNameOfDay(DateTime date)
+{
+    Console.WriteLine("-> GetTimeByNameOfDay");
+    var timeOfDay = new List<(TimeSpan startTime, TimeSpan endTime)>();
+    var nameOfDay = date.ToString("dddd");
+    Console.WriteLine("nameOfDay= " + nameOfDay);
+
+    var workingDays = WorkingDays.GenerateWorkingDays();
+    foreach (var w in workingDays)
+    {
+        if (w.Name == nameOfDay)
+        {
+            timeOfDay.Add((w.startTime, w.endTime));
+        }
+    }
+    return timeOfDay;
+}
+*/

@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\hairDresser.Application\hairDresser.Application.csproj" />
     <ProjectReference Include="..\hairDresser.Domain\hairDresser.Domain.csproj" />
   </ItemGroup>
 

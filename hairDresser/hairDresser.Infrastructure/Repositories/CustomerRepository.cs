@@ -14,10 +14,10 @@ namespace hairDresser.Infrastructure.Repositories
 
         public CustomerRepository()
         {
-            CustomerList.Add(new Customer("Serb David", "serbdavid", "parola123", "serbdavid@yahoo.com", "+40763023012", "Timis"));
-            CustomerList.Add(new Customer("Adrian Marin", "adrianmarin", "parola321", "adrianmarin@yahoo.com", "+40783231930", "Constanta"));
-            CustomerList.Add(new Customer("Vlad Apetrica", "vladapetrica", "parola333", "vladapetrica@yahoo.com", "+40732012993", "Sighet"));
-            CustomerList.Add(new Customer("Mircea Ghita", "mirceaghita", "333parola", "mirceaghita@yahoo.com", "+40712023982", "Bucuresti"));
+            CustomerList.Add(new Customer { Name = "Serb David", Username = "serbdavid", Password = "parola123", Email = "serbdavid@yahoo.com", Phone = "+40763023012", Address = "Timis" });
+            CustomerList.Add(new Customer { Name = "Adrian Marin", Username = "adrianmarin", Password = "parola321", Email = "adrianmarin@yahoo.com", Phone = "+40783231930", Address = "Constanta" });
+            CustomerList.Add(new Customer { Name = "Vlad Apetrica", Username = "vladapetrica", Password = "parola333", Email = "vladapetrica@yahoo.com", Phone = "+40732012993", Address = "Sighet" });
+            CustomerList.Add(new Customer { Name = "Mircea Ghita", Username = "mirceaghita", Password = "333parola", Email = "mirceaghita@yahoo.com", Phone = "+40712023982", Address = "Bucuresti" });
         }
 
         public void CreateCustomer(Customer customer)
@@ -30,9 +30,9 @@ namespace hairDresser.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Customer GetCustomerByCustomerName(string customerName)
+        public Customer GetCustomerByCustomerUsername(string customerUsername)
         {
-            throw new NotImplementedException();
+            return CustomerList.FirstOrDefault(obj => obj.Username == customerUsername);
         }
 
         public IEnumerable<Customer> GetCustomers()

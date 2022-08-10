@@ -12,6 +12,7 @@ namespace hairDresser.Domain.Interfaces
         void CreateAppointment(Appointment appointment);
         IEnumerable<Appointment> GetAllAppointmentsByCustomerName(string customerName);
         IEnumerable<Appointment> GetInWorkAppointmentsByEmployeeName(string employeeName);
+        IEnumerable<Appointment> GetInWorkAppointmentsByEmployeeNameAndDate(string employeeName, DateTime date);
         IEnumerable<Appointment> GetAllAppointments();
         void UpdateAppointment(Appointment appointment);
         void DeleteAppointment(Appointment appointment);

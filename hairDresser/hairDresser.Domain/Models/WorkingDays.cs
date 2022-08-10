@@ -12,7 +12,7 @@ namespace hairDresser.Domain.Models
         public TimeSpan startTime { get; set; }
         public TimeSpan endTime { get; set; }
 
-        public override string ToString() => $"{Name} {startTime} {endTime}";
+        public override string ToString() => $"'{Name}' - '{startTime}' - '{endTime}'";
 
         public static List<WorkingDays> GenerateWorkingDays()
         {

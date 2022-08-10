@@ -13,7 +13,7 @@ namespace hairDresser.Domain.Models
         public float Price { get; set; }
 
         // Returneaza ce inseamna reprezentarea in string a unui HairService.
-        public override string ToString() => $"{ServiceName} {Duration} {Price}";
+        public override string ToString() => $"'{ServiceName}' - '{Duration}' - '{Price}'";
 
         public static List<HairService> GenerateHairServices()
         {
