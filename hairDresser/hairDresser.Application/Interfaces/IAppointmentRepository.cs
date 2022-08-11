@@ -10,9 +10,9 @@ namespace hairDresser.Domain.Interfaces
     public interface IAppointmentRepository
     {
         void CreateAppointment(Appointment appointment);
-        IEnumerable<Appointment> GetAllAppointmentsByCustomerName(string customerName);
-        IEnumerable<Appointment> GetInWorkAppointmentsByEmployeeName(string employeeName);
-        IEnumerable<Appointment> GetInWorkAppointmentsByEmployeeNameAndDate(string employeeName, DateTime date);
+        IEnumerable<Appointment> GetAllCustomerAppointments(string customerName);
+        IEnumerable<Appointment> GetAllCustomerAppointmentsInWork(string customerName);
+        IEnumerable<Appointment> GetInWorkAppointments(string employeeName, DateTime date);
         IEnumerable<Appointment> GetAllAppointments();
         void UpdateAppointment(Appointment appointment);
         void DeleteAppointment(Appointment appointment);

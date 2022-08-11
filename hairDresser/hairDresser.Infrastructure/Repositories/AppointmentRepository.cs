@@ -39,37 +39,30 @@ namespace hairDresser.Infrastructure.Repositories
 
         public void CreateAppointment(Appointment appointment)
         {
-            Console.WriteLine("-> new AppointmentRepository().CreateAppointment()");
-            Console.WriteLine("--- start for testing ---");
-            Console.WriteLine(appointment.CustomerName);
-            Console.WriteLine(appointment.EmployeeName);
-            Console.WriteLine(appointment.HairServiceName);
-            Console.WriteLine(appointment.StartDate);
-            Console.WriteLine(appointment.EndDate);
-            AppointmentList.Add(new Appointment { CustomerName = appointment.CustomerName, EmployeeName = appointment.EmployeeName, HairServiceName = appointment.HairServiceName, StartDate = appointment.StartDate, EndDate = appointment.EndDate });
-            Console.WriteLine("new list of appointments:");
-            foreach (var apps in new AppointmentRepository().GetAllAppointments())
+            AppointmentList.Add(appointment);
+            // this -> pointeaza spre obiectul (in cazul nostru appRepo) care apeleaza metoda (in cazul nostru GetAllAppointments()).
+            /*Console.WriteLine("new list of appointments:");
+            foreach (var apps in this.GetAllAppointments())
             {
                 Console.WriteLine($"'{apps.CustomerName}', '{apps.EmployeeName}', '{apps.HairServiceName}', '{apps.StartDate}', '{apps.EndDate}'.");
             }
-            Console.WriteLine("--- end for testing ---");
+            Console.WriteLine("--- end for testing ---");*/
         }
 
         // Asta ajuta la Istoricu de Appointments a unui Customer.
-        public IEnumerable<Appointment> GetAllAppointmentsByCustomerName(string customerName)
+        public IEnumerable<Appointment> GetAllCustomerAppointments(string customerName)
         {
             return AppointmentList.Where(obj => obj.CustomerName == customerName);
         }
-
-        // asta nu stiu daca mai imi trebuie
-        public IEnumerable<Appointment> GetInWorkAppointmentsByEmployeeName(string employeeName)
+        public IEnumerable<Appointment> GetAllCustomerAppointmentsInWork(string customerName)
         {
             return AppointmentList
                 .Where(obj => obj.StartDate >= DateTime.Now)
-                .Where(obj => obj.EmployeeName == employeeName);
+                .Where(obj => obj.CustomerName == customerName);
+
         }
 
-        public IEnumerable<Appointment> GetInWorkAppointmentsByEmployeeNameAndDate(string employeeName, DateTime date)
+        public IEnumerable<Appointment> GetInWorkAppointments(string employeeName, DateTime date)
         {
             return AppointmentList
                 .Where(obj => obj.StartDate.Date == date.Date)

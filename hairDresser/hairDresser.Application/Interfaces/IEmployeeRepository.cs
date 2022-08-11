@@ -10,9 +10,9 @@ namespace hairDresser.Domain.Interfaces
     public interface IEmployeeRepository
     {
         void CreateEmployee(Employee employee);
-        Employee GetEmployeeById(int employeeId);
+        Employee GetEmployee(int employeeId);
         IEnumerable<Employee> GetAllEmployees();
         void UpdateEmployee(Employee employee);
-        void DeleteEmployee(Employee employee);
+        void DeleteEmployee(int employeeId);
     }
 }

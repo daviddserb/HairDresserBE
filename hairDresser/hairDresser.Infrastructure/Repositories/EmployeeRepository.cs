@@ -20,10 +20,10 @@ namespace hairDresser.Infrastructure.Repositories
 
         public void CreateEmployee(Employee employee)
         {
-            throw new NotImplementedException();
+            EmployeeList.Add(employee);
         }
 
-        public Employee GetEmployeeById(int employeeId)
+        public Employee GetEmployee(int employeeId)
         {
             return EmployeeList.FirstOrDefault(obj => obj.Id == employeeId);
         }
@@ -38,9 +38,13 @@ namespace hairDresser.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public void DeleteEmployee(Employee employee)
+        public void DeleteEmployee(int employeeId)
         {
-            throw new NotImplementedException();
+            var employee = EmployeeList.SingleOrDefault(obj => obj.Id == employeeId);
+            if (employee != null)
+            {
+                EmployeeList.Remove(employee);
+            }
         }
     }
 }

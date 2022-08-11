@@ -25,12 +25,7 @@ namespace hairDresser.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public void DeleteCustomer(Customer customer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Customer GetCustomerByCustomerUsername(string customerUsername)
+        public Customer GetCustomer(string customerUsername)
         {
             return CustomerList.FirstOrDefault(obj => obj.Username == customerUsername);
         }
@@ -41,6 +36,10 @@ namespace hairDresser.Infrastructure.Repositories
         }
 
         public void UpdateCustomer(Customer customer)
+        {
+            throw new NotImplementedException();
+        }
+        public void DeleteCustomer(Customer customer)
         {
             throw new NotImplementedException();
         }
