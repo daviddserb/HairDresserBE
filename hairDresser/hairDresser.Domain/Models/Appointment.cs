@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Domain.Models
 {
-    // Appointments = the actual schedules with the date time (start-end).
     public class Appointment
     {
         public string CustomerName { get; set; }

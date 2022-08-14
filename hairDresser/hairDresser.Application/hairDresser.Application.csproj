@@ -10,4 +10,13 @@
     <ProjectReference Include="..\hairDresser.Domain\hairDresser.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Appointments\Queries\GetAppointmentsByEmployeeName\" />
+    <Folder Include="Appointments\Queries\GetAppointmentsByCustomerName\" />
+    <Folder Include="Customers\" />
+    <Folder Include="Employees\" />
+    <Folder Include="HairServices\" />
+    <Folder Include="WorkingDays\" />
+  </ItemGroup>
+
 </Project>
