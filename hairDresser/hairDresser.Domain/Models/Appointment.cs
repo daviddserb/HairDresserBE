@@ -8,9 +8,10 @@ namespace hairDresser.Domain.Models
 {
     public class Appointment
     {
+        public int Id { get; set; }
         public string CustomerName { get; set; }
         public string EmployeeName { get; set; }
-        public string HairServiceName { get; set; }
+        public string HairServices { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 

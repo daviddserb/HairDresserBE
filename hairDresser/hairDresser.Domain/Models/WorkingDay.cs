@@ -10,7 +10,7 @@ namespace hairDresser.Domain.Models
     {
         public int EmployeeId { get; set; }
         public string Name { get; set; }
-        public TimeSpan startTime { get; set; }
-        public TimeSpan endTime { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
     }
 }

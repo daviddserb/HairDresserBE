@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser.Domain.Interfaces
+namespace hairDresser.Application.Interfaces
 {
     public interface IAppointmentRepository
     {

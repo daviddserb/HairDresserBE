@@ -1,4 +1,4 @@
-﻿using hairDresser.Domain.Interfaces;
+﻿using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -23,9 +23,40 @@ namespace hairDresser.Infrastructure.Repositories
             EmployeeList.Add(employee);
         }
 
-        public Employee GetEmployee(int employeeId)
+        public Employee GetEmployeeById(int employeeId)
         {
             return EmployeeList.FirstOrDefault(obj => obj.Id == employeeId);
+        }
+
+        public IEnumerable<Employee> GetEmployeesByServices(List<string> servicesPickedByCustomer)
+        {
+            var validEmployees = new List<Employee>();
+            foreach(var employee in EmployeeList)
+            {
+                var invariantText = employee.Specialization.ToUpperInvariant();
+                bool matches = servicesPickedByCustomer.All(hspbc => invariantText.Contains(hspbc.ToUpperInvariant()));
+                if (matches)
+                {
+                    validEmployees.Add(employee);
+                }
+            }
+
+            Console.WriteLine("Repository -> ");
+
+            if (validEmployees.Count() == 0)
+            {
+                Console.WriteLine("Nobody can help you.");
+            }
+            else
+            {
+                Console.WriteLine("All the employees that can help you:");
+                for (int i = 0; i < validEmployees.Count(); ++i)
+                {
+                    Console.WriteLine(validEmployees[i].Id + " - " + validEmployees[i].Name);
+                }
+            }
+
+            return validEmployees;
         }
 
         public IEnumerable<Employee> GetAllEmployees()

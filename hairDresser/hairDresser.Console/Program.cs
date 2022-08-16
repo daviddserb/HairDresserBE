@@ -1,4 +1,189 @@
-﻿using hairDresser.Domain.Models;
+﻿using hairDresser.Application.Appointments.Commands.CreateAppointment;
+using hairDresser.Application.Employees.Command.CreateEmployee;
+using hairDresser.Application.Employees.Command.DeleteEmployeeById;
+using hairDresser.Application.Employees.Queries.GetAllEmployees;
+using hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppointmentByDate;
+using hairDresser.Application.Employees.Queries.GetEmployeesByServices;
+using hairDresser.Application.HairServices.Queries;
+using hairDresser.Application.Interfaces;
+using hairDresser.Domain.Models;
+using hairDresser.Infrastructure.Repositories;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+
+//Intrebari: ???
+// La Read Appointment, are voie un Customer sa aiba 2 progamari in viitor? Adica suntem pe data de 13 si el sa aiba una pe 14 sa zicem si inca una pe 19? Astfel sa stiu cand le selectez, daca pun o limita sau nu?
+//Si tot In functie de asta, la Delete Appointment, cand un Customer vrea sa dea Delete la un appointment, prima data ar trebui sa-i afisez toate appointment-urile pe care le are in viitor (adica in proces) si de acolo sa aleaga pe unul dintre ele pe care sa il stearga, corect?
+// La Update Appointment, la ce mai exact sa faca update? Adica, poate sa aiba 3 optiuni: hairservices, employee si date. Astfel, aici ma gandeam cumva sa repet algoritmul de la Create.
+// GetEmployeeIntervalsForAppointmentByDate nu stiu daca trebuie sa il pun in folderul de Appointments sau de Employees sau altul...?
+// Cum pot sa vad aici ce mi-a returnat Handler-ul?
+
+bool showMenu = true;
+
+// di = Dependency Injection
+var diContainer = new ServiceCollection()
+    // De fiecare data cand vei vedea ca cineva depinde de IHairServiceRepository, creezi o instanta de HairServiceRepository (la fel si pt. restul).
+    .AddScoped<IHairServiceRepository, HairServiceRepository>()
+    .AddScoped<IEmployeeRepository, EmployeeRepository>()
+    .AddScoped<IAppointmentRepository, AppointmentRepository>()
+    .AddScoped<IWorkingDayRepository, WorkingDayRepository>()
+    .AddScoped<ICustomerRepository, CustomerRepository>()
+
+    // Adaugam MediatR, care scaneaza toate mesajele (Queries/Commands) si toate handle-urile, de tipul typeof().
+    // Cu toate ca noi avem mai multe .AddScoped(), adaugam doar unul dintre ele la typeof() si MediatR le scaneaza pe toate din layer-ul de unde typeof() face parte, adica IHairServiceRepository face parte din Application.
+    .AddMediatR(typeof(IHairServiceRepository))
+
+    // ??? Build-uim acest container = ...?
+    .BuildServiceProvider();
+var mediator = diContainer.GetRequiredService<IMediator>();
+
+// (showMenu) same thing as (showMenu == true).
+while (showMenu)
+{
+    showMenu = MainMenu();
+}
+
+bool MainMenu()
+{
+    Console.WriteLine("\n- CRUD Appointment -");
+    Console.WriteLine("00 - GetAllHairServices");
+    Console.WriteLine("01 - GetAllEmpoyeesForServices");
+    Console.WriteLine("02 - GetAvailableTimeSpotsForEmployee");
+    Console.WriteLine("03 - CreateAppointment");
+    //Console.WriteLine("03 - ReadAppointments");
+    //Console.WriteLine("03 - UpdateAppointment");
+    //Console.WriteLine("03 - DeleteAppointment");
+
+    Console.WriteLine("\n- CRUD Employee -");
+    Console.WriteLine("10 - AddEmployee");
+    Console.WriteLine("11 - GetAllEmployees");
+    Console.WriteLine("12 - DeleteEmployee");
+
+    //Console.WriteLine("\n- CRUD Customers -");
+
+    //Console.WriteLine("\n- CRUD WorkingDays -");
+
+    //Console.WriteLine("\n- CRUD HairServices -");
+
+    var userInputCase = Console.ReadLine();
+    switch (userInputCase)
+    {
+        case "00":
+            // ??? Cum pot sa vad aici ce mi-a returnat Handler-ul?
+            mediator.Send(new GetAllHairServicesQuery());
+            return true;
+        case "01":
+            {
+                Console.WriteLine("Type each hair service name on a new line.\nIf you want to stop, press the ENTER button.");
+                var hairServicesPickedByCustomer = new List<string>();
+                var hairService = Console.ReadLine();
+                while (hairService != "")
+                {
+                    hairServicesPickedByCustomer.Add(hairService);
+                    hairService = Console.ReadLine();
+                }
+
+                mediator.Send(new GetEmployeesByServicesQuery(hairServicesPickedByCustomer));
+                return true;
+            }
+        case "02":
+            {
+                Console.WriteLine("What is the id of the employee?");
+                var employeeId = Int32.Parse(Console.ReadLine());
+
+                Console.WriteLine("What is the date, the day in numbers, from this month for you appointment?");
+                var date = Int32.Parse(Console.ReadLine());
+
+                // ??? Aici nu sunt sigur daca trebuia sa il intreb direct cat dureaza SAU sa il pun sa aleaga ce hair services vrea si in functie de ce a ales, sa calculez eu cat dureaza.
+                Console.WriteLine("How much time, in minutes, for the appointment?");
+                var durationInMinutes = Int32.Parse(Console.ReadLine());
+
+                mediator.Send(new GetEmployeeIntervalsForAppointmentByDateQuery
+                {
+                    EmployeeId = employeeId,
+                    Date = date,
+                    DurationInMinutes = durationInMinutes
+                });
+                return true;
+            }
+        case "03":
+            {
+                Console.WriteLine("Under what name do you want to save the appointment?");
+                var customerName = Console.ReadLine();
+
+                Console.WriteLine("What is the id of the employee?");
+                var employeeId = Int32.Parse(Console.ReadLine());
+
+                Console.WriteLine("Type each hair service name on a new line.\nIf you want to stop, press the ENTER button.");
+                var hairServicesPickedByCustomer = new List<string>();
+                var hairService = Console.ReadLine();
+                while (hairService != "")
+                {
+                    hairServicesPickedByCustomer.Add(hairService);
+                    hairService = Console.ReadLine();
+                }
+
+                // ??? Aici nu sunt sigur daca trebuia sa scriu intervalul de start si end date din Consola? 
+                Console.WriteLine("What is the selected interval (start + end date) for the appointment? Type them on a new line.\nFor example:\n8/19/2022 12:00:00 AM\n8/19/2022 2:50:00 PM");
+                var start = Console.ReadLine();
+                var end = Console.ReadLine();
+
+                mediator.Send(new CreateAppointmentCommand
+                {
+                    CustomerName = customerName,
+                    EmployeeId = employeeId,
+                    HairServices = hairServicesPickedByCustomer,
+                    StartDate = start,
+                    EndDate = end
+                });
+                return true;
+            }
+        case "10":
+            {
+                Console.WriteLine("\nWhat is the name of the employee?");
+                var name = Console.ReadLine();
+
+                Console.WriteLine("What are his specializations? Type each one on a new line. Press the ENTER button when you want to stop.");
+                var specializations = new List<string>();
+                var skills = Console.ReadLine();
+                while (skills != "")
+                {
+                    specializations.Add(skills);
+                    skills = Console.ReadLine();
+                }
+
+                mediator.Send(new CreateEmployeeComand
+                {
+                    Name = name,
+                    Specializations = specializations
+                });
+                return true;
+            }
+
+        case "11":
+            mediator.Send(new GetAllEmployeesQuery());
+            return true;
+
+        case "12":
+            {
+                Console.WriteLine("\nWhat is the id of the employee?");
+                var employeeId = Int32.Parse(Console.ReadLine());
+
+                mediator.Send(new DeleteEmployeeByIdCommand
+                {
+                    Id = employeeId
+                });
+                return true;
+            }
+
+        // default = cand nu se executa niciun alt case pt. ca input-ul nu corespunde.
+        default:
+            return true;
+    }
+}
+
+/*
+using hairDresser.Domain.Models;
 using hairDresser.Infrastructure.Repositories;
 
 //Intrebari: ???
@@ -338,3 +523,4 @@ void DeleteEmployee(int employeeId)
         Console.WriteLine($"id= '{er.Id}', name= '{er.Name}', specialization= '{er.Specialization}'");
     }
 }
+*/

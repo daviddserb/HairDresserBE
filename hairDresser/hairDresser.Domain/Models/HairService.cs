@@ -8,7 +8,8 @@ namespace hairDresser.Domain.Models
 {
     public class HairService
     {
-        public string ServiceName { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
         public TimeSpan Duration { get; set; }
         public float Price { get; set; }
     }

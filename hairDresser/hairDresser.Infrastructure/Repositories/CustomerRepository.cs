@@ -1,4 +1,4 @@
-﻿using hairDresser.Domain.Interfaces;
+﻿using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using System;
 using System.Collections.Generic;

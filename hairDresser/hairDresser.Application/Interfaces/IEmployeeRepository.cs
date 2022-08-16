@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser.Domain.Interfaces
+namespace hairDresser.Application.Interfaces
 {
     public interface IEmployeeRepository
     {
         void CreateEmployee(Employee employee);
-        Employee GetEmployee(int employeeId);
+        Employee GetEmployeeById(int employeeId);
+        IEnumerable<Employee> GetEmployeesByServices(List<string> servicesPickedByCustomer);
         IEnumerable<Employee> GetAllEmployees();
         void UpdateEmployee(Employee employee);
         void DeleteEmployee(int employeeId);

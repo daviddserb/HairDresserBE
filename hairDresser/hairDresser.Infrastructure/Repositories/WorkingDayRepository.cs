@@ -14,11 +14,11 @@ namespace hairDresser.Infrastructure.Repositories
 
         public WorkingDayRepository()
         {
-            WorkingDayList.Add(new WorkingDay { Name = "Monday", startTime = new TimeSpan(08, 00, 00), endTime = new TimeSpan(16, 00, 00) });
-            WorkingDayList.Add(new WorkingDay { Name = "Tuesday", startTime = new TimeSpan(08, 30, 00), endTime = new TimeSpan(16, 30, 00) });
-            WorkingDayList.Add(new WorkingDay { Name = "Wednesday", startTime = new TimeSpan(09, 00, 00), endTime = new TimeSpan(17, 00, 00) });
-            WorkingDayList.Add(new WorkingDay { Name = "Thursday", startTime = new TimeSpan(09, 30, 00), endTime = new TimeSpan(17, 30, 00) });
-            WorkingDayList.Add(new WorkingDay { Name = "Friday", startTime = new TimeSpan(10, 00, 00), endTime = new TimeSpan(18, 00, 00) });
+            WorkingDayList.Add(new WorkingDay { Name = "Monday", StartTime = new TimeSpan(08, 00, 00), EndTime = new TimeSpan(16, 00, 00) });
+            WorkingDayList.Add(new WorkingDay { Name = "Tuesday", StartTime = new TimeSpan(08, 30, 00), EndTime = new TimeSpan(16, 30, 00) });
+            WorkingDayList.Add(new WorkingDay { Name = "Wednesday", StartTime = new TimeSpan(09, 00, 00), EndTime = new TimeSpan(17, 00, 00) });
+            WorkingDayList.Add(new WorkingDay { Name = "Thursday", StartTime = new TimeSpan(09, 30, 00), EndTime = new TimeSpan(17, 30, 00) });
+            WorkingDayList.Add(new WorkingDay { Name = "Friday", StartTime = new TimeSpan(10, 00, 00), EndTime = new TimeSpan(18, 00, 00) });
         }
 
         public void CreateWorkingDay()
