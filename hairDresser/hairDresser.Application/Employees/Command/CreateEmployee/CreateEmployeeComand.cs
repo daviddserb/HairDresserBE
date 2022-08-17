@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Employees.Command.CreateEmployee
 {
-    public class CreateEmployeeComand : IRequest<Employee>
+    public class CreateEmployeeComand : IRequest
     {
         public string Name { get; set; }
         public List<string> Specializations { get; set; }

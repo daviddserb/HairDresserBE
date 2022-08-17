@@ -40,10 +40,10 @@ var mediator = diContainer.GetRequiredService<IMediator>();
 // (showMenu) same thing as (showMenu == true).
 while (showMenu)
 {
-    showMenu = MainMenu();
+    showMenu = await MainMenuAsync();
 }
 
-bool MainMenu()
+async Task<bool> MainMenuAsync()
 {
     Console.WriteLine("\n- CRUD Appointment -");
     Console.WriteLine("00 - GetAllHairServices");
@@ -69,8 +69,11 @@ bool MainMenu()
     switch (userInputCase)
     {
         case "00":
-            // ??? Cum pot sa vad aici ce mi-a returnat Handler-ul?
-            mediator.Send(new GetAllHairServicesQuery());
+            var allServices = await mediator.Send(new GetAllHairServicesQuery());
+            foreach (var service in allServices)
+            {
+                Console.WriteLine($"name= '{service.Name}', duration= '{service.Duration}', price= '{service.Price}'");
+            }
             return true;
         case "01":
             {
@@ -83,7 +86,7 @@ bool MainMenu()
                     hairService = Console.ReadLine();
                 }
 
-                mediator.Send(new GetEmployeesByServicesQuery(hairServicesPickedByCustomer));
+                await mediator.Send(new GetEmployeesByServicesQuery(hairServicesPickedByCustomer));
                 return true;
             }
         case "02":
@@ -98,7 +101,7 @@ bool MainMenu()
                 Console.WriteLine("How much time, in minutes, for the appointment?");
                 var durationInMinutes = Int32.Parse(Console.ReadLine());
 
-                mediator.Send(new GetEmployeeIntervalsForAppointmentByDateQuery
+                await mediator.Send(new GetEmployeeIntervalsForAppointmentByDateQuery
                 {
                     EmployeeId = employeeId,
                     Date = date,
@@ -128,7 +131,7 @@ bool MainMenu()
                 var start = Console.ReadLine();
                 var end = Console.ReadLine();
 
-                mediator.Send(new CreateAppointmentCommand
+                await mediator.Send(new CreateAppointmentCommand
                 {
                     CustomerName = customerName,
                     EmployeeId = employeeId,
@@ -152,7 +155,7 @@ bool MainMenu()
                     skills = Console.ReadLine();
                 }
 
-                mediator.Send(new CreateEmployeeComand
+                await mediator.Send(new CreateEmployeeComand
                 {
                     Name = name,
                     Specializations = specializations
@@ -161,7 +164,12 @@ bool MainMenu()
             }
 
         case "11":
-            mediator.Send(new GetAllEmployeesQuery());
+            var allEmployees = await mediator.Send(new GetAllEmployeesQuery());
+            Console.Write("All employees:\n");
+            foreach (var employee in allEmployees)
+            {
+                Console.WriteLine($"id= '{employee.Id}', name= '{employee.Name}', specialization= '{employee.Specialization}'");
+            }
             return true;
 
         case "12":
@@ -169,7 +177,7 @@ bool MainMenu()
                 Console.WriteLine("\nWhat is the id of the employee?");
                 var employeeId = Int32.Parse(Console.ReadLine());
 
-                mediator.Send(new DeleteEmployeeByIdCommand
+                await mediator.Send(new DeleteEmployeeByIdCommand
                 {
                     Id = employeeId
                 });

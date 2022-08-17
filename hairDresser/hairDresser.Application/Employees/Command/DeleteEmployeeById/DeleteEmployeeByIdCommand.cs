@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Employees.Command.DeleteEmployeeById
 {
-    public class DeleteEmployeeByIdCommand : IRequest<IEnumerable<Employee>>
+    public class DeleteEmployeeByIdCommand : IRequest
     {
         public int Id { get; set; }
     }

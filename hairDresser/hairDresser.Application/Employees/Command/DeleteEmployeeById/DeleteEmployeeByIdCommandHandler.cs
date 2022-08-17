@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Employees.Command.DeleteEmployeeById
 {
-    public class DeleteEmployeeByIdCommandHandler : IRequestHandler<DeleteEmployeeByIdCommand, IEnumerable<Employee>>
+    // public class DeleteEmployeeByIdCommandHandler : IRequestHandler<DeleteEmployeeByIdCommand, Unit>
+    public class DeleteEmployeeByIdCommandHandler : IRequestHandler<DeleteEmployeeByIdCommand>
     {
         private readonly IEmployeeRepository _employeeRepository;
 
@@ -17,20 +18,16 @@ namespace hairDresser.Application.Employees.Command.DeleteEmployeeById
         {
             _employeeRepository = employeeRepository;
         }
-        public async Task<IEnumerable<Employee>> Handle(DeleteEmployeeByIdCommand request, CancellationToken cancellationToken)
+
+        public async Task<Unit> Handle(DeleteEmployeeByIdCommand request, CancellationToken cancellationToken)
         {
-            var employee = new Employee();
-            employee.Id = request.Id;
-
-            _employeeRepository.DeleteEmployeeAsync(employee.Id);
-
-            Console.WriteLine("Handler -> The new list of employees:");
-            var allEmployees = await _employeeRepository.GetAllEmployeesAsync();
-            foreach (var empl in allEmployees)
+            var employee = new Employee
             {
-                Console.WriteLine($"id= '{empl.Id}', name= '{empl.Name}', specialization= '{empl.Specialization}'");
-            }
-            return await Task.FromResult(allEmployees);
+                Id = request.Id
+            };
+
+            await _employeeRepository.DeleteEmployeeAsync(employee.Id);
+            return Unit.Value;
         }
     }
 }
