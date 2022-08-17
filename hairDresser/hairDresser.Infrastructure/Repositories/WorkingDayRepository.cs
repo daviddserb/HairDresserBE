@@ -21,26 +21,26 @@ namespace hairDresser.Infrastructure.Repositories
             WorkingDayList.Add(new WorkingDay { Name = "Friday", StartTime = new TimeSpan(10, 00, 00), EndTime = new TimeSpan(18, 00, 00) });
         }
 
-        public void CreateWorkingDay()
+        public async Task CreateWorkingDayAsync()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<WorkingDay> GetAllWorkingDays()
+        public async Task<IEnumerable<WorkingDay>> GetAllWorkingDaysAsync()
         {
             return WorkingDayList;
         }
 
-        public WorkingDay GetWorkingDay(string nameOfDay)
+        public async Task<WorkingDay> GetWorkingDayAsync(string nameOfDay)
         {
             return WorkingDayList.FirstOrDefault(obj => obj.Name == nameOfDay);
         }
 
-        public void UpdateWorkingDay()
+        public async Task UpdateWorkingDayAsync()
         {
             throw new NotImplementedException();
         }
-        public void DeleteWorkingDay()
+        public async Task DeleteWorkingDayAsync()
         {
             throw new NotImplementedException();
         }

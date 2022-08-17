@@ -18,17 +18,17 @@ namespace hairDresser.Infrastructure.Repositories
             EmployeeList.Add(new Employee { Id = 2, Name = "Onofras Rica", Specialization = "cut, dye" });
         }
 
-        public void CreateEmployee(Employee employee)
+        public async Task CreateEmployeeAsync(Employee employee)
         {
             EmployeeList.Add(employee);
         }
 
-        public Employee GetEmployeeById(int employeeId)
+        public async Task<Employee> GetEmployeeByIdAsync(int employeeId)
         {
             return EmployeeList.FirstOrDefault(obj => obj.Id == employeeId);
         }
 
-        public IEnumerable<Employee> GetEmployeesByServices(List<string> servicesPickedByCustomer)
+        public async Task<IEnumerable<Employee>> GetEmployeesByServicesAsync(List<string> servicesPickedByCustomer)
         {
             var validEmployees = new List<Employee>();
             foreach(var employee in EmployeeList)
@@ -59,17 +59,17 @@ namespace hairDresser.Infrastructure.Repositories
             return validEmployees;
         }
 
-        public IEnumerable<Employee> GetAllEmployees()
+        public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
         {
             return EmployeeList;
         }
 
-        public void UpdateEmployee(Employee employee)
+        public async Task UpdateEmployeeAsync(Employee employee)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteEmployee(int employeeId)
+        public async Task DeleteEmployeeAsync(int employeeId)
         {
             var employee = EmployeeList.SingleOrDefault(obj => obj.Id == employeeId);
             if (employee != null)

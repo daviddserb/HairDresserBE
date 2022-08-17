@@ -17,14 +17,15 @@ namespace hairDresser.Application.HairServices.Queries
             _hairServiceRepository = hairServiceRepository;
         }
 
-        public Task<IEnumerable<HairService>> Handle(GetAllHairServicesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<HairService>> Handle(GetAllHairServicesQuery request, CancellationToken cancellationToken)
         {
             Console.Write("Handler -> All the hair services that we can offer:\n");
-            foreach (var hsr in _hairServiceRepository.GetAllHairServices())
+            var allServices = await _hairServiceRepository.GetAllHairServicesAsync();
+            foreach (var service in allServices)
             {
-                Console.WriteLine($"name= '{hsr.Name}', duration= '{hsr.Duration}', price= '{hsr.Price}'");
+                Console.WriteLine($"name= '{service.Name}', duration= '{service.Duration}', price= '{service.Price}'");
             }
-            return Task.FromResult(_hairServiceRepository.GetAllHairServices());
+            return await Task.FromResult(allServices);
         }
     }
 }

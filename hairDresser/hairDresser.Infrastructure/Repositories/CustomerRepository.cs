@@ -10,7 +10,7 @@ namespace hairDresser.Infrastructure.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
-        List<Customer> CustomerList = new List<Customer>();
+        List<Customer> CustomerList = new();
 
         public CustomerRepository()
         {
@@ -20,26 +20,26 @@ namespace hairDresser.Infrastructure.Repositories
             CustomerList.Add(new Customer { Name = "Mircea Ghita", Username = "mirceaghita", Password = "333parola", Email = "mirceaghita@yahoo.com", Phone = "+40712023982", Address = "Bucuresti" });
         }
 
-        public void CreateCustomer(Customer customer)
+        public async Task CreateCustomerAsync(Customer customer)
         {
             throw new NotImplementedException();
         }
 
-        public Customer GetCustomer(string customerUsername)
+        public async Task<Customer> GetCustomerAsync(string customerUsername)
         {
             return CustomerList.FirstOrDefault(obj => obj.Username == customerUsername);
         }
 
-        public IEnumerable<Customer> GetCustomers()
+        public async Task<IEnumerable<Customer>> GetCustomersAsync()
         {
             return CustomerList;
         }
 
-        public void UpdateCustomer(Customer customer)
+        public async Task UpdateCustomerAsync(Customer customer)
         {
             throw new NotImplementedException();
         }
-        public void DeleteCustomer(Customer customer)
+        public async Task DeleteCustomerAsync(Customer customer)
         {
             throw new NotImplementedException();
         }

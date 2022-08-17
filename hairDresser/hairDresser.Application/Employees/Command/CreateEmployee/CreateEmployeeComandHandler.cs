@@ -17,11 +17,12 @@ namespace hairDresser.Application.Employees.Command.CreateEmployee
         {
             _employeeRepository = employeeRepository;
         }
-        public Task<Employee> Handle(CreateEmployeeComand request, CancellationToken cancellationToken)
+        public async Task<Employee> Handle(CreateEmployeeComand request, CancellationToken cancellationToken)
         {
             Console.WriteLine("Handler ->");
             var employee = new Employee();
-            employee.Id = _employeeRepository.GetAllEmployees().Max(employee => employee.Id) + 1;
+            var allEmployees = await _employeeRepository.GetAllEmployeesAsync();
+            employee.Id = allEmployees.Max(employee => employee.Id) + 1;
             employee.Name = request.Name;
 
             for (int i = 0; i < request.Specializations.Count; ++i)
@@ -33,14 +34,14 @@ namespace hairDresser.Application.Employees.Command.CreateEmployee
                 }
             }
 
-            _employeeRepository.CreateEmployee(employee);
+            _employeeRepository.CreateEmployeeAsync(employee);
 
             Console.WriteLine("The new list of employees:");
-            foreach (var er in _employeeRepository.GetAllEmployees())
+            foreach (var er in await _employeeRepository.GetAllEmployeesAsync())
             {
                 Console.WriteLine($"id= '{er.Id}', name= '{er.Name}', specialization= '{er.Specialization}'");
             }
-            return Task.FromResult(employee);
+            return await Task.FromResult(employee);
 
         }
     }

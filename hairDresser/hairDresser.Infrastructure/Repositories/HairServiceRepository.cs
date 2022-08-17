@@ -19,22 +19,22 @@ namespace hairDresser.Infrastructure.Repositories
             _hairServices.Add(new HairService { Name = "dye", Duration = new TimeSpan(01, 30, 00), Price = 150 });
         }
 
-        public void CreateHairService(HairService hairService)
+        public async Task CreateHairServiceAsync(HairService hairService)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<HairService> GetAllHairServices()
+        public async Task<IEnumerable<HairService>> GetAllHairServicesAsync()
         {
             return _hairServices;
         }
 
-        public void UpdateHairService(string hairServiceName)
+        public async Task UpdateHairServiceAsync(string hairServiceName)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteHairService(string hairServiceName)
+        public async Task DeleteHairServiceAsync(string hairServiceName)
         {
             throw new NotImplementedException();
         }

@@ -9,11 +9,11 @@ namespace hairDresser.Application.Interfaces
 {
     public interface IEmployeeRepository
     {
-        void CreateEmployee(Employee employee);
-        Employee GetEmployeeById(int employeeId);
-        IEnumerable<Employee> GetEmployeesByServices(List<string> servicesPickedByCustomer);
-        IEnumerable<Employee> GetAllEmployees();
-        void UpdateEmployee(Employee employee);
-        void DeleteEmployee(int employeeId);
+        Task CreateEmployeeAsync(Employee employee);
+        Task<Employee> GetEmployeeByIdAsync(int employeeId);
+        Task<IEnumerable<Employee>> GetEmployeesByServicesAsync(List<string> servicesPickedByCustomer);
+        Task<IEnumerable<Employee>> GetAllEmployeesAsync();
+        Task UpdateEmployeeAsync(Employee employee);
+        Task DeleteEmployeeAsync(int employeeId);
     }
 }

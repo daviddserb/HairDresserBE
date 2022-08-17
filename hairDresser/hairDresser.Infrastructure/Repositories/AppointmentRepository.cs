@@ -36,7 +36,7 @@ namespace hairDresser.Infrastructure.Repositories
             AppointmentList.Add(new Appointment { CustomerName = "Vlad Apetrica", EmployeeName = "Onofras Rica", HairServices = "cut, wash", StartDate = new DateTime(2022, 08, 19, 10, 38, 10), EndDate = new DateTime(2022, 08, 19, 13, 20, 10) });
         }
 
-        public void CreateAppointment(Appointment appointment)
+        public async Task CreateAppointmentAsync(Appointment appointment)
         {
             AppointmentList.Add(appointment);
 
@@ -47,13 +47,14 @@ namespace hairDresser.Infrastructure.Repositories
             //}
         }
 
-        // Asta ajuta la Istoricu de Appointments a unui Customer.
-        public IEnumerable<Appointment> GetAllCustomerAppointments(string customerName)
+        // Asta o sa ajute la Istoricu de Appointments a unui Customer.
+        public async Task<IEnumerable<Appointment>> GetAllCustomerAppointmentsAsync(string customerName)
         {
             return AppointmentList.Where(obj => obj.CustomerName == customerName);
         }
 
-        public IEnumerable<Appointment> GetAllCustomerAppointmentsInWork(string customerName)
+        // Asta o sa ajute la Read AppointmentsInWork from a Customer.
+        public async Task<IEnumerable<Appointment>> GetAllCustomerAppointmentsInWorkAsync(string customerName)
         {
             return AppointmentList
                 .Where(obj => obj.StartDate >= DateTime.Now)
@@ -61,24 +62,24 @@ namespace hairDresser.Infrastructure.Repositories
 
         }
 
-        public IEnumerable<Appointment> GetInWorkAppointments(string employeeName, DateTime date)
+        public async Task<IEnumerable<Appointment>> GetInWorkAppointmentsAsync(string employeeName, DateTime date)
         {
             return AppointmentList
                 .Where(obj => obj.StartDate.Date == date.Date)
                 .Where(obj => obj.EmployeeName == employeeName);
         }
 
-        public IEnumerable<Appointment> GetAllAppointments()
+        public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync()
         {
             return AppointmentList;
         }
 
-        public void UpdateAppointment(Appointment appointment)
+        public async Task UpdateAppointmentAsync(Appointment appointment)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteAppointment(Appointment appointment)
+        public async Task DeleteAppointmentAsync(Appointment appointment)
         {
             throw new NotImplementedException();
         }

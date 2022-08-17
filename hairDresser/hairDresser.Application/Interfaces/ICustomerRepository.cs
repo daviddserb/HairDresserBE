@@ -9,10 +9,10 @@ namespace hairDresser.Application.Interfaces
 {
     public interface ICustomerRepository
     {
-        void CreateCustomer(Customer customer);
-        public Customer GetCustomer(string customerUsername);
-        IEnumerable<Customer> GetCustomers();
-        void UpdateCustomer(Customer customer);
-        void DeleteCustomer(Customer customer);
+        Task CreateCustomerAsync(Customer customer);
+        Task<Customer> GetCustomerAsync(string customerUsername);
+        Task<IEnumerable<Customer>> GetCustomersAsync();
+        Task UpdateCustomerAsync(Customer customer);
+        Task DeleteCustomerAsync(Customer customer);
     }
 }

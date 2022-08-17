@@ -21,9 +21,10 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             _employeeRepository = employeeRepository;
         }
 
-        public Task<Appointment> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
+        public async Task<Appointment> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
         {
-            var employeeName = _employeeRepository.GetEmployeeById(request.EmployeeId).Name;
+            var employeeById = await _employeeRepository.GetEmployeeByIdAsync(request.EmployeeId);
+            var employeeName = employeeById.Name;
 
             var hairServices = "";
             for (int i = 0; i < request.HairServices.Count; ++i)
@@ -46,8 +47,8 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             Console.Write("Handler -> The new appointment:\n");
             Console.WriteLine(appointment.CustomerName + " - " + appointment.EmployeeName + " - " + appointment.HairServices + " - " + appointment.StartDate + " - " + appointment.EndDate);
 
-            _appointmentRepository.CreateAppointment(appointment);
-            return Task.FromResult(appointment);
+            _appointmentRepository.CreateAppointmentAsync(appointment);
+            return await Task.FromResult(appointment);
         }
     }
 }

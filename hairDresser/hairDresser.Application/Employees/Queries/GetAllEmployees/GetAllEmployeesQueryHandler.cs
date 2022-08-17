@@ -17,14 +17,14 @@ namespace hairDresser.Application.Employees.Queries.GetAllEmployees
         {
             _employeeRepository = employeeRepository;
         }
-        public Task<IEnumerable<Employee>> Handle(GetAllEmployeesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Employee>> Handle(GetAllEmployeesQuery request, CancellationToken cancellationToken)
         {
             Console.Write("Handler -> All employees:\n");
-            foreach (var er in _employeeRepository.GetAllEmployees())
+            foreach (var er in await _employeeRepository.GetAllEmployeesAsync())
             {
                 Console.WriteLine($"id= '{er.Id}', name= '{er.Name}', specialization= '{er.Specialization}'");
             }
-            return Task.FromResult(_employeeRepository.GetAllEmployees());
+            return await Task.FromResult(await _employeeRepository.GetAllEmployeesAsync());
         }
     }
 }

@@ -22,11 +22,11 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
             _workingDayRepository = workingDayRepository;
         }
 
-        public Task<List<(DateTime startDate, DateTime endDate)>> Handle(GetEmployeeIntervalsForAppointmentByDateQuery request, CancellationToken cancellationToken)
+        public async Task<List<(DateTime startDate, DateTime endDate)>> Handle(GetEmployeeIntervalsForAppointmentByDateQuery request, CancellationToken cancellationToken)
         {
             Console.WriteLine("Handler ->");
-
-            var employeeName = _employeeRepository.GetEmployeeById(request.EmployeeId).Name;
+            var employeeById = await _employeeRepository.GetEmployeeByIdAsync(request.EmployeeId);
+            var employeeName = employeeById.Name;
             Console.WriteLine("employeeName= " + employeeName);
 
             var appointmentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, request.Date);
@@ -37,7 +37,7 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
 
             var employeeAppointmentsDates = new List<(DateTime startDate, DateTime endDate)>();
             Console.WriteLine("\nAll about the appointments from the selected employee and the selected day:");
-            foreach (var ar in _appointmentRepository.GetInWorkAppointments(employeeName, appointmentDate))
+            foreach (var ar in await _appointmentRepository.GetInWorkAppointmentsAsync(employeeName, appointmentDate))
             {
                 employeeAppointmentsDates.Add((ar.StartDate, ar.EndDate));
                 Console.WriteLine($"customer= '{ar.CustomerName}', employee= '{ar.EmployeeName}', services= '{ar.HairServices}', start= '{ar.StartDate}', end= '{ar.EndDate}'");
@@ -58,7 +58,7 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
 
             var nameOfDay = appointmentDate.ToString("dddd");
             Console.WriteLine($"The name of the day based on the selected date is= '{nameOfDay}'");
-            var timeOfDay = _workingDayRepository.GetWorkingDay(nameOfDay);
+            var timeOfDay = await _workingDayRepository.GetWorkingDayAsync(nameOfDay);
             Console.WriteLine($"start= '{timeOfDay.StartTime}', end= '{timeOfDay.EndTime}'");
             var timeOfDay_withDate_start = appointmentDate.Add(timeOfDay.StartTime);
             var timeOfDay_withDate_end = appointmentDate.Add(timeOfDay.EndTime);
@@ -102,7 +102,7 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
                 Console.WriteLine($"start= '{intervals.startDate}', end= '{intervals.endDate}'");
             }
 
-            return Task.FromResult(validIntervals);
+            return await Task.FromResult(validIntervals);
         }
     }
 }

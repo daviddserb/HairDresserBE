@@ -9,12 +9,12 @@ namespace hairDresser.Application.Interfaces
 {
     public interface IAppointmentRepository
     {
-        void CreateAppointment(Appointment appointment);
-        IEnumerable<Appointment> GetAllCustomerAppointments(string customerName);
-        IEnumerable<Appointment> GetAllCustomerAppointmentsInWork(string customerName);
-        IEnumerable<Appointment> GetInWorkAppointments(string employeeName, DateTime date);
-        IEnumerable<Appointment> GetAllAppointments();
-        void UpdateAppointment(Appointment appointment);
-        void DeleteAppointment(Appointment appointment);
+        Task CreateAppointmentAsync(Appointment appointment);
+        Task<IEnumerable<Appointment>> GetAllCustomerAppointmentsAsync(string customerName);
+        Task<IEnumerable<Appointment>> GetAllCustomerAppointmentsInWorkAsync(string customerName);
+        Task<IEnumerable<Appointment>> GetInWorkAppointmentsAsync(string employeeName, DateTime date);
+        Task<IEnumerable<Appointment>> GetAllAppointmentsAsync();
+        Task UpdateAppointmentAsync(Appointment appointment);
+        Task DeleteAppointmentAsync(Appointment appointment);
     }
 }

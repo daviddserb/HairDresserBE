@@ -17,19 +17,20 @@ namespace hairDresser.Application.Employees.Command.DeleteEmployeeById
         {
             _employeeRepository = employeeRepository;
         }
-        public Task<IEnumerable<Employee>> Handle(DeleteEmployeeByIdCommand request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Employee>> Handle(DeleteEmployeeByIdCommand request, CancellationToken cancellationToken)
         {
             var employee = new Employee();
             employee.Id = request.Id;
 
-            _employeeRepository.DeleteEmployee(employee.Id);
+            _employeeRepository.DeleteEmployeeAsync(employee.Id);
 
             Console.WriteLine("Handler -> The new list of employees:");
-            foreach (var er in _employeeRepository.GetAllEmployees())
+            var allEmployees = await _employeeRepository.GetAllEmployeesAsync();
+            foreach (var empl in allEmployees)
             {
-                Console.WriteLine($"id= '{er.Id}', name= '{er.Name}', specialization= '{er.Specialization}'");
+                Console.WriteLine($"id= '{empl.Id}', name= '{empl.Name}', specialization= '{empl.Specialization}'");
             }
-            return Task.FromResult(_employeeRepository.GetAllEmployees());
+            return await Task.FromResult(allEmployees);
         }
     }
 }
