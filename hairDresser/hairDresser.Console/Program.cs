@@ -1,4 +1,5 @@
 ﻿using hairDresser.Application.Appointments.Commands.CreateAppointment;
+using hairDresser.Application.Appointments.Queries.GetAllAppointments;
 using hairDresser.Application.Employees.Command.CreateEmployee;
 using hairDresser.Application.Employees.Command.DeleteEmployeeById;
 using hairDresser.Application.Employees.Queries.GetAllEmployees;
@@ -6,7 +7,6 @@ using hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppointme
 using hairDresser.Application.Employees.Queries.GetEmployeesByServices;
 using hairDresser.Application.HairServices.Queries;
 using hairDresser.Application.Interfaces;
-using hairDresser.Domain.Models;
 using hairDresser.Infrastructure.Repositories;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,71 +45,34 @@ while (showMenu)
 
 async Task<bool> MainMenuAsync()
 {
-    Console.WriteLine("\n- CRUD Appointment -");
-    Console.WriteLine("00 - GetAllHairServices");
-    Console.WriteLine("01 - GetAllEmpoyeesForServices");
-    Console.WriteLine("02 - GetAvailableTimeSpotsForEmployee");
-    Console.WriteLine("03 - CreateAppointment");
-    //Console.WriteLine("03 - ReadAppointments");
-    //Console.WriteLine("03 - UpdateAppointment");
+    Console.WriteLine("                    CRUD Appointment:");
+    Console.WriteLine("00 - CreateAppointment");
+    Console.WriteLine("01 - ReadAppointments");
+    //Console.WriteLine("02 - UpdateAppointment");
     //Console.WriteLine("03 - DeleteAppointment");
 
-    Console.WriteLine("\n- CRUD Employee -");
-    Console.WriteLine("10 - AddEmployee");
-    Console.WriteLine("11 - GetAllEmployees");
-    Console.WriteLine("12 - DeleteEmployee");
+    Console.WriteLine("                    CRUD Employee:");
+    Console.WriteLine("10 - CreateEmployee");
+    Console.WriteLine("11 - GetAllEmpoyeesByServices");
+    Console.WriteLine("12 - GetEmployeeIntervalsByDate"); // ??? Nu stiu daca apartine intr-un fel de Appointment sau de Employee
+    Console.WriteLine("13 - ReadEmployees");
+    //Update
+    Console.WriteLine("15 - DeleteEmployee");
 
-    //Console.WriteLine("\n- CRUD Customers -");
+    Console.WriteLine("                    CRUD Customers:");
 
-    //Console.WriteLine("\n- CRUD WorkingDays -");
+    Console.WriteLine("                    CRUD WorkingDays:");
 
-    //Console.WriteLine("\n- CRUD HairServices -");
+    Console.WriteLine("                    CRUD HairServices:");
+    //Create
+    Console.WriteLine("51 - ReadHairServices");
+    //Update
+    //Delete
 
     var userInputCase = Console.ReadLine();
     switch (userInputCase)
     {
         case "00":
-            var allServices = await mediator.Send(new GetAllHairServicesQuery());
-            foreach (var service in allServices)
-            {
-                Console.WriteLine($"name= '{service.Name}', duration= '{service.Duration}', price= '{service.Price}'");
-            }
-            return true;
-        case "01":
-            {
-                Console.WriteLine("Type each hair service name on a new line.\nIf you want to stop, press the ENTER button.");
-                var hairServicesPickedByCustomer = new List<string>();
-                var hairService = Console.ReadLine();
-                while (hairService != "")
-                {
-                    hairServicesPickedByCustomer.Add(hairService);
-                    hairService = Console.ReadLine();
-                }
-
-                await mediator.Send(new GetEmployeesByServicesQuery(hairServicesPickedByCustomer));
-                return true;
-            }
-        case "02":
-            {
-                Console.WriteLine("What is the id of the employee?");
-                var employeeId = Int32.Parse(Console.ReadLine());
-
-                Console.WriteLine("What is the date, the day in numbers, from this month for you appointment?");
-                var date = Int32.Parse(Console.ReadLine());
-
-                // ??? Aici nu sunt sigur daca trebuia sa il intreb direct cat dureaza SAU sa il pun sa aleaga ce hair services vrea si in functie de ce a ales, sa calculez eu cat dureaza.
-                Console.WriteLine("How much time, in minutes, for the appointment?");
-                var durationInMinutes = Int32.Parse(Console.ReadLine());
-
-                await mediator.Send(new GetEmployeeIntervalsForAppointmentByDateQuery
-                {
-                    EmployeeId = employeeId,
-                    Date = date,
-                    DurationInMinutes = durationInMinutes
-                });
-                return true;
-            }
-        case "03":
             {
                 Console.WriteLine("Under what name do you want to save the appointment?");
                 var customerName = Console.ReadLine();
@@ -119,14 +82,14 @@ async Task<bool> MainMenuAsync()
 
                 Console.WriteLine("Type each hair service name on a new line.\nIf you want to stop, press the ENTER button.");
                 var hairServicesPickedByCustomer = new List<string>();
-                var hairService = Console.ReadLine();
-                while (hairService != "")
+                var inputService = Console.ReadLine();
+                while (inputService != "")
                 {
-                    hairServicesPickedByCustomer.Add(hairService);
-                    hairService = Console.ReadLine();
+                    hairServicesPickedByCustomer.Add(inputService);
+                    inputService = Console.ReadLine();
                 }
 
-                // ??? Aici nu sunt sigur daca trebuia sa scriu intervalul de start si end date din Consola? 
+                // ??? Aici nu sunt sigur daca trebuia sa scriu intervalul de start si end date din Consola? Sau sa il extrag din intervalele posibile...? Dar atunci trebuie sa fac legatura cu alta metoda si mi-ai spus sa nu fac asa.
                 Console.WriteLine("What is the selected interval (start + end date) for the appointment? Type them on a new line.\nFor example:\n8/19/2022 12:00:00 AM\n8/19/2022 2:50:00 PM");
                 var start = Console.ReadLine();
                 var end = Console.ReadLine();
@@ -139,6 +102,15 @@ async Task<bool> MainMenuAsync()
                     StartDate = start,
                     EndDate = end
                 });
+                return true;
+            }
+        case "01":
+            {
+                var allAppointments = await mediator.Send(new GetAllAppointmentsQuery());
+                foreach (var app in allAppointments)
+                {
+                    Console.WriteLine(app.Id + " - " + app.CustomerName + " - " + app.EmployeeName + " - " + app.HairServices + " - " + app.StartDate + " - " + app.EndDate);
+                }
                 return true;
             }
         case "10":
@@ -164,6 +136,63 @@ async Task<bool> MainMenuAsync()
             }
 
         case "11":
+            {
+                // ??? Aici trebuie input-ul sa fie de tipul string adica hairServiceName sau de tipul int adica id-ul de la fiecare hairServiceName?
+                //Daca raspunsul este da (ceea ce cred ca o sa fie):
+                //1. ??? De ce?
+                //2. !!! Trebuie sa adaug id la clasa din domain HairServices si sa fac si alte modificari peste tot...
+                Console.WriteLine("Type each hair service name on a new line.\nIf you want to stop, press the ENTER button.");
+                var hairServicesPickedByCustomer = new List<string>();
+                var inputService = Console.ReadLine();
+                while (inputService != "")
+                {
+                    hairServicesPickedByCustomer.Add(inputService);
+                    inputService = Console.ReadLine();
+                }
+
+                var validEmployees = await mediator.Send(new GetEmployeesByServicesQuery(hairServicesPickedByCustomer));
+                if (!validEmployees.Any())
+                {
+                    Console.WriteLine("Nobody can help you.");
+                }
+                else
+                {
+                    foreach (var employee in validEmployees)
+                    {
+                        Console.WriteLine(employee.Id + " - " + employee.Name + " - " + employee.Specialization);
+                    }
+                }
+                return true;
+            }
+
+        case "12":
+            {
+                Console.WriteLine("What is the id of the employee?");
+                var employeeId = Int32.Parse(Console.ReadLine());
+
+                Console.WriteLine("What is the date, the day in numbers, from this month for you appointment?");
+                var date = Int32.Parse(Console.ReadLine());
+
+                // ??? Aici nu sunt sigur daca trebuia sa il intreb direct cat dureaza SAU sa il pun sa aleaga ce hair services vrea si in functie de ce a ales, sa calculez eu cat dureaza.
+                Console.WriteLine("How much time, in minutes, for the appointment?");
+                var durationInMinutes = Int32.Parse(Console.ReadLine());
+
+                var intervalsForAppointment = await mediator.Send(new GetEmployeeIntervalsByDateQuery
+                {
+                    EmployeeId = employeeId,
+                    Date = date,
+                    DurationInMinutes = durationInMinutes
+                });
+
+                Console.WriteLine("\nback in case -> all valid intervals for appointments: ");
+                foreach (var interval in intervalsForAppointment)
+                {
+                    Console.WriteLine(interval.startDate + " - " + interval.endDate);
+                }
+                return true;
+            }
+
+        case "13":
             var allEmployees = await mediator.Send(new GetAllEmployeesQuery());
             Console.Write("All employees:\n");
             foreach (var employee in allEmployees)
@@ -172,9 +201,9 @@ async Task<bool> MainMenuAsync()
             }
             return true;
 
-        case "12":
+        case "15":
             {
-                Console.WriteLine("\nWhat is the id of the employee?");
+                Console.WriteLine("What is the id of the employee?");
                 var employeeId = Int32.Parse(Console.ReadLine());
 
                 await mediator.Send(new DeleteEmployeeByIdCommand
@@ -183,6 +212,14 @@ async Task<bool> MainMenuAsync()
                 });
                 return true;
             }
+
+        case "51":
+            var allServices = await mediator.Send(new GetAllHairServicesQuery());
+            foreach (var service in allServices)
+            {
+                Console.WriteLine($"name= '{service.Name}', duration= '{service.Duration}', price= '{service.Price}'");
+            }
+            return true;
 
         // default = cand nu se executa niciun alt case pt. ca input-ul nu corespunde.
         default:

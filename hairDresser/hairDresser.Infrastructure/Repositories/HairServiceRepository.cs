@@ -24,7 +24,7 @@ namespace hairDresser.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<HairService>> GetAllHairServicesAsync()
+        public async Task<IEnumerable<HairService>> ReadHairServicesAsync()
         {
             return _hairServices;
         }

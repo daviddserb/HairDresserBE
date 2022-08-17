@@ -30,36 +30,22 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IEnumerable<Employee>> GetEmployeesByServicesAsync(List<string> servicesPickedByCustomer)
         {
+            // ???
+            // Am prea multa logica sau nu? Nu stiu exact ce sa fac, pt. ca dupa cum am denumit functia, eu trebuie sa returnez toti employee din lista care au toate serviciile cerute de customer.
             var validEmployees = new List<Employee>();
             foreach(var employee in EmployeeList)
             {
-                var invariantText = employee.Specialization.ToUpperInvariant();
-                bool matches = servicesPickedByCustomer.All(hspbc => invariantText.Contains(hspbc.ToUpperInvariant()));
+                var employeeSpecialization = employee.Specialization.ToUpperInvariant();
+                bool matches = servicesPickedByCustomer.All(services => employeeSpecialization.Contains(services.ToUpperInvariant()));
                 if (matches)
                 {
                     validEmployees.Add(employee);
                 }
             }
-
-            Console.WriteLine("Repository -> ");
-
-            if (validEmployees.Count() == 0)
-            {
-                Console.WriteLine("Nobody can help you.");
-            }
-            else
-            {
-                Console.WriteLine("All the employees that can help you:");
-                for (int i = 0; i < validEmployees.Count(); ++i)
-                {
-                    Console.WriteLine(validEmployees[i].Id + " - " + validEmployees[i].Name);
-                }
-            }
-
             return validEmployees;
         }
 
-        public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
+        public async Task<IEnumerable<Employee>> ReadEmployeesAsync()
         {
             return EmployeeList;
         }

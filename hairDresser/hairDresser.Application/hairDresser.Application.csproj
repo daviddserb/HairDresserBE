@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Appointments\Queries\GetAppointmentsByEmployeeName\" />
-    <Folder Include="Appointments\Queries\GetAppointmentsByCustomerName\" />
+    <Folder Include="Appointments\Queries\GetAllCustomerAppointments\" />
+    <Folder Include="Appointments\Queries\GetAllCustomerAppointmentsInWork\" />
     <Folder Include="Customers\" />
     <Folder Include="HairServices\Commands\" />
     <Folder Include="WorkingDays\" />

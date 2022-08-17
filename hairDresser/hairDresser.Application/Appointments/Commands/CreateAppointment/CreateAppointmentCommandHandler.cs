@@ -23,6 +23,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 
         public async Task<Appointment> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
         {
+            // !!! Am lasat sa returnez ceva ca inca nu am GetAllAppointments
             var employeeById = await _employeeRepository.GetEmployeeByIdAsync(request.EmployeeId);
             var employeeName = employeeById.Name;
 
@@ -47,7 +48,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             Console.Write("Handler -> The new appointment:\n");
             Console.WriteLine(appointment.CustomerName + " - " + appointment.EmployeeName + " - " + appointment.HairServices + " - " + appointment.StartDate + " - " + appointment.EndDate);
 
-            _appointmentRepository.CreateAppointmentAsync(appointment);
+            await _appointmentRepository.CreateAppointmentAsync(appointment);
             return await Task.FromResult(appointment);
         }
     }

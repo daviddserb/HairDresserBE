@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppointmentByDate
 {
     // ??? Eu vreau sa returnez intervalele valide pt. appointments de la alesul employee, atunci acest CQRS trebuie sa fie in folderul de Appointments/Employees sau care?
-    public class GetEmployeeIntervalsForAppointmentByDateQuery : IRequest<List<(DateTime startDate, DateTime endDate)>>
+    public class GetEmployeeIntervalsByDateQuery : IRequest<List<(DateTime startDate, DateTime endDate)>>
     {
         public int EmployeeId { get; set; }
         public int Date { get; set; }

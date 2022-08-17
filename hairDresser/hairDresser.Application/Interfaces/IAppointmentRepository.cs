@@ -13,7 +13,7 @@ namespace hairDresser.Application.Interfaces
         Task<IEnumerable<Appointment>> GetAllCustomerAppointmentsAsync(string customerName);
         Task<IEnumerable<Appointment>> GetAllCustomerAppointmentsInWorkAsync(string customerName);
         Task<IEnumerable<Appointment>> GetInWorkAppointmentsAsync(string employeeName, DateTime date);
-        Task<IEnumerable<Appointment>> GetAllAppointmentsAsync();
+        Task<IEnumerable<Appointment>> ReadAppointmentsAsync();
         Task UpdateAppointmentAsync(Appointment appointment);
         Task DeleteAppointmentAsync(Appointment appointment);
     }

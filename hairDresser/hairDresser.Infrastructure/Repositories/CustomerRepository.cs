@@ -30,7 +30,7 @@ namespace hairDresser.Infrastructure.Repositories
             return CustomerList.FirstOrDefault(obj => obj.Username == customerUsername);
         }
 
-        public async Task<IEnumerable<Customer>> GetCustomersAsync()
+        public async Task<IEnumerable<Customer>> ReadCustomersAsync()
         {
             return CustomerList;
         }

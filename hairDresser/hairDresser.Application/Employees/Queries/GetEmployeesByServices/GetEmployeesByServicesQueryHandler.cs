@@ -20,13 +20,8 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeesByServices
 
         public async Task<IEnumerable<Employee>> Handle(GetEmployeesByServicesQuery request, CancellationToken cancellationToken)
         {
-            Console.Write("Handler -> All the employees:\n");
-            foreach (var employee in await _employeeRepository.GetAllEmployeesAsync())
-            {
-                Console.WriteLine($"name= '{employee.Name}', specialization= '{employee.Specialization}'");
-            }
-
-            return await Task.FromResult(await _employeeRepository.GetEmployeesByServicesAsync(request.HairServicesPickedByCustomer));
+            var validEmployees = await _employeeRepository.GetEmployeesByServicesAsync(request.HairServicesPickedByCustomer);
+            return await Task.FromResult(validEmployees);
         }
     }
 }

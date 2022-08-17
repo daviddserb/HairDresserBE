@@ -19,7 +19,7 @@ namespace hairDresser.Application.Employees.Queries.GetAllEmployees
         }
         public async Task<IEnumerable<Employee>> Handle(GetAllEmployeesQuery request, CancellationToken cancellationToken)
         {
-            var allEmployees = await _employeeRepository.GetAllEmployeesAsync();
+            var allEmployees = await _employeeRepository.ReadEmployeesAsync();
             return allEmployees;
         }
     }

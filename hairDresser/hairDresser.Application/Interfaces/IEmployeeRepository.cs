@@ -12,7 +12,7 @@ namespace hairDresser.Application.Interfaces
         Task CreateEmployeeAsync(Employee employee);
         Task<Employee> GetEmployeeByIdAsync(int employeeId);
         Task<IEnumerable<Employee>> GetEmployeesByServicesAsync(List<string> servicesPickedByCustomer);
-        Task<IEnumerable<Employee>> GetAllEmployeesAsync();
+        Task<IEnumerable<Employee>> ReadEmployeesAsync();
         Task UpdateEmployeeAsync(Employee employee);
         Task DeleteEmployeeAsync(int employeeId);
     }

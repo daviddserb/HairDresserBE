@@ -69,7 +69,7 @@ namespace hairDresser.Infrastructure.Repositories
                 .Where(obj => obj.EmployeeName == employeeName);
         }
 
-        public async Task<IEnumerable<Appointment>> GetAllAppointmentsAsync()
+        public async Task<IEnumerable<Appointment>> ReadAppointmentsAsync()
         {
             return AppointmentList;
         }

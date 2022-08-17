@@ -26,14 +26,14 @@ namespace hairDresser.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<WorkingDay>> GetAllWorkingDaysAsync()
-        {
-            return WorkingDayList;
-        }
-
         public async Task<WorkingDay> GetWorkingDayAsync(string nameOfDay)
         {
             return WorkingDayList.FirstOrDefault(obj => obj.Name == nameOfDay);
+        }
+
+        public async Task<IEnumerable<WorkingDay>> ReadWorkingDaysAsync()
+        {
+            return WorkingDayList;
         }
 
         public async Task UpdateWorkingDayAsync()
