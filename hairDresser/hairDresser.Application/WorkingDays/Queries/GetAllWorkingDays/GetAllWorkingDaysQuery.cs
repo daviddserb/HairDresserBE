@@ -6,10 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser.Application.Employees.Command.DeleteEmployeeById
+namespace hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays
 {
-    public class DeleteEmployeeByIdCommand : IRequest
+    public class GetAllWorkingDaysQuery : IRequest<IEnumerable<WorkingDay>>
     {
-        public int Id { get; set; }
     }
 }

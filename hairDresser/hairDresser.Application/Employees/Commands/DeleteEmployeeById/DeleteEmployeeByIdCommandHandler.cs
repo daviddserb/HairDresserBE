@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser.Application.Employees.Command.DeleteEmployeeById
+namespace hairDresser.Application.Employees.Commands.DeleteEmployeeById
 {
     // public class DeleteEmployeeByIdCommandHandler : IRequestHandler<DeleteEmployeeByIdCommand, Unit>
     public class DeleteEmployeeByIdCommandHandler : IRequestHandler<DeleteEmployeeByIdCommand>

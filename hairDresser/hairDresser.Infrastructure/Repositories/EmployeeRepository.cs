@@ -10,7 +10,7 @@ namespace hairDresser.Infrastructure.Repositories
 {
     public class EmployeeRepository : IEmployeeRepository
     {
-        List<Employee> EmployeeList = new List<Employee>();
+        List<Employee> EmployeeList = new();
 
         public EmployeeRepository()
         {
@@ -23,15 +23,16 @@ namespace hairDresser.Infrastructure.Repositories
             EmployeeList.Add(employee);
         }
 
-        public async Task<Employee> GetEmployeeByIdAsync(int employeeId)
+        // Get Employee By Id.
+        public async Task<Employee> GetEmployeeAsync(int employeeId)
         {
             return EmployeeList.FirstOrDefault(obj => obj.Id == employeeId);
         }
 
-        public async Task<IEnumerable<Employee>> GetEmployeesByServicesAsync(List<string> servicesPickedByCustomer)
+        // Get Employee By Services.
+        public async Task<IEnumerable<Employee>> GetEmployeesAsync(List<string> servicesPickedByCustomer)
         {
-            // ???
-            // Am prea multa logica sau nu? Nu stiu exact ce sa fac, pt. ca dupa cum am denumit functia, eu trebuie sa returnez toti employee din lista care au toate serviciile cerute de customer.
+            // ??? Am prea multa logica sau nu? Nu stiu exact ce sa fac, pt. ca dupa cum am denumit functia, eu trebuie sa returnez toti employee din lista care au toate serviciile cerute de customer.
             var validEmployees = new List<Employee>();
             foreach(var employee in EmployeeList)
             {

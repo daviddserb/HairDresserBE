@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 {
     // Trebuie sa implementam interfata IRequestHandler, care primeste 2 parametrii: request-ul (mesajul) si raspunsul mesajului (ce returneaza el)
-    public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointmentCommand, Appointment>
+    public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointmentCommand>
     {
         private readonly IAppointmentRepository _appointmentRepository;
         private readonly IEmployeeRepository _employeeRepository;
@@ -21,10 +21,10 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             _employeeRepository = employeeRepository;
         }
 
-        public async Task<Appointment> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
         {
             // !!! Am lasat sa returnez ceva ca inca nu am GetAllAppointments
-            var employeeById = await _employeeRepository.GetEmployeeByIdAsync(request.EmployeeId);
+            var employeeById = await _employeeRepository.GetEmployeeAsync(request.EmployeeId);
             var employeeName = employeeById.Name;
 
             var hairServices = "";
@@ -49,7 +49,8 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             Console.WriteLine(appointment.CustomerName + " - " + appointment.EmployeeName + " - " + appointment.HairServices + " - " + appointment.StartDate + " - " + appointment.EndDate);
 
             await _appointmentRepository.CreateAppointmentAsync(appointment);
-            return await Task.FromResult(appointment);
+
+            return Unit.Value;
         }
     }
 }

@@ -15,7 +15,6 @@
     <Folder Include="Appointments\Queries\GetAllCustomerAppointmentsInWork\" />
     <Folder Include="Customers\" />
     <Folder Include="HairServices\Commands\" />
-    <Folder Include="WorkingDays\" />
   </ItemGroup>
 
   <ItemGroup>

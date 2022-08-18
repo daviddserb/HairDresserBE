@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser.Application.Employees.Command.CreateEmployee
+namespace hairDresser.Application.Employees.Commands.CreateEmployee
 {
     public class CreateEmployeeComand : IRequest
     {

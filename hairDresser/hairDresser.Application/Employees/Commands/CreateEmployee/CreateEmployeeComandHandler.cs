@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser.Application.Employees.Command.CreateEmployee
+namespace hairDresser.Application.Employees.Commands.CreateEmployee
 {
     public class CreateEmployeeComandHandler : IRequestHandler<CreateEmployeeComand>
     {
@@ -17,7 +17,8 @@ namespace hairDresser.Application.Employees.Command.CreateEmployee
         {
             _employeeRepository = employeeRepository;
         }
-        async Task<Unit> IRequestHandler<CreateEmployeeComand, Unit>.Handle(CreateEmployeeComand request, CancellationToken cancellationToken)
+
+        public async Task<Unit> Handle(CreateEmployeeComand request, CancellationToken cancellationToken)
         {
             Console.WriteLine("Handle ->");
             var employee = new Employee();
