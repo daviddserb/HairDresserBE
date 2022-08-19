@@ -22,15 +22,41 @@ namespace hairDresser.Application.WorkingDays.Commands.CreateWorkingDay
         {
             Console.WriteLine("Handle ->");
 
-            var workingDay = new WorkingDay()
-            {
-                EmployeeId = request.EmployeeId,
-                Name = request.NameOfDay,
-                StartTime = TimeSpan.Parse(request.StartTime),
-                EndTime = TimeSpan.Parse(request.EndTime),
-            };
+            var employeeId = request.EmployeeId;
+            var nameOfDay = request.NameOfDay;
+            var startTime = TimeSpan.Parse(request.StartTime);
+            var endTime = TimeSpan.Parse(request.EndTime);
 
-            await _workingDayRepository.CreateWorkingDayAsync(workingDay);
+            Console.WriteLine("Check if the Interval (startTime - endTime) is not overlapping with other intervals:");
+            var allEmployeeIntervalsInSelectedDay = await _workingDayRepository.GetWorkingDayAsync(employeeId, nameOfDay);
+            var isIntervalGood = true;
+            foreach (var intervals in allEmployeeIntervalsInSelectedDay)
+            {
+                Console.WriteLine("Existing interval -> " + intervals.StartTime + " - " + intervals.EndTime);
+                // ??? -/+ new TimeSpan(01, 00, 00) -> ca sa fie pauza de cel putin o ora intre intervalele de lucru.Trebuie sa testez daca este corect.
+                //bool overlap = startTime <= intervals.EndTime && intervals.StartTime <= endTime;
+                bool overlap = startTime < intervals.EndTime + new TimeSpan(01, 00, 00) && intervals.StartTime - new TimeSpan(01, 00, 00) < endTime;
+                Console.WriteLine("overlap= " + overlap);
+                if (overlap)
+                {
+                    isIntervalGood = false;
+                    Console.WriteLine("Interval overlapping");
+                    break;
+                }
+            }
+            if (isIntervalGood == true)
+            {
+                Console.WriteLine("INTERVAL NOT OVERLAPPING");
+                var workingDay = new WorkingDay()
+                {
+                    EmployeeId = employeeId,
+                    Name = nameOfDay,
+                    StartTime = startTime,
+                    EndTime = endTime,
+                };
+
+                await _workingDayRepository.CreateWorkingDayAsync(workingDay);
+            }
 
             return Unit.Value;
         }
