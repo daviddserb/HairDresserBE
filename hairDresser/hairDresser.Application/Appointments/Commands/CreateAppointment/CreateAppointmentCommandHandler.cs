@@ -14,39 +14,42 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
     {
         private readonly IAppointmentRepository _appointmentRepository;
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IHairServiceRepository _hairServiceRepository;
 
-        public CreateAppointmentCommandHandler(IAppointmentRepository appointmentRepository, IEmployeeRepository employeeRepository)
+        public CreateAppointmentCommandHandler(IAppointmentRepository appointmentRepository, IEmployeeRepository employeeRepository, IHairServiceRepository hairServiceRepository)
         {
             _appointmentRepository = appointmentRepository;
             _employeeRepository = employeeRepository;
+            _hairServiceRepository = hairServiceRepository;
         }
 
         public async Task<Unit> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
         {
-            // !!! Am lasat sa returnez ceva ca inca nu am GetAllAppointments
+            var allAppointmnets = await _appointmentRepository.ReadAppointmentsAsync();
+
             var employeeById = await _employeeRepository.GetEmployeeAsync(request.EmployeeId);
             var employeeName = employeeById.Name;
 
+            var hairServicesPickedByCustomer = await _hairServiceRepository.GetHairServiceAsync(request.HairServicesId);
             var hairServices = "";
-            for (int i = 0; i < request.HairServices.Count; ++i)
+            foreach(var service in hairServicesPickedByCustomer)
             {
-                hairServices += request.HairServices[i];
-                if (i != request.HairServices.Count - 1)
+                hairServices += service.Name;
+                if (service != hairServicesPickedByCustomer.Last())
                 {
                     hairServices += ", ";
                 }
             }
 
-            var appointment = new Appointment { 
+            var appointment = new Appointment
+            {
+                Id = allAppointmnets.Max(app => app.Id) + 1,
                 CustomerName = request.CustomerName,
                 EmployeeName = employeeName,
                 HairServices = hairServices,
                 StartDate = DateTime.Parse(request.StartDate),
                 EndDate = DateTime.Parse(request.EndDate)
             };
-
-            Console.Write("Handler -> The new appointment:\n");
-            Console.WriteLine(appointment.CustomerName + " - " + appointment.EmployeeName + " - " + appointment.HairServices + " - " + appointment.StartDate + " - " + appointment.EndDate);
 
             await _appointmentRepository.CreateAppointmentAsync(appointment);
 

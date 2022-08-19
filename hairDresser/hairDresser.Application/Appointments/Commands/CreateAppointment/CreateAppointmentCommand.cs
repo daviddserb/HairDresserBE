@@ -15,7 +15,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
         // Acestea sunt proprietatile fara de care nu pot sa fac un appointment, adica am nevoie de user input in ele.
         public string CustomerName { get; set; }
         public int EmployeeId { get; set; }
-        public List<string> HairServices { get; set; }
+        public List<int> HairServicesId { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
 

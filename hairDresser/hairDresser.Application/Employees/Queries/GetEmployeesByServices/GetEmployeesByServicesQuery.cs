@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Employees.Queries.GetEmployeesByServices
 {
-    public record GetEmployeesByServicesQuery (List<string> HairServicesPickedByCustomer) : IRequest<IEnumerable<Employee>>;
+    public record GetEmployeesByServicesQuery (List<int> HairServicesId) : IRequest<IEnumerable<Employee>>;
 }

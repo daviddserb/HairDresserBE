@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.WorkingDays.Commands.CreateWorkingDay
 {
-    public class CreateWorkingDayHandler : IRequestHandler<CreateWorkingDayQuery>
+    public class CreateWorkingDayHandler : IRequestHandler<CreateWorkingDayCommand>
     {
         private IWorkingDayRepository _workingDayRepository;
 
@@ -18,23 +18,25 @@ namespace hairDresser.Application.WorkingDays.Commands.CreateWorkingDay
             _workingDayRepository = workingDayRepository;
         }
 
-        public async Task<Unit> Handle(CreateWorkingDayQuery request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateWorkingDayCommand request, CancellationToken cancellationToken)
         {
             Console.WriteLine("Handle ->");
 
             var employeeId = request.EmployeeId;
-            var nameOfDay = request.NameOfDay;
+
+            var day = await _workingDayRepository.GetWorkingDayAsync(request.DayId);
+            var nameOfDay = day.Name;
+
             var startTime = TimeSpan.Parse(request.StartTime);
             var endTime = TimeSpan.Parse(request.EndTime);
 
+            // Validation for startTime and endTime to don't overlap other intervals.
             Console.WriteLine("Check if the Interval (startTime - endTime) is not overlapping with other intervals:");
             var allEmployeeIntervalsInSelectedDay = await _workingDayRepository.GetWorkingDayAsync(employeeId, nameOfDay);
             var isIntervalGood = true;
             foreach (var intervals in allEmployeeIntervalsInSelectedDay)
             {
                 Console.WriteLine("Existing interval -> " + intervals.StartTime + " - " + intervals.EndTime);
-                // ??? -/+ new TimeSpan(01, 00, 00) -> ca sa fie pauza de cel putin o ora intre intervalele de lucru.Trebuie sa testez daca este corect.
-                //bool overlap = startTime <= intervals.EndTime && intervals.StartTime <= endTime;
                 bool overlap = startTime < intervals.EndTime + new TimeSpan(01, 00, 00) && intervals.StartTime - new TimeSpan(01, 00, 00) < endTime;
                 Console.WriteLine("overlap= " + overlap);
                 if (overlap)

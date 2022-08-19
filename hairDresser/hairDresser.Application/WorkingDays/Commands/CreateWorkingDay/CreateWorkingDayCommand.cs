@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.WorkingDays.Commands.CreateWorkingDay
 {
-    public class CreateWorkingDayQuery : IRequest
+    public class CreateWorkingDayCommand : IRequest
     {
         public int EmployeeId { get; set; }
-        public string NameOfDay { get; set; }
+        public int DayId { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }
     }

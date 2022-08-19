@@ -34,7 +34,7 @@ var diContainer = new ServiceCollection()
     // Cu toate ca noi avem mai multe .AddScoped(), adaugam doar unul dintre ele la typeof() si MediatR le scaneaza pe toate din layer-ul de unde typeof() face parte, adica IHairServiceRepository face parte din Application.
     .AddMediatR(typeof(IHairServiceRepository))
 
-    // ??? Build-uim acest container = ...?
+    // Build-uim acest container ...
     .BuildServiceProvider();
 var mediator = diContainer.GetRequiredService<IMediator>();
 
@@ -54,15 +54,15 @@ async Task<bool> MainMenuAsync()
     Console.WriteLine("\nCRUD Employee:");
     Console.WriteLine("10 - CreateEmployee");
     Console.WriteLine("11 - GetAllEmpoyeesByServices");
-    Console.WriteLine("12 - GetEmployeeIntervalsByDate"); // ??? Nu stiu daca apartine de Appointment sau de Employee, atunci cand vrei sa iei toate intervalele unui employee dupa ce customer a selectat un date.
+    Console.WriteLine("12 - GetEmployeeIntervalsByDate");
     Console.WriteLine("13 - ReadEmployees");
     //Update
     Console.WriteLine("15 - DeleteEmployee");
 
-    //Console.WriteLine("\nCRUD Customers:"); (??? N-am facut nimic CRUD la Customers inca, trebuie acum?)
+    //Console.WriteLine("\nCRUD Customers:");
 
     Console.WriteLine("\nCRUD WorkingDays:");
-    Console.WriteLine("40 - CreateWorkingDay"); //??? am de lucru
+    Console.WriteLine("40 - CreateWorkingDay");
     Console.WriteLine("41 - GetWorkingDayByEmployeeIdBynameOfDay");
     Console.WriteLine("42 - ReadWorkingDays");
     //Update
@@ -79,23 +79,22 @@ async Task<bool> MainMenuAsync()
     {
         case "00":
             {
-                Console.WriteLine("Under what name do you want to save the appointment?");
+                Console.WriteLine("Customer Name?");
                 var customerName = Console.ReadLine();
 
-                Console.WriteLine("What is the id of the employee?");
+                Console.WriteLine("Employee Id?");
                 var employeeId = Int32.Parse(Console.ReadLine());
 
-                Console.WriteLine("Type each hair service name on a new line.\nIf you want to stop, press the ENTER button.");
-                var hairServicesPickedByCustomer = new List<string>();
+                Console.WriteLine("Hair services? Type each number on a new line. When you want to stop, press the ENTER button.\n1 - wash\n2 - cut\n3 - dye");
+                var hairServicesId = new List<int>();
                 var inputService = Console.ReadLine();
                 while (inputService != "")
                 {
-                    hairServicesPickedByCustomer.Add(inputService);
+                    hairServicesId.Add(Int32.Parse(inputService));
                     inputService = Console.ReadLine();
                 }
 
-                // ??? Aici nu sunt sigur daca trebuia sa scriu intervalul de start si end date din Consola? Sau sa il extrag din intervalele posibile...? Dar atunci trebuie sa fac legatura cu alta metoda si mi-ai spus sa nu fac asa.
-                Console.WriteLine("What is the selected interval (start + end date) for the appointment? Type them on a new line.\nFor example:\n8/19/2022 12:00:00 AM\n8/19/2022 2:50:00 PM");
+                Console.WriteLine("Selected interval (start and end date) for appointment? Type each one on a new line. For example:\n8/26/2022 12:00:00 AM\n8/26/2022 2:50:00 PM");
                 var start = Console.ReadLine();
                 var end = Console.ReadLine();
 
@@ -103,7 +102,7 @@ async Task<bool> MainMenuAsync()
                 {
                     CustomerName = customerName,
                     EmployeeId = employeeId,
-                    HairServices = hairServicesPickedByCustomer,
+                    HairServicesId = hairServicesId,
                     StartDate = start,
                     EndDate = end
                 });
@@ -120,10 +119,11 @@ async Task<bool> MainMenuAsync()
             }
         case "10":
             {
-                Console.WriteLine("\nWhat is the name of the employee?");
+                Console.WriteLine("\nEmployee Name?");
                 var name = Console.ReadLine();
 
-                Console.WriteLine("What are his specializations? Type each one on a new line. Press the ENTER button when you want to stop.");
+                // ??? Aici cand vreau sa creez un Employee, cand se adauga specializarile lui, ele trebuie sa fie de tip string, adica nu mai poti cu id (int), corect?
+                Console.WriteLine("Specializations? Type each one on a new line. When you want to stop, press the ENTER button.");
                 var specializations = new List<string>();
                 var skills = Console.ReadLine();
                 while (skills != "")
@@ -142,18 +142,16 @@ async Task<bool> MainMenuAsync()
 
         case "11":
             {
-                // ??? Aici input-ul trebuie sa fie de tipul string la hairServices sau de tipul int adica id-ul de la fiecare hairService?
-                //Daca raspunsul este da, ceea ce tind sa cred ca o sa fie, de ce?
-                Console.WriteLine("Type each hair service name on a new line.\nIf you want to stop, press the ENTER button.");
-                var hairServicesPickedByCustomer = new List<string>();
+                Console.WriteLine("Hair services? Type each number on a new line. When you want to stop, press the ENTER button.\n1 - wash\n2 - cut\n3 - dye");
+                var hairServicesId = new List<int>();
                 var inputService = Console.ReadLine();
                 while (inputService != "")
                 {
-                    hairServicesPickedByCustomer.Add(inputService);
+                    hairServicesId.Add(Int32.Parse(inputService));
                     inputService = Console.ReadLine();
                 }
 
-                var validEmployees = await mediator.Send(new GetEmployeesByServicesQuery(hairServicesPickedByCustomer));
+                var validEmployees = await mediator.Send(new GetEmployeesByServicesQuery(hairServicesId));
                 if (!validEmployees.Any())
                 {
                     Console.WriteLine("Nobody can help you.");
@@ -170,14 +168,13 @@ async Task<bool> MainMenuAsync()
 
         case "12":
             {
-                Console.WriteLine("What is the id of the employee?");
+                Console.WriteLine("Employee Id?");
                 var employeeId = Int32.Parse(Console.ReadLine());
 
-                Console.WriteLine("What is the date, the day in numbers, from this month for you appointment?");
+                Console.WriteLine("Date from this month, the day in numbers (ex: 01, 29), for appointment?");
                 var date = Int32.Parse(Console.ReadLine());
 
-                // ??? Aici nu sunt sigur daca trebuia sa il intreb direct cat dureaza SAU sa il pun sa aleaga ce hair services vrea si in functie de ce a ales, sa calculez eu cat dureaza.
-                Console.WriteLine("How much time, in minutes, for the appointment?");
+                Console.WriteLine("How much time, in minutes, for appointment?");
                 var durationInMinutes = Int32.Parse(Console.ReadLine());
 
                 var intervalsForAppointment = await mediator.Send(new GetEmployeeIntervalsByDateQuery
@@ -206,7 +203,7 @@ async Task<bool> MainMenuAsync()
 
         case "15":
             {
-                Console.WriteLine("What is the id of the employee?");
+                Console.WriteLine("Employee Id?");
                 var employeeId = Int32.Parse(Console.ReadLine());
 
                 await mediator.Send(new DeleteEmployeeByIdCommand
@@ -218,24 +215,23 @@ async Task<bool> MainMenuAsync()
 
         case "40":
             {
-                Console.WriteLine("What is the id of the employee?");
+                Console.WriteLine("Employee Id?");
                 var employeeId = Int32.Parse(Console.ReadLine());
 
-                // ??? Cand cer input-ul de day, trebuie sa fie string (adica Monday, Tuesday, Wednesday) sau int (adica 1 pt. Monday, 2 pt. Tuesday, etc...)?
-                Console.WriteLine("What is the name of the day (ex: Monday, ..., Friday?");
-                var nameOfDay = Console.ReadLine();
+                // !!! Aici trebuie cu id (int)
+                Console.WriteLine("Id Day (ex: 1 - Monday, 2 - Tuesday, ..., 5 - Friday) ?");
+                var dayId = Int32.Parse(Console.ReadLine());
 
-                // ??? Cand cer input-ul de start/end time pt. day, n-am stiut sigur cum sa-l iau, si l-am lasat de tipul string si cumva o sa-l convertesc in TimeSpan, dar conteaza si cum il scrie employee, sa nu provoace erori (chiar daca ofer exemplu). E ok?
-                Console.WriteLine("What is the start time? (ex: 09:30:05 or 18:00:00)");
+                Console.WriteLine("What is the start time (ex: 09:30:05 or 18:00:00)?");
                 var start = Console.ReadLine();
 
                 Console.WriteLine("What is the end time?");
                 var end = Console.ReadLine();
 
-                await mediator.Send(new CreateWorkingDayQuery
+                await mediator.Send(new CreateWorkingDayCommand
                 {
                     EmployeeId = employeeId,
-                    NameOfDay = nameOfDay,
+                    DayId = dayId,
                     StartTime = start,
                     EndTime = end
                 });
