@@ -13,8 +13,6 @@
   <ItemGroup>
     <Folder Include="Appointments\Queries\GetAllCustomerAppointments\" />
     <Folder Include="Appointments\Queries\GetAllCustomerAppointmentsInWork\" />
-    <Folder Include="Customers\" />
-    <Folder Include="HairServices\Commands\" />
   </ItemGroup>
 
   <ItemGroup>

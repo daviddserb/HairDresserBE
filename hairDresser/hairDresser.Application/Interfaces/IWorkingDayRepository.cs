@@ -11,7 +11,7 @@ namespace hairDresser.Application.Interfaces
     {
         Task CreateWorkingDayAsync(WorkingDay workingDay);
         Task<WorkingDay> GetWorkingDayAsync(int dayId);
-        Task<IEnumerable<WorkingDay>> GetWorkingDayAsync(int employeeId, string nameOfDay);
+        Task<IEnumerable<WorkingDay>> GetWorkingDayAsync(int employeeId, int dayId);
         Task<IEnumerable<WorkingDay>> ReadWorkingDaysAsync();
         Task UpdateWorkingDayAsync();
         Task DeleteWorkingDayAsync();

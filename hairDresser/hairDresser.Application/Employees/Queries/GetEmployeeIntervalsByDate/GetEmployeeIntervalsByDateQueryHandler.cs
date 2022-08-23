@@ -11,57 +11,61 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
 {
     public class GetEmployeeIntervalsByDateQueryHandler : IRequestHandler<GetEmployeeIntervalsByDateQuery, List<(DateTime startDate, DateTime endDate)>>
     {
-        private readonly IAppointmentRepository _appointmentRepository;
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IAppointmentRepository _appointmentRepository;
+        private readonly IDayRepository _dayRepository;
         private readonly IWorkingDayRepository _workingDayRepository;
 
-        public GetEmployeeIntervalsByDateQueryHandler(IAppointmentRepository appointmentRepository, IEmployeeRepository employeeRepository, IWorkingDayRepository workingDayRepository)
+        public GetEmployeeIntervalsByDateQueryHandler(IAppointmentRepository appointmentRepository, IEmployeeRepository employeeRepository, IDayRepository dayRepository, IWorkingDayRepository workingDayRepository)
         {
-            _appointmentRepository = appointmentRepository;
             _employeeRepository = employeeRepository;
+            _appointmentRepository = appointmentRepository;
+            _dayRepository = dayRepository;
             _workingDayRepository = workingDayRepository;
         }
 
         public async Task<List<(DateTime startDate, DateTime endDate)>> Handle(GetEmployeeIntervalsByDateQuery request, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Handler ->");
+            Console.WriteLine("GetEmployeeIntervalsByDateQueryHandler:");
 
-            var employeeById = await _employeeRepository.GetEmployeeAsync(request.EmployeeId);
-            var employeeName = employeeById.Name;
-            Console.WriteLine("employeeName= " + employeeName);
+            var employee = await _employeeRepository.GetEmployeeAsync(request.EmployeeId);
+            Console.WriteLine($"employeeName= '{employee.Name}'");
 
             var appointmentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, request.Date);
-            Console.WriteLine("appointmentDate (ignoram Time, am setat doar Date-ul)= " + appointmentDate);
+            Console.WriteLine($"appointmentDate (ignoram Time-ul, am setat doar Date-ul (Day) in Anul curent si Luna curenta= '{appointmentDate}'");
 
             var duration = TimeSpan.FromMinutes(request.DurationInMinutes);
-            Console.WriteLine("duration (from minutes transformed in TimeSpan)= " + duration);
+            Console.WriteLine($"duration (from minutes transformed in TimeSpan)== '{duration}'");
 
             var employeeAppointmentsDates = new List<(DateTime startDate, DateTime endDate)>();
-            Console.WriteLine("\nAll about the appointments from the selected employee and selected day:");
-            foreach (var app in await _appointmentRepository.GetAppointmentsInWorkAsync(employeeName, appointmentDate))
+            Console.WriteLine("\nAll about the appointments from the selected employee and the selected date:");
+            foreach (var app in await _appointmentRepository.GetAppointmentsInWorkAsync(employee.Name, appointmentDate))
             {
                 employeeAppointmentsDates.Add((app.StartDate, app.EndDate));
                 Console.WriteLine($"customer= '{app.CustomerName}', employee= '{app.EmployeeName}', services= '{app.HairServices}', start= '{app.StartDate}', end= '{app.EndDate}'");
             }
 
             var nameOfDay = appointmentDate.ToString("dddd");
-            Console.WriteLine($"\nThe name of the day based on the selected date is= '{nameOfDay}'");
-            var timeOfDay = await _workingDayRepository.GetWorkingDayAsync(request.EmployeeId, nameOfDay);
+            Console.WriteLine($"\nname of the day based on the selected date is= '{nameOfDay}'");
+
+            var day = await _dayRepository.GetDayAsync(nameOfDay);
+            Console.WriteLine($"day: Id= '{day.Id}', Name= '{day.Name}'");
+
+            var employeeWorkingIntervals = await _workingDayRepository.GetWorkingDayAsync(request.EmployeeId, day.Id);
             var possibleIntervals = new List<DateTime>();
-            foreach (var day in timeOfDay)
+            foreach (var intervals in employeeWorkingIntervals)
             {
-                Console.WriteLine("TIME OF THE DAY: " + day.StartTime + " -> " + day.EndTime);
-                possibleIntervals.Add(appointmentDate.Add(day.StartTime));
+                Console.WriteLine($"day intervals (start - end): '{intervals.StartTime}' - '{intervals.EndTime}'");
+                possibleIntervals.Add(appointmentDate.Add(intervals.StartTime));
                 foreach (var app in employeeAppointmentsDates)
                 {
-                    //Console.WriteLine("start/end appointment:" + app.startDate + " - " + app.endDate);
-                    if (day.StartTime <= app.startDate.TimeOfDay && app.endDate.TimeOfDay <= day.EndTime)
+                    if (intervals.StartTime <= app.startDate.TimeOfDay && app.endDate.TimeOfDay <= intervals.EndTime)
                     {
                         possibleIntervals.Add(app.startDate);
                         possibleIntervals.Add(app.endDate);
                     }
                 }
-                possibleIntervals.Add(appointmentDate.Add(day.EndTime));
+                possibleIntervals.Add(appointmentDate.Add(intervals.EndTime));
             }
             Console.WriteLine("\nPossible Intervals:");
             foreach (var intervals in possibleIntervals)
@@ -76,7 +80,8 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
                 var startOfInterval = possibleIntervals[i];
                 var copy_startOfInterval = startOfInterval;
                 var endOfInterval = possibleIntervals[i + 1];
-                Console.WriteLine("startInterval=" + startOfInterval.TimeOfDay + ", endInterval=" + endOfInterval.TimeOfDay + "\nValid dates in the interval:");
+                Console.WriteLine($"intervals (start - end): '{startOfInterval.TimeOfDay}' - '{endOfInterval.TimeOfDay}'");
+                Console.WriteLine("Valid dates:");
                 while ((startOfInterval += duration) <= endOfInterval)
                 {
                     Console.WriteLine(copy_startOfInterval.TimeOfDay + " - " + startOfInterval.TimeOfDay);
@@ -84,90 +89,12 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
                     copy_startOfInterval = startOfInterval;
                 }
             }
-            Console.WriteLine("\nAll valid intervals:");
-            foreach (var intervals in validIntervals)
-            {
-                Console.WriteLine($"start= '{intervals.startDate}', end= '{intervals.endDate}'");
-            }
+            //Console.WriteLine("\nAll valid intervals:");
+            //foreach (var intervals in validIntervals)
+            //{
+            //    Console.WriteLine($"start= '{intervals.startDate}', end= '{intervals.endDate}'");
+            //}
             return await Task.FromResult(validIntervals);
         }
     }
 }
-
-/* BEFORE (When it wasn't EmployeeId in the WorkingDay, so he would have only one start and end date).
-            Console.WriteLine("Handler ->");
-
-            var employeeById = await _employeeRepository.GetEmployeeAsync(request.EmployeeId);
-            var employeeName = employeeById.Name;
-            Console.WriteLine("employeeName= " + employeeName);
-
-            var appointmentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, request.Date);
-            Console.WriteLine("appointmentDate (putem ignora ora setata, nu este importanta): " + appointmentDate);
-
-            var duration = TimeSpan.FromMinutes(request.DurationInMinutes);
-            Console.WriteLine("duration (from minutes transformed in TimeSpan): " + duration);
-
-            var employeeAppointmentsDates = new List<(DateTime startDate, DateTime endDate)>();
-            Console.WriteLine("\nAll about the appointments from the selected employee and the selected day:");
-            foreach (var app in await _appointmentRepository.GetAppointmentsInWorkAsync(employeeName, appointmentDate))
-            {
-                employeeAppointmentsDates.Add((app.StartDate, app.EndDate));
-                Console.WriteLine($"customer= '{app.CustomerName}', employee= '{app.EmployeeName}', services= '{app.HairServices}', start= '{app.StartDate}', end= '{app.EndDate}'");
-            }
-
-            var sorted_employeeAppointments = employeeAppointmentsDates.OrderBy(s => s.Item1);
-            Console.WriteLine("Only the dates sorted:");
-            foreach (var sapp in sorted_employeeAppointments)
-            {
-                Console.WriteLine(sapp.startDate + " - " + sapp.endDate);
-            }
-
-            var nameOfDay = appointmentDate.ToString("dddd");
-            Console.WriteLine($"The name of the day based on the selected date is= '{nameOfDay}'");
-
-            var timeOfDay = await _workingDayRepository.GetWorkingDayAsync(nameOfDay);
-            Console.WriteLine($"start= '{timeOfDay.StartTime}', end= '{timeOfDay.EndTime}'");
-            var timeOfDay_withDate_start = appointmentDate.Add(timeOfDay.StartTime);
-            var timeOfDay_withDate_end = appointmentDate.Add(timeOfDay.EndTime);
-
-            var possibleIntervals = new List<DateTime>();
-            possibleIntervals.Add(timeOfDay_withDate_start);
-            foreach (var sapp in sorted_employeeAppointments)
-            {
-                possibleIntervals.Add(sapp.startDate);
-                possibleIntervals.Add(sapp.endDate);
-            }
-            possibleIntervals.Add(timeOfDay_withDate_end);
-
-            Console.WriteLine("Possible intervals:");
-            foreach (var intervals in possibleIntervals)
-            {
-                Console.WriteLine(intervals);
-            }
-
-            var validIntervals = new List<(DateTime startDate, DateTime endDate)>();
-            Console.WriteLine("\nCheck for valid intervals:");
-            for (int i = 0; i < possibleIntervals.Count - 1; i += 2)
-            {
-                var startOfInterval = possibleIntervals[i];
-                var copy_startOfInterval = startOfInterval;
-                var endOfInterval = possibleIntervals[i + 1];
-                Console.WriteLine("startOfInterval= " + startOfInterval);
-                Console.WriteLine("endOfInterval= " + endOfInterval);
-
-                while ((startOfInterval += duration) <= endOfInterval)
-                {
-                    Console.WriteLine("Valid dates in this interval: " + copy_startOfInterval + " - " + startOfInterval);
-                    validIntervals.Add((copy_startOfInterval, startOfInterval));
-                    copy_startOfInterval = startOfInterval;
-                }
-            }
-
-            Console.WriteLine("\nAll valid intervals:");
-            foreach (var intervals in validIntervals)
-            {
-                Console.WriteLine($"start= '{intervals.startDate}', end= '{intervals.endDate}'");
-            }
-
-            return await Task.FromResult(validIntervals);
-*/

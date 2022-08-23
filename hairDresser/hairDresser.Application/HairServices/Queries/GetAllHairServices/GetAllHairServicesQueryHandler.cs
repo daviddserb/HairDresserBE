@@ -11,7 +11,7 @@ namespace hairDresser.Application.HairServices.Queries
 {
     public class GetAllHairServicesQueryHandler : IRequestHandler<GetAllHairServicesQuery, IEnumerable<HairService>>
     {
-        private IHairServiceRepository _hairServiceRepository;
+        private readonly IHairServiceRepository _hairServiceRepository;
         public GetAllHairServicesQueryHandler(IHairServiceRepository hairServiceRepository)
         {
             _hairServiceRepository = hairServiceRepository;
@@ -19,8 +19,7 @@ namespace hairDresser.Application.HairServices.Queries
 
         public async Task<IEnumerable<HairService>> Handle(GetAllHairServicesQuery request, CancellationToken cancellationToken)
         {
-            var allServices = await _hairServiceRepository.ReadHairServicesAsync();
-            return allServices;
+            return await _hairServiceRepository.ReadHairServicesAsync();
         }
     }
 }

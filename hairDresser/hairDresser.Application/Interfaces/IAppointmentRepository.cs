@@ -10,10 +10,10 @@ namespace hairDresser.Application.Interfaces
     public interface IAppointmentRepository
     {
         Task CreateAppointmentAsync(Appointment appointment);
-        Task<IEnumerable<Appointment>> GetAllCustomerAppointmentsAsync(string customerName);
-        Task<IEnumerable<Appointment>> GetAllCustomerAppointmentsInWorkAsync(string customerName);
-        Task<IEnumerable<Appointment>> GetAppointmentsInWorkAsync(string employeeName, DateTime date);
-        Task<IEnumerable<Appointment>> ReadAppointmentsAsync();
+        Task<IQueryable<Appointment>> GetAllCustomerAppointmentsAsync(string customerName);
+        Task<IQueryable<Appointment>> GetAllCustomerAppointmentsInWorkAsync(string customerName);
+        Task<IQueryable<Appointment>> GetAppointmentsInWorkAsync(string employeeName, DateTime date);
+        Task<IQueryable<Appointment>> ReadAppointmentsAsync();
         Task UpdateAppointmentAsync(Appointment appointment);
         Task DeleteAppointmentAsync(Appointment appointment);
     }

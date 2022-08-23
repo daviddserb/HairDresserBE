@@ -8,7 +8,5 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Employees.Queries.GetAllEmployees
 {
-    public class GetAllEmployeesQuery : IRequest<IEnumerable<Employee>>
-    {
-    }
+    public class GetAllEmployeesQuery : IRequest<IEnumerable<Employee>>{}
 }

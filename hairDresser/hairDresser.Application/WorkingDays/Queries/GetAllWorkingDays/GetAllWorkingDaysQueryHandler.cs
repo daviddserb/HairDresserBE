@@ -11,7 +11,7 @@ namespace hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays
 {
     public class GetAllWorkingDaysQueryHandler : IRequestHandler<GetAllWorkingDaysQuery, IEnumerable<WorkingDay>>
     {
-        private IWorkingDayRepository _workingDayRepository;
+        private readonly IWorkingDayRepository _workingDayRepository;
         public GetAllWorkingDaysQueryHandler(IWorkingDayRepository workingDayRepository)
         {
             _workingDayRepository = workingDayRepository;

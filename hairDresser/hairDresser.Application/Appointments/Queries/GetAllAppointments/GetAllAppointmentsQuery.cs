@@ -8,7 +8,5 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Appointments.Queries.GetAllAppointments
 {
-    public class GetAllAppointmentsQuery : IRequest<IEnumerable<Appointment>>
-    {
-    }
+    public class GetAllAppointmentsQuery : IRequest<IEnumerable<Appointment>>{}
 }

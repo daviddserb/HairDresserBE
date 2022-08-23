@@ -9,32 +9,28 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.WorkingDays.Commands.CreateWorkingDay
 {
-    public class CreateWorkingDayHandler : IRequestHandler<CreateWorkingDayCommand>
+    public class CreateWorkingDayCommandHandler : IRequestHandler<CreateWorkingDayCommand>
     {
-        private IWorkingDayRepository _workingDayRepository;
+        private readonly IWorkingDayRepository _workingDayRepository;
 
-        public CreateWorkingDayHandler(IWorkingDayRepository workingDayRepository)
+        public CreateWorkingDayCommandHandler(IWorkingDayRepository workingDayRepository)
         {
             _workingDayRepository = workingDayRepository;
         }
 
         public async Task<Unit> Handle(CreateWorkingDayCommand request, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Handle ->");
+            Console.WriteLine("Handle:");
 
             var employeeId = request.EmployeeId;
-
-            var day = await _workingDayRepository.GetWorkingDayAsync(request.DayId);
-            var nameOfDay = day.Name;
-
             var startTime = TimeSpan.Parse(request.StartTime);
             var endTime = TimeSpan.Parse(request.EndTime);
 
-            // Validation for startTime and endTime to don't overlap other intervals.
-            Console.WriteLine("Check if the Interval (startTime - endTime) is not overlapping with other intervals:");
-            var allEmployeeIntervalsInSelectedDay = await _workingDayRepository.GetWorkingDayAsync(employeeId, nameOfDay);
+            // Validation for the selected interval (startTime -> endTime) to don't overlap other intervals. And to be at least 1 hour between all working intervals.
+            Console.WriteLine("Check if the Interval (startTime -> endTime) is not overlapping with other intervals:");
+            var allEmployeeWorkingIntervals = await _workingDayRepository.GetWorkingDayAsync(employeeId, request.DayId);
             var isIntervalGood = true;
-            foreach (var intervals in allEmployeeIntervalsInSelectedDay)
+            foreach (var intervals in allEmployeeWorkingIntervals)
             {
                 Console.WriteLine("Existing interval -> " + intervals.StartTime + " - " + intervals.EndTime);
                 bool overlap = startTime < intervals.EndTime + new TimeSpan(01, 00, 00) && intervals.StartTime - new TimeSpan(01, 00, 00) < endTime;
@@ -51,8 +47,8 @@ namespace hairDresser.Application.WorkingDays.Commands.CreateWorkingDay
                 Console.WriteLine("INTERVAL NOT OVERLAPPING");
                 var workingDay = new WorkingDay()
                 {
+                    DayId = request.DayId,
                     EmployeeId = employeeId,
-                    Name = nameOfDay,
                     StartTime = startTime,
                     EndTime = endTime,
                 };

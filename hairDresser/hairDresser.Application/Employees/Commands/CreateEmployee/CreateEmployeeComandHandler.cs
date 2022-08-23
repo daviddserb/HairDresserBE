@@ -20,12 +20,8 @@ namespace hairDresser.Application.Employees.Commands.CreateEmployee
 
         public async Task<Unit> Handle(CreateEmployeeComand request, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Handle ->");
+            Console.WriteLine("Handle:");
             var employee = new Employee();
-
-            var allEmployees = await _employeeRepository.ReadEmployeesAsync();
-
-            employee.Id = allEmployees.Max(employee => employee.Id) + 1;
 
             employee.Name = request.Name;
 

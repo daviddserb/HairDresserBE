@@ -1,4 +1,5 @@
 ﻿using hairDresser.Application.Interfaces;
+using hairDresser.Domain;
 using hairDresser.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -10,63 +11,50 @@ namespace hairDresser.Infrastructure.Repositories
 {
     public class EmployeeRepository : IEmployeeRepository
     {
-        private readonly List<Employee> _employees = new();
+        private readonly DataContext context;
 
-        public EmployeeRepository()
+        public EmployeeRepository(DataContext context)
         {
-            _employees.Add(new Employee { Id = 1, Name = "Matei Dima", Specialization = "wash, cut" });
-            _employees.Add(new Employee { Id = 2, Name = "Onofras Rica", Specialization = "cut, dye" });
+            this.context = context;
         }
 
         public async Task CreateEmployeeAsync(Employee employee)
         {
-            _employees.Add(employee);
+            await context.Employees.AddAsync(employee);
+            await context.SaveChangesAsync();
         }
 
-        // Get Employee By Id.
         public async Task<Employee> GetEmployeeAsync(int employeeId)
         {
-            return _employees.FirstOrDefault(obj => obj.Id == employeeId);
+            return context.Employees.First(obj => obj.Id == employeeId);
         }
 
-        // Get Employee By Services.
-        public async Task<IEnumerable<Employee>> GetEmployeesAsync(string servicesPickedByCustomer)
+        public async Task<IQueryable<Employee>> GetEmployeesAsync(string services)
         {
-            //var validEmployees = new List<Employee>();
-            //foreach(var employee in _employees)
-            //{
-            //    //var employeeSpecialization = employee.Specialization.ToUpperInvariant(); -> nu mai folosesc .ToUpperInvariant() pt. ca nu mai pot sa pun metoda si pe services
-            //    var employeeSpecialization = employee.Specialization;
-            //    Console.WriteLine("employeeSpecialization= " + employeeSpecialization);
-            //    bool matches = servicesPickedByCustomer.All(services => employeeSpecialization.Contains(services));
-            //    if (matches)
-            //    {
-            //        validEmployees.Add(employee);
-            //    }
-            //}
-
-            // Am simplificat algoritmul de sus:
-            var validEmployees = _employees.Where(obj => obj.Specialization.Contains(servicesPickedByCustomer));
-
+            var validEmployees = context.Employees.Where(obj => obj.Specialization.Contains(services));
             return validEmployees;
         }
 
-        public async Task<IEnumerable<Employee>> ReadEmployeesAsync()
+        public async Task<IQueryable<Employee>> ReadEmployeesAsync()
         {
-            return _employees;
+            // ??? Aici nu ar trebui sa folosesc await, cand ii extrag din tabela? Daca il pun am eroare. Daca nu mai trebuie, atunci o mai las async?
+            return context.Employees;
         }
 
         public async Task UpdateEmployeeAsync(Employee employee)
         {
             throw new NotImplementedException();
         }
-
         public async Task DeleteEmployeeAsync(int employeeId)
         {
-            var employee = _employees.SingleOrDefault(obj => obj.Id == employeeId);
-            if (employee != null)
+            try
             {
-                _employees.Remove(employee);
+                var employee = context.Employees.Single(e => e.Id == employeeId);
+                context.Remove(employee);
+                await context.SaveChangesAsync();
+            } catch
+            {
+                Console.WriteLine("Nu exista employee-ul cu acel id.");
             }
         }
     }

@@ -11,7 +11,7 @@ namespace hairDresser.Application.Interfaces
     {
         Task CreateCustomerAsync(Customer customer);
         Task<Customer> GetCustomerAsync(string customerUsername);
-        Task<IEnumerable<Customer>> ReadCustomersAsync();
+        Task<IQueryable<Customer>> ReadCustomersAsync();
         Task UpdateCustomerAsync(Customer customer);
         Task DeleteCustomerAsync(Customer customer);
     }
