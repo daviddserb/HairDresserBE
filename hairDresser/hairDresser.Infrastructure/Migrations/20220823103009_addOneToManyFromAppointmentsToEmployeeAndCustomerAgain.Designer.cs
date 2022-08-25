@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hairDresser.Infrastructure;
 
@@ -11,9 +12,10 @@ using hairDresser.Infrastructure;
 namespace hairDresser.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class AppointmentsContextModelSnapshot : ModelSnapshot
+    [Migration("20220823103009_addOneToManyFromAppointmentsToEmployeeAndCustomerAgain")]
+    partial class addOneToManyFromAppointmentsToEmployeeAndCustomerAgain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,11 +35,23 @@ namespace hairDresser.Infrastructure.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
+                    b.Property<string>("EmployeeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("HairServices")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -49,29 +63,6 @@ namespace hairDresser.Infrastructure.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("Appointments");
-                });
-
-            modelBuilder.Entity("hairDresser.Domain.Models.AppointmentHairService", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("AppointmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HairServiceId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppointmentId");
-
-                    b.HasIndex("HairServiceId");
-
-                    b.ToTable("AppointmentsHairServices");
                 });
 
             modelBuilder.Entity("hairDresser.Domain.Models.Customer", b =>
@@ -140,32 +131,13 @@ namespace hairDresser.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Specialization")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("hairDresser.Domain.Models.EmployeeHairService", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HairServiceId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("HairServiceId");
-
-                    b.ToTable("EmployeesHairServices");
                 });
 
             modelBuilder.Entity("hairDresser.Domain.Models.HairService", b =>
@@ -213,10 +185,6 @@ namespace hairDresser.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DayId");
-
-                    b.HasIndex("EmployeeId");
-
                     b.ToTable("WorkingDays");
                 });
 
@@ -239,68 +207,6 @@ namespace hairDresser.Infrastructure.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("hairDresser.Domain.Models.AppointmentHairService", b =>
-                {
-                    b.HasOne("hairDresser.Domain.Models.Appointment", "Appointment")
-                        .WithMany("AppointmentHairService")
-                        .HasForeignKey("AppointmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("hairDresser.Domain.Models.HairService", "HairService")
-                        .WithMany("AppointmentHairService")
-                        .HasForeignKey("HairServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Appointment");
-
-                    b.Navigation("HairService");
-                });
-
-            modelBuilder.Entity("hairDresser.Domain.Models.EmployeeHairService", b =>
-                {
-                    b.HasOne("hairDresser.Domain.Models.Employee", "Employee")
-                        .WithMany("EmployeeHairService")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("hairDresser.Domain.Models.HairService", "HairService")
-                        .WithMany("EmployeeHairService")
-                        .HasForeignKey("HairServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("HairService");
-                });
-
-            modelBuilder.Entity("hairDresser.Domain.Models.WorkingDay", b =>
-                {
-                    b.HasOne("hairDresser.Domain.Models.Day", "Day")
-                        .WithMany()
-                        .HasForeignKey("DayId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("hairDresser.Domain.Models.Employee", "Employee")
-                        .WithMany("WorkingDays")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Day");
-
-                    b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("hairDresser.Domain.Models.Appointment", b =>
-                {
-                    b.Navigation("AppointmentHairService");
-                });
-
             modelBuilder.Entity("hairDresser.Domain.Models.Customer", b =>
                 {
                     b.Navigation("Appointments");
@@ -309,17 +215,6 @@ namespace hairDresser.Infrastructure.Migrations
             modelBuilder.Entity("hairDresser.Domain.Models.Employee", b =>
                 {
                     b.Navigation("Appointments");
-
-                    b.Navigation("EmployeeHairService");
-
-                    b.Navigation("WorkingDays");
-                });
-
-            modelBuilder.Entity("hairDresser.Domain.Models.HairService", b =>
-                {
-                    b.Navigation("AppointmentHairService");
-
-                    b.Navigation("EmployeeHairService");
                 });
 #pragma warning restore 612, 618
         }

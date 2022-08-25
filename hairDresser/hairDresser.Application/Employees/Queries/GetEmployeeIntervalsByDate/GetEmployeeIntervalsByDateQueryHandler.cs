@@ -42,7 +42,8 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
             foreach (var app in await _appointmentRepository.GetAppointmentsInWorkAsync(employee.Name, appointmentDate))
             {
                 employeeAppointmentsDates.Add((app.StartDate, app.EndDate));
-                Console.WriteLine($"customer= '{app.CustomerName}', employee= '{app.EmployeeName}', services= '{app.HairServices}', start= '{app.StartDate}', end= '{app.EndDate}'");
+                //???
+                //Console.WriteLine($"customer= '{app.CustomerName}', employee= '{app.EmployeeName}', services= '{app.HairServices}', start= '{app.StartDate}', end= '{app.EndDate}'");
             }
 
             var nameOfDay = appointmentDate.ToString("dddd");

@@ -22,13 +22,12 @@ namespace hairDresser.Application.WorkingDays.Commands.CreateWorkingDay
         {
             Console.WriteLine("Handle:");
 
-            var employeeId = request.EmployeeId;
             var startTime = TimeSpan.Parse(request.StartTime);
             var endTime = TimeSpan.Parse(request.EndTime);
 
-            // Validation for the selected interval (startTime -> endTime) to don't overlap other intervals. And to be at least 1 hour between all working intervals.
+            // Validation for the selected interval (startTime -> endTime) to don't overlap other intervals and to be at least 1 hour between all working intervals.
             Console.WriteLine("Check if the Interval (startTime -> endTime) is not overlapping with other intervals:");
-            var allEmployeeWorkingIntervals = await _workingDayRepository.GetWorkingDayAsync(employeeId, request.DayId);
+            var allEmployeeWorkingIntervals = await _workingDayRepository.GetWorkingDayAsync(request.EmployeeId, request.DayId);
             var isIntervalGood = true;
             foreach (var intervals in allEmployeeWorkingIntervals)
             {
@@ -48,11 +47,10 @@ namespace hairDresser.Application.WorkingDays.Commands.CreateWorkingDay
                 var workingDay = new WorkingDay()
                 {
                     DayId = request.DayId,
-                    EmployeeId = employeeId,
+                    EmployeeId = request.EmployeeId,
                     StartTime = startTime,
                     EndTime = endTime,
                 };
-
                 await _workingDayRepository.CreateWorkingDayAsync(workingDay);
             }
 

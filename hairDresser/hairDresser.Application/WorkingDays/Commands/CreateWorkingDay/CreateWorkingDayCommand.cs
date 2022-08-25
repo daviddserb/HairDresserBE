@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using hairDresser.Domain.Models;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;

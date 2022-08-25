@@ -15,11 +15,46 @@ using hairDresser.Application.HairServices.Queries;
 using hairDresser.Application.Interfaces;
 using hairDresser.Application.WorkingDays.Commands.CreateWorkingDay;
 using hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays;
+using hairDresser.Domain.Models;
 using hairDresser.Infrastructure;
 using hairDresser.Infrastructure.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+
+//---START TESTING---
+//var list = new List<Tuple<string, int>>();
+//list.Add(new Tuple<string, int>("1", 1));
+//list.Add(new Tuple<string, int>("1", 2));
+//list.Add(new Tuple<string, int>("1", 6));
+
+//list.Add(new Tuple<string, int>("2", 2));
+//list.Add(new Tuple<string, int>("2", 3));
+//list.Add(new Tuple<string, int>("2", 5));
+//list.GroupBy(obj => obj.Item1);
+//foreach (var lists in list.GroupBy(obj => obj.Item1))
+//{
+//    Console.WriteLine(lists.Key);
+//    foreach(var l in lists)
+//    {
+//        Console.WriteLine(l);
+//    }
+//}
+
+//List<List<string>> myList = new List<List<string>>();
+//myList.Add(new List<string> { "1", "1" });
+//myList.Add(new List<string> { "1", "2"});
+//myList.Add(new List<string> { "1", "6"});
+//myList.Add(new List<string> { "2", "2" });
+//myList.Add(new List<string> { "2", "3" });
+//myList.Add(new List<string> { "2", "5" });
+//// To iterate over it.
+//foreach (var subList in myList)
+//{
+//    Console.WriteLine(subList[0] + " " + subList[1]);
+//}
+
+//---FINISH TESTING---
 
 //Intrebari -> ???
 // La Read Appointment, are voie un Customer sa aiba 2 progamari in viitor? De ex. suntem pe data de 13 si el sa aiba un appointment pe data de 14 si inca unul pe data de 19?
@@ -27,20 +62,25 @@ using Microsoft.Extensions.DependencyInjection;
 //Tot in functie de asta, la functionalitatea de UpdateAppointment, ma gandesc ca tot trebuie sa ii dau o lista cu appointment-urile pe care le are in viitor (in proces) si de acolo sa aleaga unul. Dar dupa asta, la ce mai exact sa faca update? Ma gandesc sa aiba 3 optiuni: hairservices, employee si date. Astfel, aici ma gandeam cumva sa repet algoritmul de la CreateAppointment. Este ok?
 
 // Application -> Employees -> Queries - GetEmployeeIntervalsByDateQuery
-// Infrastructure -> EmployeeRepository
-// Domain -> Models -> WorkingDay
-// In Infrastructure -> Migrari, pt. ca le-am mutat din Domain, la namespace daca schimb din Domain in Infrastructure, am ceva erori la: BuildModel, BuildTargetModel
 
-// Trebuie sa ma gandesc la o relatie cand CreateEmployee. Adica eu ii dau numele si dupa serviciile pe care le face. Dar aici, ma gandesc la 2 optiuni:
-//1. Eu in tabela HairServices sa am toate serviciile pe care le vreau ca employee mei sa le faca, nu si altele si atunci employee isi alege din lista ce stie el sa faca.
-//2. Cand employee isi adauga serviciile, poate unul din ele nu il am in tabela mea HairServices si atunci cumva ar trebui sa il adaug ca sa ii pot da o durata si un price.
-//Cum mai exact sa fac?
+//!!! Unde am modificari de facut dupa ce am amplicat: One-To-Many intre Appointment si Customer, Appointment si Employee + Many-To-Many intre Appointment si HairService.
+// AppointmentRepository
+// GetEmployeeIntervalsByDateQueryHandler
+
+//!!! Unde am modificari de facut dupa ce am amplicat Many-To-Many intre Employee si HairService:
+// EmployeeRepository
+
+//!!!
+// Sa schimb din:
+// WorkingDay -> WorkingIntervals
+// dupa ce am facut schimbarea asta, pot trece la urmatoarea:
+// Day -> WorkingDay
 
 bool showMenu = true;
 
 // di = Dependency Injection
 var diContainer = new ServiceCollection()
-    //
+    //Facem legatura cu server-ul nostru din DB.
     .AddDbContext<DataContext>(options => options.UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDb;Trusted_Connection=True;MultipleActiveResultSets=True;"))
 
     // De fiecare data cand vei vedea ca cineva depinde de IHairServiceRepository, creezi o instanta de HairServiceRepository (la fel si pt. restul).
@@ -105,20 +145,19 @@ async Task<bool> MainMenuAsync()
     {
         case "00":
             {
-                Console.WriteLine("Customer Name?");
-                var customerName = Console.ReadLine();
+                Console.WriteLine("Customer Id?");
+                var customerId = Int32.Parse(Console.ReadLine());
 
                 Console.WriteLine("Employee Id?");
                 var employeeId = Int32.Parse(Console.ReadLine());
 
-                Console.WriteLine("Hair services? Type each number on a new line. Press the ENTER button to stop.");
+                Console.WriteLine("Services? Type each number on a new line. Press the ENTER button to stop.");
                 var allHairServices = await mediator.Send(new GetAllHairServicesQuery());
                 foreach (var service in allHairServices)
                 {
-                    Console.WriteLine($"id= '{service.Id}' -> name= '{service.Name}', duration= '{service.Duration}', price= '{service.Price}'");
+                    Console.WriteLine($"{service.Id} - '{service.Name}', '{service.Duration}', '{service.Price}'");
                 }
 
-                // !!! Aici tot id-uri trebuie sa inserez
                 var hairServicesId = new List<int>();
                 var inputService = Console.ReadLine();
                 while (inputService != "")
@@ -134,7 +173,7 @@ async Task<bool> MainMenuAsync()
 
                 await mediator.Send(new CreateAppointmentCommand
                 {
-                    CustomerName = customerName,
+                    CustomerId = customerId,
                     EmployeeId = employeeId,
                     HairServicesId = hairServicesId,
                     StartDate = start,
@@ -147,7 +186,7 @@ async Task<bool> MainMenuAsync()
                 var allAppointments = await mediator.Send(new GetAllAppointmentsQuery());
                 foreach (var app in allAppointments)
                 {
-                    Console.WriteLine(app.Id + " - " + app.CustomerName + " - " + app.EmployeeName + " - " + app.HairServices + " - " + app.StartDate + " - " + app.EndDate);
+                    Console.WriteLine($"{app.Id} - '{app.Customer.Name}', '{app.Employee.Name}', '{app.StartDate}', '{app.EndDate}'");
                 }
                 return true;
             }
@@ -156,35 +195,43 @@ async Task<bool> MainMenuAsync()
                 Console.WriteLine("\nEmployee Name?");
                 var name = Console.ReadLine();
 
-                // ??? Aici cand vreau sa creez un Employee, cand se adauga specializarile lui, ele trebuie sa fie de tip string, adica nu mai poti cu id (int), corect?
-                Console.WriteLine("Specializations? Type each one on a new line. Press the ENTER button to stop.");
-                var specializations = new List<string>();
-                var skills = Console.ReadLine();
-                while (skills != "")
+                Console.WriteLine("Specializations? Type each number on a new line. Press the ENTER button to stop.");
+                var allServices = await mediator.Send(new GetAllHairServicesQuery());
+                foreach (var service in allServices)
                 {
-                    specializations.Add(skills);
-                    skills = Console.ReadLine();
+                    Console.WriteLine($"id = '{service.Id}'-> name = '{service.Name}', duration= '{service.Duration}', price= '{service.Price}'");
+                }
+                var specializationsIds = new List<int>();
+                var employeeSpecialization = Console.ReadLine();
+                while (employeeSpecialization != "")
+                {
+                    specializationsIds.Add(Int32.Parse(employeeSpecialization));
+                    employeeSpecialization = Console.ReadLine();
                 }
 
                 await mediator.Send(new CreateEmployeeComand
                 {
                     Name = name,
-                    Specializations = specializations
+                    SpecializationsIds = specializationsIds
                 });
                 return true;
             }
-
         case "11":
             {
                 var allEmployees = await mediator.Send(new GetAllEmployeesQuery());
                 Console.Write("All employees:\n");
+                //???Cum pot accesa Hairservices a unui Employee, cand am o legatura de Many-To-Many intre ei? Aici nu cred ca mai pot si nu are rost sa fac join (include) intre Employee si HairServices, ci sa lucrez direct pe tabela EmployeeHairServices, dar dupa ce returnez context.EmployeeHairServices in repository (intrebare: ii ok sa returnez in repository-ul Employee ceva de tipul altei clase, in cazul de fata EmployeeHairServices?), aici nu pot sa fac object.EmployeeHairServices.Employee de exemplu.
                 foreach (var employee in allEmployees)
                 {
-                    Console.WriteLine($"id= '{employee.Id}', name= '{employee.Name}', specialization= '{employee.Specialization}'");
+                    Console.WriteLine("employee= " + employee.Name);
+                    //BEFORE:
+                    //Console.WriteLine($"{employee.Id} - name= '{employee.Name}', specializations= '?'");
+
+                    //AFTER: (merge dar trebuie cumva sa fac GroupBy() cred in Repository si am erori)
+                    //Console.WriteLine($"{employee.EmployeeId} - '{employee.Employee.Name}', '{employee.HairService.Name}'");
                 }
                 return true;
             }
-
         case "12":
             {
                 Console.WriteLine("Hair services? Type each number on a new line. Press the ENTER button to stop.");
@@ -210,14 +257,14 @@ async Task<bool> MainMenuAsync()
                 else
                 {
                     Console.WriteLine("All employees who can help you:");
+                    //???Cum pot accesa specializarile unui employee?
                     foreach (var employee in validEmployees)
                     {
-                        Console.WriteLine(employee.Id + " - " + employee.Name + " - " + employee.Specialization);
+                        Console.WriteLine($"{employee.Id} - name= '{employee.Name}', specializations= '?'");
                     }
                 }
                 return true;
             }
-
         case "13":
             {
                 Console.WriteLine("Employee Id?");
@@ -243,7 +290,6 @@ async Task<bool> MainMenuAsync()
                 }
                 return true;
             }
-
         case "15":
             {
                 Console.WriteLine("Employee Id?");
@@ -255,7 +301,6 @@ async Task<bool> MainMenuAsync()
                 });
                 return true;
             }
-
         case "20":
             {
                 Console.WriteLine("Name?");
@@ -288,7 +333,6 @@ async Task<bool> MainMenuAsync()
 
                 return true;
             }
-
         case "21":
             {
                 Console.WriteLine("All customers:");
@@ -299,7 +343,6 @@ async Task<bool> MainMenuAsync()
                 }
                 return true;
             }
-
         case "30":
             {
                 Console.WriteLine("Day Id? (ex: 1 - Monday, 2 - Tuesday, ..., 5 - Friday)");
@@ -323,7 +366,6 @@ async Task<bool> MainMenuAsync()
                 });
                 return true;
             }
-
         case "31":
             {
                 var allWorkingDays = await mediator.Send(new GetAllWorkingDaysQuery());
@@ -333,12 +375,10 @@ async Task<bool> MainMenuAsync()
                     {
                         Id = workingDay.EmployeeId
                     });
-
-                    Console.WriteLine($"employeeName= '{employee.Name}', dayId= '{workingDay.DayId}', start= '{workingDay.StartTime}', end= '{workingDay.EndTime}'");
+                    Console.WriteLine($"{workingDay.Id} - '{workingDay.Day.Name}', '{employee.Name}', '{workingDay.StartTime}', '{workingDay.EndTime}'");
                 }
                 return true;
             }
-
         case "40":
             {
                 Console.WriteLine("Name?");
@@ -358,13 +398,12 @@ async Task<bool> MainMenuAsync()
                 });
                 return true;
             }
-
         case "41":
             {
                 var allServices = await mediator.Send(new GetAllHairServicesQuery());
                 foreach (var service in allServices)
                 {
-                    Console.WriteLine($"name= '{service.Name}', duration= '{service.Duration}', price= '{service.Price}'");
+                    Console.WriteLine($"id = '{service.Id}'-> name = '{service.Name}', duration= '{service.Duration}', price= '{service.Price}'");
                 }
                 return true;
             }
@@ -390,8 +429,6 @@ async Task<bool> MainMenuAsync()
                 }
                 return true;
             }
-
-        // default = cand nu se executa niciun alt case pt. ca input-ul nu corespunde.
         default:
             return true;
     }

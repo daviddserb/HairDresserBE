@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hairDresser.Infrastructure;
 
@@ -11,9 +12,10 @@ using hairDresser.Infrastructure;
 namespace hairDresser.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class AppointmentsContextModelSnapshot : ModelSnapshot
+    [Migration("20220824143525_addDbSetAppointmnetHairService")]
+    partial class addDbSetAppointmnetHairService
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,7 +73,7 @@ namespace hairDresser.Infrastructure.Migrations
 
                     b.HasIndex("HairServiceId");
 
-                    b.ToTable("AppointmentsHairServices");
+                    b.ToTable("AppointmentHairServices");
                 });
 
             modelBuilder.Entity("hairDresser.Domain.Models.Customer", b =>
@@ -165,7 +167,7 @@ namespace hairDresser.Infrastructure.Migrations
 
                     b.HasIndex("HairServiceId");
 
-                    b.ToTable("EmployeesHairServices");
+                    b.ToTable("EmployeeHairServices");
                 });
 
             modelBuilder.Entity("hairDresser.Domain.Models.HairService", b =>
@@ -286,7 +288,7 @@ namespace hairDresser.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("hairDresser.Domain.Models.Employee", "Employee")
-                        .WithMany("WorkingDays")
+                        .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -311,8 +313,6 @@ namespace hairDresser.Infrastructure.Migrations
                     b.Navigation("Appointments");
 
                     b.Navigation("EmployeeHairService");
-
-                    b.Navigation("WorkingDays");
                 });
 
             modelBuilder.Entity("hairDresser.Domain.Models.HairService", b =>

@@ -48,16 +48,17 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<WorkingDay> GetWorkingDayAsync(int dayId)
         {
-            Console.WriteLine("Repository, day = " + _workingDays.FirstOrDefault(obj => obj.DayId == dayId));
-            return _workingDays.FirstOrDefault(obj => obj.DayId == dayId);
+            throw new NotImplementedException();
+            //Console.WriteLine("Repository, day = " + _workingDays.FirstOrDefault(obj => obj.DayId == dayId));
+            //return _workingDays.FirstOrDefault(obj => obj.DayId == dayId);
         }
         
         public async Task<IEnumerable<WorkingDay>> GetWorkingDayAsync(int employeeId, string nameOfDay)
         {
-            return _workingDays
-                .Where(obj => obj.EmployeeId == employeeId)
-                .Where(obj => obj.DayId == 3);
-            //.Where(obj => obj.Name == nameOfDay); asta era inainte de al 2-lea Where
+            throw new NotImplementedException();
+            //return _workingDays
+            //.Where(obj => obj.EmployeeId == employeeId)
+            //.Where(obj => obj.DayId == 3);
         }
 
         public async Task<IEnumerable<WorkingDay>> ReadWorkingDaysAsync()

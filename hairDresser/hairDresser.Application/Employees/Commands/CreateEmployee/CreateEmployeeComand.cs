@@ -11,6 +11,6 @@ namespace hairDresser.Application.Employees.Commands.CreateEmployee
     public class CreateEmployeeComand : IRequest
     {
         public string Name { get; set; }
-        public List<string> Specializations { get; set; }
+        public List<int> SpecializationsIds { get; set; }
     }
 }

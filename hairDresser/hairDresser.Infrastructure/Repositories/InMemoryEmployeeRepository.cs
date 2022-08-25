@@ -14,8 +14,8 @@ namespace hairDresser.Infrastructure.Repositories
 
         public InMemoryEmployeeRepository()
         {
-            _employees.Add(new Employee { Id = 1, Name = "Matei Dima", Specialization = "wash, cut" });
-            _employees.Add(new Employee { Id = 2, Name = "Onofras Rica", Specialization = "cut, dye" });
+            //_employees.Add(new Employee { Id = 1, Name = "Matei Dima", Specialization = "wash, cut" });
+            //_employees.Add(new Employee { Id = 2, Name = "Onofras Rica", Specialization = "cut, dye" });
         }
 
         public async Task CreateEmployeeAsync(Employee employee)
@@ -47,9 +47,9 @@ namespace hairDresser.Infrastructure.Repositories
             //}
 
             //AFTER (am simplificat algoritmul de mai sus):
-            var validEmployees = _employees.Where(obj => obj.Specialization.Contains(servicesPickedByCustomer));
-
-            return validEmployees;
+            //var validEmployees = _employees.Where(obj => obj.Specialization.Contains(servicesPickedByCustomer));
+            //return validEmployees;
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Employee>> ReadEmployeesAsync()

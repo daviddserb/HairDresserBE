@@ -31,10 +31,10 @@ namespace hairDresser.Infrastructure.Repositories
             //AppointmentList.Add(new Appointment { Id = 11, CustomerName = "Vlad Apetrica", EmployeeName = "Onofras Rica", HairServices = "dye", StartDate = new DateTime(2022, 08, 17, 13, 38, 10), EndDate = new DateTime(2022, 09, 17, 15, 20, 10) });
 
             //In Work Appointments (Not Finished):
-            AppointmentList.Add(new Appointment { Id = 12, CustomerName = "Adrian Marin", EmployeeName = "Matei Dima", HairServices = "wash, cut", StartDate = new DateTime(2022, 08, 26, 16, 30, 00), EndDate = new DateTime(2022, 08, 26, 18, 00, 00) });
-            AppointmentList.Add(new Appointment { Id = 13, CustomerName = "Serb David", EmployeeName = "Matei Dima", HairServices = "wash", StartDate = new DateTime(2022, 08, 26, 12, 20, 00), EndDate = new DateTime(2022, 08, 26, 14, 00, 00) });
-            AppointmentList.Add(new Appointment { Id = 14, CustomerName = "Vlad Apetrica", EmployeeName = "Onofras Rica", HairServices = "cut, dye", StartDate = new DateTime(2022, 08, 26, 14, 00, 00), EndDate = new DateTime(2022, 08, 26, 15, 30, 00) });
-            AppointmentList.Add(new Appointment { Id = 15, CustomerName = "Vlad Apetrica", EmployeeName = "Onofras Rica", HairServices = "dye", StartDate = new DateTime(2022, 08, 26, 10, 30, 00), EndDate = new DateTime(2022, 08, 26, 11, 30, 00) });
+            //AppointmentList.Add(new Appointment { Id = 12, CustomerName = "Adrian Marin", EmployeeName = "Matei Dima", HairServices = "wash, cut", StartDate = new DateTime(2022, 08, 26, 16, 30, 00), EndDate = new DateTime(2022, 08, 26, 18, 00, 00) });
+            //AppointmentList.Add(new Appointment { Id = 13, CustomerName = "Serb David", EmployeeName = "Matei Dima", HairServices = "wash", StartDate = new DateTime(2022, 08, 26, 12, 20, 00), EndDate = new DateTime(2022, 08, 26, 14, 00, 00) });
+            //AppointmentList.Add(new Appointment { Id = 14, CustomerName = "Vlad Apetrica", EmployeeName = "Onofras Rica", HairServices = "cut, dye", StartDate = new DateTime(2022, 08, 26, 14, 00, 00), EndDate = new DateTime(2022, 08, 26, 15, 30, 00) });
+            //AppointmentList.Add(new Appointment { Id = 15, CustomerName = "Vlad Apetrica", EmployeeName = "Onofras Rica", HairServices = "dye", StartDate = new DateTime(2022, 08, 26, 10, 30, 00), EndDate = new DateTime(2022, 08, 26, 11, 30, 00) });
         }
 
         public async Task CreateAppointmentAsync(Appointment appointment)
@@ -51,15 +51,16 @@ namespace hairDresser.Infrastructure.Repositories
         // Asta o sa ajute la Istoricu de Appointments a unui Customer.
         public async Task<IEnumerable<Appointment>> GetAllCustomerAppointmentsAsync(string customerName)
         {
-            return AppointmentList.Where(obj => obj.CustomerName == customerName);
+            throw new NotImplementedException();
+            //return AppointmentList.Where(obj => obj.CustomerName == customerName);
         }
 
         // Asta o sa ajute la Read AppointmentsInWork a unui Customer.
         public async Task<IEnumerable<Appointment>> GetAllCustomerAppointmentsInWorkAsync(string customerName)
         {
             return AppointmentList
-                .Where(obj => obj.StartDate >= DateTime.Now)
-                .Where(obj => obj.CustomerName == customerName);
+                .Where(obj => obj.StartDate >= DateTime.Now);
+                //.Where(obj => obj.CustomerName == customerName);
 
         }
 
@@ -67,8 +68,8 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task<IEnumerable<Appointment>> GetAppointmentsInWorkAsync(string employeeName, DateTime date)
         {
             return AppointmentList
-                .Where(obj => obj.StartDate.Date == date.Date)
-                .Where(obj => obj.EmployeeName == employeeName);
+                .Where(obj => obj.StartDate.Date == date.Date);
+                //.Where(obj => obj.EmployeeName == employeeName);
         }
 
         public async Task<IEnumerable<Appointment>> ReadAppointmentsAsync()

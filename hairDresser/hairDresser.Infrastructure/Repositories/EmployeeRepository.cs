@@ -1,6 +1,7 @@
 ﻿using hairDresser.Application.Interfaces;
 using hairDresser.Domain;
 using hairDresser.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,16 +30,39 @@ namespace hairDresser.Infrastructure.Repositories
             return context.Employees.First(obj => obj.Id == employeeId);
         }
 
-        public async Task<IQueryable<Employee>> GetEmployeesAsync(string services)
+        public async Task<IQueryable<Employee>> GetEmployeesAsync(List<int> services)
         {
-            var validEmployees = context.Employees.Where(obj => obj.Specialization.Contains(services));
-            return validEmployees;
+            //BEFORE (cand aveam coloana Specialization in tabelul Employee si care continea, de ex.: wash, cut, dye, etc...), acum am Many-To-Many cu tabelul HairService.
+            //var validEmployees = context.Employees.Where(obj => obj.Specialization.Contains(services));
+            //return validEmployees;
+
+            //???
+            //var validEmployees = context.EmployeeHairServices.Where(obj => obj.HairServiceId.Contains((int) services));
+            //return validEmployees;
+            throw new NotImplementedException();
         }
 
+        //public async Task<IQueryable<Employee>> ReadEmployeesAsync()
         public async Task<IQueryable<Employee>> ReadEmployeesAsync()
         {
-            // ??? Aici nu ar trebui sa folosesc await, cand ii extrag din tabela? Daca il pun am eroare. Daca nu mai trebuie, atunci o mai las async?
-            return context.Employees;
+            //BEFORE:
+            return context.Employees.Include(obj => obj.WorkingDays).Include(obj => obj.EmployeeHairService);
+
+            //AFTER (merge dar trebuie cumva sa fac GroupBy() si nu-mi dau seama cum pt. ca am erori):
+            //return context.EmployeesHairServices
+            //.Include(x => x.Employee)
+            //.Include(x => x.HairService);
+
+            // ??? CUM FAC GROUPBY DUPA EMPLOYEEID, adica sa am (in functie de tabelul din DB): 1 - 1, 2, 6; 2 - 2, 3, 5. Adica ceva de tipul: Key -> List<int>.
+            //return context.EmployeesHairServices
+            //.GroupBy(obj => obj.EmployeeId);
+
+            //return context.EmployeesHairServices
+            //.GroupBy(obj => obj.EmployeeId,
+            //(key, list) => new EmployeeHairService { EmployeeId = key, HairServiceId = list.ToList() } );
+            //(key, list) => new { EmployeeId = key, HairServiceId = list.ToList() });
+            
+            //throw new NotImplementedException();
         }
 
         public async Task UpdateEmployeeAsync(Employee employee)

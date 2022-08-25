@@ -20,14 +20,22 @@ namespace hairDresser.Infrastructure
         public DbSet<HairService> HairServices => Set<HairService>();
         public DbSet<WorkingDay> WorkingDays => Set<WorkingDay>();
         public DbSet<Day> Days => Set<Day>();
+        // Chiar daca tabelul de legatura (many-to-many) iti este creat automat in DB, daca ii faci si DbSet te ajuta sa il poti accesa.
+        public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();
+        public DbSet<AppointmentHairService> AppointmentsHairServices => Set<AppointmentHairService>();
 
-        //!!! Nu ma folosesc de OnConfiguring momentan, pt. ca am mutat string-ul de legatura in fila de Program.cs din Console.
+        //!!! Am conectarea cu connection string-ul de la DB si in Program, diContainer, dar daca sterg OnConfiguring cu string connection-ul am ceva erori.
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
             optionBuilder
                 .UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDb;Trusted_Connection=True;MultipleActiveResultSets=true");
-                //.LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }) // ??? am nevoie de asta?
-                //.EnableSensitiveDataLogging(); // ??? am nevoie de asta?
         }
+
+        // DE VERIFICAT: !!!??? Am vazut pe net ca pe langa legaturile by convention, chiar daca am facut tabelul intermediar, tot am nevoie si de asta, ca sa pot accesa tabelul de legatura... este adevarat? La call s-a spus ca nu este nevoie, din cate am inteles eu.
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<AppointmentHairService>()
+        //        .HasKey(ah => new { ah.AppointmentId, ah.HairServiceId });
+        //}
     }
 }

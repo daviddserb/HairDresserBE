@@ -20,22 +20,15 @@ namespace hairDresser.Application.Employees.Commands.CreateEmployee
 
         public async Task<Unit> Handle(CreateEmployeeComand request, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Handle:");
-            var employee = new Employee();
-
-            employee.Name = request.Name;
-
-            for (int i = 0; i < request.Specializations.Count; ++i)
+            var employee = new Employee
             {
-                employee.Specialization += request.Specializations[i];
-                if (i != request.Specializations.Count - 1)
+                Name = request.Name,
+                EmployeeHairService = request.SpecializationsIds.Select(hsi => new EmployeeHairService()
                 {
-                    employee.Specialization += ", ";
-                }
-            }
-
+                    HairServiceId = hsi
+                }).ToList()
+            };
             await _employeeRepository.CreateEmployeeAsync(employee);
-
             return Unit.Value;
         }
     }

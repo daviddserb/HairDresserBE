@@ -22,19 +22,20 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeesByServices
 
         public async Task<IEnumerable<Employee>> Handle(GetEmployeesByServicesQuery request, CancellationToken cancellationToken)
         {
-            var hairServicesPickedByCustomer = await _hairServiceRepository.GetHairServiceAsync(request.HairServicesId);
-            var hairServices = "";
-            foreach (var service in hairServicesPickedByCustomer)
-            {
-                hairServices += service.Name;
-                if (service != hairServicesPickedByCustomer.Last())
-                {
-                    hairServices += ", ";
-                }
-            }
+            Console.WriteLine("Handle:");
+            // !!! Nu cred ca mai am nevoie de asta (is destul de sigur dar sa verific totusi).
+            //var hairServicesPickedByCustomer = await _hairServiceRepository.GetHairServiceAsync(request.HairServicesId);
+            //var hairServices = "";
+            //foreach (var service in hairServicesPickedByCustomer)
+            //{
+            //    hairServices += service.Name;
+            //    if (service != hairServicesPickedByCustomer.Last())
+            //    {
+            //        hairServices += ", ";
+            //    }
+            //}
 
-            var validEmployees = await _employeeRepository.GetEmployeesAsync(hairServices);
-
+            var validEmployees = await _employeeRepository.GetEmployeesAsync(request.HairServicesId);
             return await Task.FromResult(validEmployees);
         }
     }

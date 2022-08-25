@@ -1,6 +1,7 @@
 ﻿using hairDresser.Application.Interfaces;
 using hairDresser.Domain;
 using hairDresser.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,10 @@ namespace hairDresser.Infrastructure.Repositories
             await context.Appointments.AddAsync(appointment);
             await context.SaveChangesAsync();
         }
+        public async Task<IQueryable<Appointment>> ReadAppointmentsAsync()
+        {
+            return context.Appointments.Include(x => x.Customer).Include(x => x.Employee);
+        }
 
         public async Task<IQueryable<Appointment>> GetAllCustomerAppointmentsAsync(string customerName)
         {
@@ -36,14 +41,10 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<Appointment>> GetAppointmentsInWorkAsync(string employeeName, DateTime date)
         {
+            //???
             return context.Appointments
-                .Where(obj => obj.StartDate.Date == date.Date)
-                .Where(obj => obj.EmployeeName == employeeName);
-        }
-
-        public async Task<IQueryable<Appointment>> ReadAppointmentsAsync()
-        {
-            return context.Appointments;
+                .Where(obj => obj.StartDate.Date == date.Date);
+                //.Where(obj => obj.EmployeeName == employeeName);
         }
 
         public async Task UpdateAppointmentAsync(Appointment appointment)
