@@ -10,8 +10,8 @@ namespace hairDresser.Domain.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<WorkingDay> WorkingDays { get; set; }
+        public ICollection<WorkingInterval> WorkingIntervals { get; set; }
         public ICollection<Appointment> Appointments { get; set; }
-        public ICollection<EmployeeHairService> EmployeeHairService { get; set; }
+        public ICollection<EmployeeHairService> EmployeeHairServices { get; set; }
     }
 }

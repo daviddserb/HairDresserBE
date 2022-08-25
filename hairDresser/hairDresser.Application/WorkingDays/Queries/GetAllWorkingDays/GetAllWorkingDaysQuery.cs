@@ -8,5 +8,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays
 {
-    public class GetAllWorkingDaysQuery : IRequest<IEnumerable<WorkingDay>>{}
+    public class GetAllWorkingDaysQuery : IRequest<IEnumerable<WorkingDay>>
+    {
+    }
 }

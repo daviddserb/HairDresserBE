@@ -1,5 +1,6 @@
 ﻿using hairDresser.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Proxies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +11,18 @@ namespace hairDresser.Infrastructure
 {
     public class DataContext : DbContext
     {
-        public DataContext(){}
-
-        public DataContext(DbContextOptions dbContextOptions) : base(dbContextOptions){}
+        public DataContext() 
+        {
+            this.ChangeTracker.LazyLoadingEnabled = false;
+        }
 
         public DbSet<Appointment> Appointments => Set<Appointment>();
         public DbSet<Customer> Customers => Set<Customer>();
         public DbSet<Employee> Employees => Set<Employee>();
         public DbSet<HairService> HairServices => Set<HairService>();
+        public DbSet<WorkingInterval> WorkingIntervals => Set<WorkingInterval>();
         public DbSet<WorkingDay> WorkingDays => Set<WorkingDay>();
-        public DbSet<Day> Days => Set<Day>();
-        // Chiar daca tabelul de legatura (many-to-many) iti este creat automat in DB, daca ii faci si DbSet te ajuta sa il poti accesa.
+        // Chiar daca tabelul de legatura (many-to-many) iti este creat automat in DB, daca ii faci si DbSet te ajuta, adica il poti accesa.
         public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();
         public DbSet<AppointmentHairService> AppointmentsHairServices => Set<AppointmentHairService>();
 

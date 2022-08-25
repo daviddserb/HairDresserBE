@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Infrastructure.Repositories
 {
-    public class InMemoryWorkingDayRepository 
+    public class InMemoryWorkingIntervalRepository 
     {
-        private readonly List<WorkingDay> _workingDays = new();
+        private readonly List<WorkingInterval> _workingDays = new();
 
-        public InMemoryWorkingDayRepository()
+        public InMemoryWorkingIntervalRepository()
         {
             //_workingDays.Add(new WorkingDay { Id = 1, DayId = 1, EmployeeId = 1, Name = "Monday", StartTime = new TimeSpan(08, 00, 00), EndTime = new TimeSpan(12, 00, 00) });
             //_workingDays.Add(new WorkingDay { Id = 2, DayId = 1, EmployeeId = 1, Name = "Monday", StartTime = new TimeSpan(13, 00, 00), EndTime = new TimeSpan(19, 00, 00) });
@@ -41,19 +41,19 @@ namespace hairDresser.Infrastructure.Repositories
 
         }
 
-        public async Task CreateWorkingDayAsync(WorkingDay workingDay)
+        public async Task CreateWorkingDayAsync(WorkingInterval workingDay)
         {
             _workingDays.Add(workingDay);
         }
 
-        public async Task<WorkingDay> GetWorkingDayAsync(int dayId)
+        public async Task<WorkingInterval> GetWorkingDayAsync(int dayId)
         {
             throw new NotImplementedException();
             //Console.WriteLine("Repository, day = " + _workingDays.FirstOrDefault(obj => obj.DayId == dayId));
             //return _workingDays.FirstOrDefault(obj => obj.DayId == dayId);
         }
         
-        public async Task<IEnumerable<WorkingDay>> GetWorkingDayAsync(int employeeId, string nameOfDay)
+        public async Task<IEnumerable<WorkingInterval>> GetWorkingDayAsync(int employeeId, string nameOfDay)
         {
             throw new NotImplementedException();
             //return _workingDays
@@ -61,7 +61,7 @@ namespace hairDresser.Infrastructure.Repositories
             //.Where(obj => obj.DayId == 3);
         }
 
-        public async Task<IEnumerable<WorkingDay>> ReadWorkingDaysAsync()
+        public async Task<IEnumerable<WorkingInterval>> ReadWorkingDaysAsync()
         {
             return _workingDays;
         }

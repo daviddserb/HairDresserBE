@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hairDresser.Infrastructure;
 
@@ -11,9 +12,10 @@ using hairDresser.Infrastructure;
 namespace hairDresser.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class AppointmentsContextModelSnapshot : ModelSnapshot
+    [Migration("20220825091124_addCollectionFromWorkingDayToWorkingInterval")]
+    partial class addCollectionFromWorkingDayToWorkingInterval
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,13 +244,13 @@ namespace hairDresser.Infrastructure.Migrations
             modelBuilder.Entity("hairDresser.Domain.Models.AppointmentHairService", b =>
                 {
                     b.HasOne("hairDresser.Domain.Models.Appointment", "Appointment")
-                        .WithMany("AppointmentHairServices")
+                        .WithMany("AppointmentHairService")
                         .HasForeignKey("AppointmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("hairDresser.Domain.Models.HairService", "HairService")
-                        .WithMany("AppointmentHairServices")
+                        .WithMany("AppointmentHairService")
                         .HasForeignKey("HairServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -267,7 +269,7 @@ namespace hairDresser.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("hairDresser.Domain.Models.HairService", "HairService")
-                        .WithMany("EmployeeHairServices")
+                        .WithMany("EmployeeHairService")
                         .HasForeignKey("HairServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -298,7 +300,7 @@ namespace hairDresser.Infrastructure.Migrations
 
             modelBuilder.Entity("hairDresser.Domain.Models.Appointment", b =>
                 {
-                    b.Navigation("AppointmentHairServices");
+                    b.Navigation("AppointmentHairService");
                 });
 
             modelBuilder.Entity("hairDresser.Domain.Models.Customer", b =>
@@ -317,9 +319,9 @@ namespace hairDresser.Infrastructure.Migrations
 
             modelBuilder.Entity("hairDresser.Domain.Models.HairService", b =>
                 {
-                    b.Navigation("AppointmentHairServices");
+                    b.Navigation("AppointmentHairService");
 
-                    b.Navigation("EmployeeHairServices");
+                    b.Navigation("EmployeeHairService");
                 });
 
             modelBuilder.Entity("hairDresser.Domain.Models.WorkingDay", b =>

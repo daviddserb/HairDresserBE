@@ -26,25 +26,31 @@ namespace hairDresser.Infrastructure.Repositories
         }
         public async Task<IQueryable<Appointment>> ReadAppointmentsAsync()
         {
-            return context.Appointments.Include(x => x.Customer).Include(x => x.Employee);
+            //return context.Appointments
+            //    .Include(customer => customer.Customer)
+            //    .Include(employee => employee.Employee)
+            //    .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices);
+
+            return context.Appointments;
         }
 
-        public async Task<IQueryable<Appointment>> GetAllCustomerAppointmentsAsync(string customerName)
+        public async Task<IQueryable<Appointment>> GetAllAppointmnetsByCustomerIdAsync(int customerId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IQueryable<Appointment>> GetAllCustomerAppointmentsInWorkAsync(string customerName)
+        public async Task<IQueryable<Appointment>> GetAllInWorkAppointmnetsByCustomerIdAsync(int customerId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IQueryable<Appointment>> GetAppointmentsInWorkAsync(string employeeName, DateTime date)
+        public async Task<IQueryable<Appointment>> GetAppointmentsInWorkAsync(int employeeId, DateTime customerDate)
         {
-            //???
             return context.Appointments
-                .Where(obj => obj.StartDate.Date == date.Date);
-                //.Where(obj => obj.EmployeeName == employeeName);
+                // ??? Conteaza unde pun Include, adica in fata de Where sau dupa? Stiu (parca) ca JOIN in SQL se pune inainte de WHERE.
+                .Where(date => date.StartDate.Date == customerDate.Date)
+                .Where(id => id.EmployeeId == employeeId)
+                .Include(customer => customer.Customer);
         }
 
         public async Task UpdateAppointmentAsync(Appointment appointment)

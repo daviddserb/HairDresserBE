@@ -22,15 +22,21 @@ namespace hairDresser.Infrastructure.Repositories
             await context.HairServices.AddAsync(hairService);
             await context.SaveChangesAsync();
         }
-
-        public async Task<IEnumerable<HairService>> GetHairServiceAsync(List<int> hairServicesId)
-        {
-            return context.HairServices.Where(service => hairServicesId.Contains(service.Id));
-        }
-
         public async Task<IEnumerable<HairService>> ReadHairServicesAsync()
         {
             return context.HairServices;
+        }
+
+        public async Task<IEnumerable<HairService>> GetHairServicesByIdsAsync(List<int> hairServicesIds)
+        {
+            //Console.WriteLine("HairServiceRepository -> GetHairServiceByIdsAsync");
+            var hairServices = context.HairServices.Where(service => hairServicesIds.Contains(service.Id));
+            // Daca vreau sa returnez doar id-urile: context.HairServices.Where(service => hairServicesIds.Contains(service.Id)).Select(service => service.Id)
+            //foreach (var services in hairServices)
+            //{
+            //    Console.WriteLine($"{services.Id} - '{services.Name}', '{services.Duration}', '{services.Price}'");
+            //}
+            return hairServices;
         }
 
         public async Task UpdateHairServiceAsync(int hairServiceId)

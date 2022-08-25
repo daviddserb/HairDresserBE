@@ -17,20 +17,21 @@ namespace hairDresser.Infrastructure.Repositories
         {
             this.context = context;
         }
+
         public async Task CreateCustomerAsync(Customer customer)
         {
             await context.Customers.AddAsync(customer);
             await context.SaveChangesAsync();
         }
 
-        public async Task<Customer> GetCustomerAsync(string customerUsername)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IQueryable<Customer>> ReadCustomersAsync()
         {
             return context.Customers;
+        }
+
+        public async Task<Customer> GetCustomerByIdAsync(int customerId)
+        {
+            return context.Customers.First(customer => customer.Id == customerId);
         }
 
         public async Task UpdateCustomerAsync(Customer customer)

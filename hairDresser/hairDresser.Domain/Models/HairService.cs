@@ -12,8 +12,8 @@ namespace hairDresser.Domain.Models
         public string Name { get; set; }
         public TimeSpan Duration { get; set; }
         public float Price { get; set; }
-        public ICollection<AppointmentHairService> AppointmentHairService { get; set; }
-        public ICollection<EmployeeHairService> EmployeeHairService { get; set; }
+        public ICollection<AppointmentHairService> AppointmentHairServices { get; set; }
+        public ICollection<EmployeeHairService> EmployeeHairServices { get; set; }
 
     }
 }

@@ -1,5 +1,4 @@
-﻿using hairDresser.Domain.Models;
-using MediatR;
+﻿using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +9,6 @@ namespace hairDresser.Application.WorkingDays.Commands.CreateWorkingDay
 {
     public class CreateWorkingDayCommand : IRequest
     {
-        public int DayId { get; set; }
-        public int EmployeeId { get; set; }
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
+        public string Name { get; set; }
     }
 }

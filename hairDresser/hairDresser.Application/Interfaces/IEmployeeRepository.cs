@@ -10,9 +10,9 @@ namespace hairDresser.Application.Interfaces
     public interface IEmployeeRepository
     {
         Task CreateEmployeeAsync(Employee employee);
+        Task<IQueryable<Employee>> ReadEmployeesAsync();
         Task<Employee> GetEmployeeAsync(int employeeId);
         Task<IQueryable<Employee>> GetEmployeesAsync(List<int> services);
-        Task<IQueryable<Employee>> ReadEmployeesAsync();
         Task UpdateEmployeeAsync(Employee employee);
         Task DeleteEmployeeAsync(int employeeId);
     }

@@ -1,7 +1,6 @@
 ﻿using hairDresser.Application.Interfaces;
 using hairDresser.Domain;
 using hairDresser.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,43 +17,30 @@ namespace hairDresser.Infrastructure.Repositories
         {
             this.context = context;
         }
-
         public async Task CreateWorkingDayAsync(WorkingDay workingDay)
         {
             await context.WorkingDays.AddAsync(workingDay);
             await context.SaveChangesAsync();
         }
 
-        public async Task DeleteWorkingDayAsync()
+        public async Task<IQueryable<WorkingDay>> ReadWorkingDaysAsync()
         {
-            throw new NotImplementedException();
+            return context.WorkingDays;
         }
 
-        public async Task<WorkingDay> GetWorkingDayAsync(int dayId)
+        // ? Nu stiu daca o sa ma folosesc de ea aceasta metoda, o sa vad...
+        public async Task<WorkingDay> GetWorkingDayByIdAsync(int workingDayId)
         {
-            throw new NotImplementedException();
-            Console.WriteLine("WorkingDayRepository -> GetWorkingDayAsync(int dayId):");
-            Console.WriteLine("nameDay= " + context.WorkingDays.First(day => day.Day.Id == dayId));
-            return context.WorkingDays.First(day => day.Day.Id == dayId);
+            Console.WriteLine("WorkingDayRepository -> GetWorkingDayAsync(int workingDayId):");
+            Console.WriteLine($"nameOfWorkingDay= '{context.WorkingDays.First(obj => obj.Id == workingDayId).Name}'");
+            return context.WorkingDays.First(obj => obj.Id == workingDayId);
         }
 
-        public async Task<IEnumerable<WorkingDay>> GetWorkingDayAsync(int employeeId, int dayId)
+        public async Task<WorkingDay> GetWorkingDayByNameAsync(string workingDayName)
         {
-            Console.WriteLine("WorkingDayRepository -> GetWorkingDayAsync(int employeeId, int dayId):");
-            return context.WorkingDays
-                .Where(wd => wd.Employee.Id == employeeId)
-                .Where(wd => wd.Day.Id == dayId);
-        }
-
-        public async Task<IEnumerable<WorkingDay>> ReadWorkingDaysAsync()
-        {
-            //Include spune ca faci JOIN intre WorkingDay si Day, care este posibil pt. ca ai cate un obiect (sau o proprietate) din cealalta clasa in ea, adica in WorkingDay ai o proprietate Day Day si la fel si invers.
-            return context.WorkingDays.Include(x => x.Day);
-        }
-
-        public async Task UpdateWorkingDayAsync()
-        {
-            throw new NotImplementedException();
+            Console.WriteLine("WorkingDayRepository -> GetWorkingDayAsync(string workingDayName):");
+            Console.WriteLine($"idOfWorkingDay= '{context.WorkingDays.First(obj => obj.Name == workingDayName).Id}'");
+            return context.WorkingDays.First(obj => obj.Name == workingDayName);
         }
     }
 }

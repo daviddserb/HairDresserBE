@@ -2,8 +2,6 @@
 using hairDresser.Application.Appointments.Queries.GetAllAppointments;
 using hairDresser.Application.Customers.Commands.CreateCustomer;
 using hairDresser.Application.Customers.Queries.GetAllCustomers;
-using hairDresser.Application.Days.Commands.CreateDay;
-using hairDresser.Application.Days.Queries.GetAllDays;
 using hairDresser.Application.Employees.Commands.CreateEmployee;
 using hairDresser.Application.Employees.Commands.DeleteEmployeeById;
 using hairDresser.Application.Employees.Queries.GetAllEmployees;
@@ -12,9 +10,12 @@ using hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppointme
 using hairDresser.Application.Employees.Queries.GetEmployeesByServices;
 using hairDresser.Application.HairServices.Commands.CreateHairService;
 using hairDresser.Application.HairServices.Queries;
+using hairDresser.Application.HairServices.Queries.GetHairServicesByIds;
 using hairDresser.Application.Interfaces;
 using hairDresser.Application.WorkingDays.Commands.CreateWorkingDay;
 using hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays;
+using hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterval;
+using hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingIntervals;
 using hairDresser.Domain.Models;
 using hairDresser.Infrastructure;
 using hairDresser.Infrastructure.Repositories;
@@ -22,74 +23,43 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-//---START TESTING---
-//var list = new List<Tuple<string, int>>();
-//list.Add(new Tuple<string, int>("1", 1));
-//list.Add(new Tuple<string, int>("1", 2));
-//list.Add(new Tuple<string, int>("1", 6));
-
-//list.Add(new Tuple<string, int>("2", 2));
-//list.Add(new Tuple<string, int>("2", 3));
-//list.Add(new Tuple<string, int>("2", 5));
-//list.GroupBy(obj => obj.Item1);
-//foreach (var lists in list.GroupBy(obj => obj.Item1))
-//{
-//    Console.WriteLine(lists.Key);
-//    foreach(var l in lists)
-//    {
-//        Console.WriteLine(l);
-//    }
-//}
-
-//List<List<string>> myList = new List<List<string>>();
-//myList.Add(new List<string> { "1", "1" });
-//myList.Add(new List<string> { "1", "2"});
-//myList.Add(new List<string> { "1", "6"});
-//myList.Add(new List<string> { "2", "2" });
-//myList.Add(new List<string> { "2", "3" });
-//myList.Add(new List<string> { "2", "5" });
-//// To iterate over it.
-//foreach (var subList in myList)
-//{
-//    Console.WriteLine(subList[0] + " " + subList[1]);
-//}
-
-//---FINISH TESTING---
-
 //Intrebari -> ???
-// La Read Appointment, are voie un Customer sa aiba 2 progamari in viitor? De ex. suntem pe data de 13 si el sa aiba un appointment pe data de 14 si inca unul pe data de 19?
-//In functie de asta, la functionalitatea de DeleteAppointment, cand un Customer vrea sa dea Delete la un appointment, prima data ar trebui sa-i afisez toate appointment-urile pe care le are in viitor (adica in proces), corect? Si din lista de appointment-uri trebuie sa aleaga pe care vrea sa il stearga, corect?
-//Tot in functie de asta, la functionalitatea de UpdateAppointment, ma gandesc ca tot trebuie sa ii dau o lista cu appointment-urile pe care le are in viitor (in proces) si de acolo sa aleaga unul. Dar dupa asta, la ce mai exact sa faca update? Ma gandesc sa aiba 3 optiuni: hairservices, employee si date. Astfel, aici ma gandeam cumva sa repet algoritmul de la CreateAppointment. Este ok?
-
-// Application -> Employees -> Queries - GetEmployeeIntervalsByDateQuery
+// Program -> case "01"
+// Application -> Employees -> Queries -> GetEmployeeIntervalsByDateQueryHandler
+// Application -> Employees -> Queries -> GetEmployeesByServicesQueryHandler
 
 //!!! Unde am modificari de facut dupa ce am amplicat: One-To-Many intre Appointment si Customer, Appointment si Employee + Many-To-Many intre Appointment si HairService.
 // AppointmentRepository
-// GetEmployeeIntervalsByDateQueryHandler
 
 //!!! Unde am modificari de facut dupa ce am amplicat Many-To-Many intre Employee si HairService:
 // EmployeeRepository
 
-//!!!
-// Sa schimb din:
-// WorkingDay -> WorkingIntervals
-// dupa ce am facut schimbarea asta, pot trece la urmatoarea:
-// Day -> WorkingDay
+/* DB relationships between entities (domain classes)
+ * Un Customer poate sa aibe mai multe Appointments dar un Appointment poate avea doar un singur Customer => One-To-Many.
+ * Un Employee poate sa aibe mai multe Appointments dar un Appointment poate avea doar un singur Employee => One-To-Many.
+ * Un Employee poate sa aibe mai multe HairServices si un HairService poate sa fie la mai multi Employees => Many-To-Many.
+ * Un Appointment poate sa aibe mai multe HairServices si un HairService poate sa fie la mai multe Appointments => Many-To-Many.
+ * -----------------------------------------------------------------------------------------------------------------------------
+ * Un Employee poate sa aiba mai multe WorkingDays si un WorkingDay poate sa fie la mai multi Employee => Many-To-Many. ! Dar aceasta legatura o fac prin intermediul tabelei WorkingInterval, unde:
+ * Un Employee poate sa aiba mai multe WorkingIntervals dar un WorkingInterval nu poate sa fie la mai multi Employees.
+ * Un WorkingDay poate sa aiba mai multe WorkingIntervals dar un WorkingInterval nu poate sa aiba mai multe WorkingDays.
+*/
 
 bool showMenu = true;
 
 // di = Dependency Injection
 var diContainer = new ServiceCollection()
     //Facem legatura cu server-ul nostru din DB.
-    .AddDbContext<DataContext>(options => options.UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDb;Trusted_Connection=True;MultipleActiveResultSets=True;"))
+    //.AddDbContext<DataContext>(options => options.UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDb;Trusted_Connection=True;MultipleActiveResultSets=True;"))
+    .AddDbContext<DataContext>()
 
     // De fiecare data cand vei vedea ca cineva depinde de IHairServiceRepository, creezi o instanta de HairServiceRepository (la fel si pt. restul).
     .AddScoped<IHairServiceRepository, HairServiceRepository>()
     .AddScoped<IEmployeeRepository, EmployeeRepository>()
     .AddScoped<IAppointmentRepository, AppointmentRepository>()
-    .AddScoped<IWorkingDayRepository, WorkingDayRepository>()
+    .AddScoped<IWorkingIntervalRepository, WorkingIntervalRepository>()
     .AddScoped<ICustomerRepository, CustomerRepository>()
-    .AddScoped<IDayRepository, DayRepository>()
+    .AddScoped<IWorkingDayRepository, WorkingDayRepository>()
 
     // Adaugam MediatR, care scaneaza toate mesajele (Queries/Commands) si toate handle-urile, de tipul typeof().
     // Cu toate ca noi avem mai multe .AddScoped(), adaugam doar unul dintre ele la typeof() si MediatR le scaneaza pe toate din layer-ul de unde typeof() face parte, adica IHairServiceRepository face parte din Application.
@@ -109,14 +79,15 @@ async Task<bool> MainMenuAsync()
     Console.WriteLine("\nCRUD Appointment:");
     Console.WriteLine("00 - CreateAppointment");
     Console.WriteLine("01 - ReadAppointments");
-    //Console.WriteLine("02 - UpdateAppointment");
-    //Console.WriteLine("03 - DeleteAppointment");
+    Console.WriteLine("02 - GetAllAppointmnetsByCustomerId"); //!!! trebuie sa o implementez
+    //Console.WriteLine("03 - UpdateAppointment");
+    //Console.WriteLine("04 - DeleteAppointment");
 
     Console.WriteLine("\nCRUD Employee:");
     Console.WriteLine("10 - CreateEmployee");
     Console.WriteLine("11 - ReadEmployees");
-    Console.WriteLine("12 - GetAllEmpoyeesByServices");
-    Console.WriteLine("13 - GetEmployeeIntervalsByDate");
+    Console.WriteLine("12 - GetAllEmpoyeesByServices"); //!!! -> nu functioneaza
+    Console.WriteLine("13 - GetEmployeeIntervalsByDate"); //!!! -> nu functioneaza
     //Update
     Console.WriteLine("15 - DeleteEmployee");
 
@@ -124,21 +95,22 @@ async Task<bool> MainMenuAsync()
     Console.WriteLine("20 - CreateCustomer");
     Console.WriteLine("21 - ReadCustomers");
 
-    Console.WriteLine("\nCRUD WorkingDays:");
-    Console.WriteLine("30 - CreateWorkingDay");
-    Console.WriteLine("31 - ReadWorkingDays");
+    Console.WriteLine("\nCRUD WorkingIntervals:");
+    Console.WriteLine("30 - CreateWorkingInterval");
+    Console.WriteLine("31 - ReadWorkingIntervals");
     //Update
     //Delete
 
     Console.WriteLine("\nCRUD HairServices:");
     Console.WriteLine("40 - CreateHairService");
     Console.WriteLine("41 - ReadHairServices");
+    Console.WriteLine("42 - GetHairServicesByIds");
     //Update
     //Delete
 
-    Console.WriteLine("\nCRUD Day:");
-    Console.WriteLine("50 - CreateDay");
-    Console.WriteLine("51 - ReadDays\n");
+    Console.WriteLine("\nCRUD WorkingDay:");
+    Console.WriteLine("50 - CreateWorkingDay");
+    Console.WriteLine("51 - ReadWorkingDays\n");
 
     var userInputCase = Console.ReadLine();
     switch (userInputCase)
@@ -183,11 +155,41 @@ async Task<bool> MainMenuAsync()
             }
         case "01":
             {
-                var allAppointments = await mediator.Send(new GetAllAppointmentsQuery());
-                foreach (var app in allAppointments)
+                var customerAppointments = await mediator.Send(new GetAllAppointmentsQuery());
+                foreach (var app in customerAppointments)
                 {
-                    Console.WriteLine($"{app.Id} - '{app.Customer.Name}', '{app.Employee.Name}', '{app.StartDate}', '{app.EndDate}'");
+                    //??? Cum fac sa printez HairServices-urile de la fiecare appointment in parte? Am facut partial dar nu-mi prea place cum am facut.
+                    // Ce mi-a zis Adina sa fac dar nu am imi merge:
+                    //query ...
+                    //var appointmentHairServices = HairServiceRepository.GetHairServiceByIdsAsync(app.AppointmentHairService.Select(a => a.HairServiceId).ToList());
+
+                    Console.WriteLine($"{app.Id} - customer= '{app.Customer.Name}', employee= '{app.Employee.Name}', start= '{app.StartDate}', end= '{app.EndDate}'");
+                    // Aici pot sa vad id-urile de la fiecare hairservice pt. fiecare appointment in parte
+                    //foreach (var hs in app.AppointmentHairServices)
+                    //{
+                    //    Console.WriteLine($"hs= " + hs.HairServiceId);
+                    //}
+
+                    var hairServicesIdsInInt = new List<int>();
+                    foreach (var appointmentHairServices in app.AppointmentHairServices)
+                    {
+                        hairServicesIdsInInt.Add(appointmentHairServices.HairServiceId);
+                    }
+                    var servicesByIds = await mediator.Send(new GetHairServicesByIdsQuery
+                    {
+                        HairServicesIds = hairServicesIdsInInt
+                    });
+
+                    Console.WriteLine("hairservices:");
+                    foreach (var service in servicesByIds)
+                    {
+                        Console.WriteLine(service.Name);
+                    }
                 }
+                return true;
+            }
+        case "02":
+            {
                 return true;
             }
         case "10":
@@ -199,7 +201,7 @@ async Task<bool> MainMenuAsync()
                 var allServices = await mediator.Send(new GetAllHairServicesQuery());
                 foreach (var service in allServices)
                 {
-                    Console.WriteLine($"id = '{service.Id}'-> name = '{service.Name}', duration= '{service.Duration}', price= '{service.Price}'");
+                    Console.WriteLine($"{service.Id} - '{service.Name}', '{service.Duration}', '{service.Price}'");
                 }
                 var specializationsIds = new List<int>();
                 var employeeSpecialization = Console.ReadLine();
@@ -238,7 +240,7 @@ async Task<bool> MainMenuAsync()
                 var allHairServices = await mediator.Send(new GetAllHairServicesQuery());
                 foreach (var service in allHairServices)
                 {
-                    Console.WriteLine($"id= '{service.Id}' -> name= '{service.Name}', duration= '{service.Duration}', price= '{service.Price}'");
+                    Console.WriteLine($"'{service.Id}' - '{service.Name}', '{service.Duration}', '{service.Price}'");
                 }
 
                 var hairServicesId = new List<int>();
@@ -272,6 +274,7 @@ async Task<bool> MainMenuAsync()
 
                 Console.WriteLine("Day of the date, in numbers (ex: 01, 15, ...), from this month?");
                 var date = Int32.Parse(Console.ReadLine());
+                //! Trebuie sa fac o validare sa nu fie un date din trecut. De ex. noi suntem pe data de 16 si el insereaza data de 14 pt. appointment.
 
                 Console.WriteLine("Time, in minutes?");
                 var durationInMinutes = Int32.Parse(Console.ReadLine());
@@ -346,9 +349,11 @@ async Task<bool> MainMenuAsync()
         case "30":
             {
                 Console.WriteLine("Day Id? (ex: 1 - Monday, 2 - Tuesday, ..., 5 - Friday)");
+                //!!! Trebuie sa ii pun toate workingday in fata ca sa isi aleaga.
                 var dayId = Int32.Parse(Console.ReadLine());
 
                 Console.WriteLine("Employee Id?");
+                //!!! Trebuie sa ii pun toti employee in fata ca sa isi aleaga.
                 var employeeId = Int32.Parse(Console.ReadLine());
 
                 Console.WriteLine("Start Time? (ex: 09:30:05, 18:00:00, ...)");
@@ -357,7 +362,7 @@ async Task<bool> MainMenuAsync()
                 Console.WriteLine("End Time?");
                 var end = Console.ReadLine();
 
-                await mediator.Send(new CreateWorkingDayCommand
+                await mediator.Send(new CreateWorkingIntervalCommand
                 {
                     DayId = dayId,
                     EmployeeId = employeeId,
@@ -368,14 +373,10 @@ async Task<bool> MainMenuAsync()
             }
         case "31":
             {
-                var allWorkingDays = await mediator.Send(new GetAllWorkingDaysQuery());
-                foreach (var workingDay in allWorkingDays)
+                var allWorkingIntervals = await mediator.Send(new GetAllWorkingIntervalsQuery());
+                foreach (var workingInterval in allWorkingIntervals)
                 {
-                    var employee = await mediator.Send(new GetEmployeeByIdQuery
-                    {
-                        Id = workingDay.EmployeeId
-                    });
-                    Console.WriteLine($"{workingDay.Id} - '{workingDay.Day.Name}', '{employee.Name}', '{workingDay.StartTime}', '{workingDay.EndTime}'");
+                    Console.WriteLine($"{workingInterval.Id} - '{workingInterval.WorkingDay.Name}', '{workingInterval.Employee.Name}', '{workingInterval.StartTime}', '{workingInterval.EndTime}'");
                 }
                 return true;
             }
@@ -403,29 +404,57 @@ async Task<bool> MainMenuAsync()
                 var allServices = await mediator.Send(new GetAllHairServicesQuery());
                 foreach (var service in allServices)
                 {
-                    Console.WriteLine($"id = '{service.Id}'-> name = '{service.Name}', duration= '{service.Duration}', price= '{service.Price}'");
+                    Console.WriteLine($"{service.Id} - '{service.Name}', '{service.Duration}', '{service.Price}'");
+                }
+                return true;
+            }
+        case "42":
+            {
+                Console.WriteLine("Hair services? Type each number on a new line. Press the ENTER button to stop.");
+                var allHairServices = await mediator.Send(new GetAllHairServicesQuery());
+                foreach (var service in allHairServices)
+                {
+                    Console.WriteLine($"'{service.Id}' - '{service.Name}', '{service.Duration}', '{service.Price}'");
+                }
+
+                var hairServicesId = new List<int>();
+                var inputService = Console.ReadLine();
+                while (inputService != "")
+                {
+                    hairServicesId.Add(Int32.Parse(inputService));
+                    inputService = Console.ReadLine();
+                }
+
+                var servicesByIds = await mediator.Send(new GetHairServicesByIdsQuery
+                {
+                    HairServicesIds = hairServicesId
+                });
+
+                Console.WriteLine("All the services based on the selected ids (eu printez doar id-ul si numele, dar sunt toate proprietatile):");
+                foreach(var service in servicesByIds)
+                {
+                    Console.WriteLine(service.Id + " - " + service.Name);
                 }
                 return true;
             }
 
-        case "50":
-            {
-                Console.WriteLine("Name?");
-                var name = Console.ReadLine();
-
-                await mediator.Send(new CreateDayCommand
-                {
-                    Name = name
-                });
-                return true;
-            }
+        //case "50":
+        //    {
+        //        Console.WriteLine("Name?");
+        //        var nameOfWorkingDay = Console.ReadLine();
+        //        await mediator.Send(new CreateWorkingDayCommand
+        //        {
+        //            Name = nameOfWorkingDay
+        //        });
+        //        return true;
+        //    }
         case "51":
             {
-                var allDays = await mediator.Send(new GetAllDaysQuery());
-                Console.WriteLine("All days:");
-                foreach(var day in allDays)
+                var allWorkingDays = await mediator.Send(new GetAllWorkingDaysQuery());
+                Console.WriteLine("All working days:");
+                foreach(var workingDay in allWorkingDays)
                 {
-                    Console.WriteLine($"id= '{day.Id}', name= '{day.Name}'");
+                    Console.WriteLine($"{workingDay.Id} - '{workingDay.Name}'");
                 }
                 return true;
             }

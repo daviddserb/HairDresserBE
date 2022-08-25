@@ -20,7 +20,6 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeById
         public async Task<Employee> Handle(GetEmployeeByIdQuery request, CancellationToken cancellationToken)
         {
             Employee employee = await _employeeRepository.GetEmployeeAsync(request.Id);
-
             return employee;
         }
     }

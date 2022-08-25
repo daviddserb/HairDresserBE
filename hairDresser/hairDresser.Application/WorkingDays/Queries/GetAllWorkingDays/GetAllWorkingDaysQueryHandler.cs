@@ -12,16 +12,14 @@ namespace hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays
     public class GetAllWorkingDaysQueryHandler : IRequestHandler<GetAllWorkingDaysQuery, IEnumerable<WorkingDay>>
     {
         private readonly IWorkingDayRepository _workingDayRepository;
+
         public GetAllWorkingDaysQueryHandler(IWorkingDayRepository workingDayRepository)
         {
             _workingDayRepository = workingDayRepository;
         }
-
         public async Task<IEnumerable<WorkingDay>> Handle(GetAllWorkingDaysQuery request, CancellationToken cancellationToken)
         {
-            var allWorkingDays = await _workingDayRepository.ReadWorkingDaysAsync();
-            return allWorkingDays;
+            return await _workingDayRepository.ReadWorkingDaysAsync();
         }
     }
 }
-

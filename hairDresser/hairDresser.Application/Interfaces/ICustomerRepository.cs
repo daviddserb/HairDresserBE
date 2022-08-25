@@ -10,7 +10,7 @@ namespace hairDresser.Application.Interfaces
     public interface ICustomerRepository
     {
         Task CreateCustomerAsync(Customer customer);
-        Task<Customer> GetCustomerAsync(string customerUsername);
+        Task<Customer> GetCustomerByIdAsync(int customerId);
         Task<IQueryable<Customer>> ReadCustomersAsync();
         Task UpdateCustomerAsync(Customer customer);
         Task DeleteCustomerAsync(Customer customer);

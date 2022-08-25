@@ -23,7 +23,7 @@ namespace hairDresser.Application.Employees.Commands.CreateEmployee
             var employee = new Employee
             {
                 Name = request.Name,
-                EmployeeHairService = request.SpecializationsIds.Select(hsi => new EmployeeHairService()
+                EmployeeHairServices = request.SpecializationsIds.Select(hsi => new EmployeeHairService()
                 {
                     HairServiceId = hsi
                 }).ToList()

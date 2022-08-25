@@ -25,28 +25,11 @@ namespace hairDresser.Infrastructure.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task<Employee> GetEmployeeAsync(int employeeId)
-        {
-            return context.Employees.First(obj => obj.Id == employeeId);
-        }
-
-        public async Task<IQueryable<Employee>> GetEmployeesAsync(List<int> services)
-        {
-            //BEFORE (cand aveam coloana Specialization in tabelul Employee si care continea, de ex.: wash, cut, dye, etc...), acum am Many-To-Many cu tabelul HairService.
-            //var validEmployees = context.Employees.Where(obj => obj.Specialization.Contains(services));
-            //return validEmployees;
-
-            //???
-            //var validEmployees = context.EmployeeHairServices.Where(obj => obj.HairServiceId.Contains((int) services));
-            //return validEmployees;
-            throw new NotImplementedException();
-        }
-
-        //public async Task<IQueryable<Employee>> ReadEmployeesAsync()
         public async Task<IQueryable<Employee>> ReadEmployeesAsync()
         {
             //BEFORE:
-            return context.Employees.Include(obj => obj.WorkingDays).Include(obj => obj.EmployeeHairService);
+            //!!! Chiar daca in clasa Employee am navigational property spre alte clase (in ex. de fata WorkingIntervals 
+            return context.Employees.Include(obj => obj.WorkingIntervals).Include(obj => obj.EmployeeHairServices);
 
             //AFTER (merge dar trebuie cumva sa fac GroupBy() si nu-mi dau seama cum pt. ca am erori):
             //return context.EmployeesHairServices
@@ -61,9 +44,24 @@ namespace hairDresser.Infrastructure.Repositories
             //.GroupBy(obj => obj.EmployeeId,
             //(key, list) => new EmployeeHairService { EmployeeId = key, HairServiceId = list.ToList() } );
             //(key, list) => new { EmployeeId = key, HairServiceId = list.ToList() });
-            
+
             //throw new NotImplementedException();
         }
+
+        public async Task<Employee> GetEmployeeAsync(int employeeId)
+        {
+            return context.Employees.First(obj => obj.Id == employeeId);
+        }
+
+        public async Task<IQueryable<Employee>> GetEmployeesAsync(List<int> servicesIds)
+        {
+            //var validEmployees = context.Employees.Include(employee => employee.EmployeeHairServices)
+            //    .Select(employee => employee.EmployeeHairServices.Where(hairService => servicesIds.Contains(hairService.HairServiceId)));
+            //return validEmployees;
+            throw new NotImplementedException();
+        }
+
+        //public async Task<IQueryable<Employee>> ReadEmployeesAsync()
 
         public async Task UpdateEmployeeAsync(Employee employee)
         {

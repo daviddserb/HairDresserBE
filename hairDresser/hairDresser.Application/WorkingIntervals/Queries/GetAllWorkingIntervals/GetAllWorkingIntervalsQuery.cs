@@ -6,9 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser.Application.Days.Queries.GetAllDays
+namespace hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingIntervals
 {
-    public class GetAllDaysQuery : IRequest<IEnumerable<Day>>
-    {
-    }
+    public class GetAllWorkingIntervalsQuery : IRequest<IEnumerable<WorkingInterval>>{}
 }
