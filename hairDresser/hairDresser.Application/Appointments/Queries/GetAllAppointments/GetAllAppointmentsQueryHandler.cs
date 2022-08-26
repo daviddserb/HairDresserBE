@@ -11,15 +11,15 @@ namespace hairDresser.Application.Appointments.Queries.GetAllAppointments
 {
     public class GetAllAppointmentsQueryHandler : IRequestHandler<GetAllAppointmentsQuery, IQueryable<Appointment>>
     {
-        private readonly IAppointmentRepository _appointmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetAllAppointmentsQueryHandler(IAppointmentRepository appointmentRepository)
+        public GetAllAppointmentsQueryHandler(IUnitOfWork unitOfWork)
         {
-            _appointmentRepository = appointmentRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<IQueryable<Appointment>> Handle(GetAllAppointmentsQuery request, CancellationToken cancellationToken)
         {
-            return await _appointmentRepository.ReadAppointmentsAsync();
+            return await _unitOfWork.AppointmentRepository.ReadAppointmentsAsync();
         }
     }
 }

@@ -12,11 +12,11 @@ namespace hairDresser.Application.Employees.Commands.DeleteEmployeeById
     // public class DeleteEmployeeByIdCommandHandler : IRequestHandler<DeleteEmployeeByIdCommand, Unit> -> este la fel daca sau nu declari Unit, care este un tip de void.
     public class DeleteEmployeeByIdCommandHandler : IRequestHandler<DeleteEmployeeByIdCommand>
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteEmployeeByIdCommandHandler(IEmployeeRepository employeeRepository)
+        public DeleteEmployeeByIdCommandHandler(IUnitOfWork unitOfWork)
         {
-            _employeeRepository = employeeRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Unit> Handle(DeleteEmployeeByIdCommand request, CancellationToken cancellationToken)
@@ -28,7 +28,8 @@ namespace hairDresser.Application.Employees.Commands.DeleteEmployeeById
                 Id = request.Id
             };
 
-            await _employeeRepository.DeleteEmployeeAsync(employee.Id);
+            await _unitOfWork.EmployeeRepository.DeleteEmployeeAsync(employee.Id);
+            await _unitOfWork.SaveAsync();
             return Unit.Value;
         }
     }

@@ -11,15 +11,16 @@ namespace hairDresser.Application.Employees.Queries.GetAllEmployees
 {
     public class GetAllEmployeesQueryHandler : IRequestHandler<GetAllEmployeesQuery, IEnumerable<Employee>>
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetAllEmployeesQueryHandler(IEmployeeRepository employeeRepository)
+        public GetAllEmployeesQueryHandler(IUnitOfWork unitOfWork)
         {
-            _employeeRepository = employeeRepository;
+            _unitOfWork = unitOfWork;
         }
+
         public async Task<IEnumerable<Employee>> Handle(GetAllEmployeesQuery request, CancellationToken cancellationToken)
         {
-            return await _employeeRepository.ReadEmployeesAsync();
+            return await _unitOfWork.EmployeeRepository.ReadEmployeesAsync();
         }
     }
 }

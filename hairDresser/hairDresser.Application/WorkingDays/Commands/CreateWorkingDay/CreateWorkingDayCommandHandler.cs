@@ -11,11 +11,11 @@ namespace hairDresser.Application.WorkingDays.Commands.CreateWorkingDay
 {
     public class CreateWorkingDayCommandHandler : IRequestHandler<CreateWorkingDayCommand>
     {
-        private readonly IWorkingDayRepository _workingDayRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateWorkingDayCommandHandler(IWorkingDayRepository workingDayRepository)
+        public CreateWorkingDayCommandHandler(IUnitOfWork unitOfWork)
         {
-            _workingDayRepository = workingDayRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Unit> Handle(CreateWorkingDayCommand request, CancellationToken cancellationToken)
@@ -24,7 +24,8 @@ namespace hairDresser.Application.WorkingDays.Commands.CreateWorkingDay
             {
                 Name = request.Name
             };
-            await _workingDayRepository.CreateWorkingDayAsync(workingDay);
+            await _unitOfWork.WorkingDayRepository.CreateWorkingDayAsync(workingDay);
+            await _unitOfWork.SaveAsync();
             return Unit.Value;
         }
     }

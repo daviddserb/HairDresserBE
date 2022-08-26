@@ -22,7 +22,6 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task CreateAppointmentAsync(Appointment appointment)
         {
             await context.Appointments.AddAsync(appointment);
-            await context.SaveChangesAsync();
         }
 
         public async Task<IQueryable<Appointment>> ReadAppointmentsAsync()
@@ -50,7 +49,8 @@ namespace hairDresser.Infrastructure.Repositories
                 // ??? Conteaza unde pun Include, adica in fata de Where sau dupa? Stiu (parca) ca JOIN in SQL se pune inainte de WHERE.
                 .Where(date => date.StartDate.Date == customerDate.Date)
                 .Where(id => id.EmployeeId == employeeId)
-                .Include(customer => customer.Customer);
+                .Include(customers => customers.Customer)
+                .Include(employees => employees.Employee);
         }
 
         public async Task<Appointment> UpdateAppointmentAsync(Appointment appointment)

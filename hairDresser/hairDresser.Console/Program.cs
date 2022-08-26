@@ -22,9 +22,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 //Intrebari -> ???
-// Application -> Employees -> Queries -> GetEmployeeIntervalsByDateQueryHandler
-// Application -> Employees -> Queries -> GetEmployeesByServicesQueryHandler
-// EmployeeRepository
+//EmployeeRepository (care are legatura cu GetEmployeeIntervalsByDateQueryHandler)
 
 //    DB relationships between entities (domain classes)
 // Un Customer poate sa aibe mai multe Appointments dar un Appointment poate avea doar un singur Customer => One-To-Many.
@@ -45,6 +43,7 @@ var diContainer = new ServiceCollection()
     .AddDbContext<DataContext>()
 
     // De fiecare data cand vei vedea ca cineva depinde de IHairServiceRepository, creezi o instanta de HairServiceRepository (la fel si pt. restul).
+    .AddScoped<IUnitOfWork, UnitOfWork>()
     .AddScoped<IHairServiceRepository, HairServiceRepository>()
     .AddScoped<IEmployeeRepository, EmployeeRepository>()
     .AddScoped<IAppointmentRepository, AppointmentRepository>()
@@ -77,14 +76,16 @@ async Task<bool> MainMenuAsync()
     Console.WriteLine("\nCRUD Employee:");
     Console.WriteLine("10 - CreateEmployee");
     Console.WriteLine("11 - ReadEmployees");
-    Console.WriteLine("12 - GetAllEmpoyeesByServices"); //!!!??? -> nu functioneaza (trebuie sa incerc)
-    Console.WriteLine("13 - GetEmployeeIntervalsByDate"); //!!!??? -> nu functioneaza (trebuie sa incerc)
+    Console.WriteLine("12 - GetAllEmpoyeesByServices"); // X
+    Console.WriteLine("13 - GetEmployeeIntervalsByDate");
     //Update
     Console.WriteLine("15 - DeleteEmployee");
 
     Console.WriteLine("\nCRUD Customers:");
     Console.WriteLine("20 - CreateCustomer");
     Console.WriteLine("21 - ReadCustomers");
+    //Update
+    //Delete
 
     Console.WriteLine("\nCRUD WorkingIntervals:");
     Console.WriteLine("30 - CreateWorkingInterval");
@@ -120,7 +121,6 @@ async Task<bool> MainMenuAsync()
                 {
                     Console.WriteLine($"{service.Id} - '{service.Name}', '{service.Duration}', '{service.Price}'");
                 }
-
                 var hairServicesId = new List<int>();
                 var inputService = Console.ReadLine();
                 while (inputService != "")
@@ -131,6 +131,7 @@ async Task<bool> MainMenuAsync()
 
                 Console.WriteLine("Start Date (for ex.: 8/26/2022 12:00:00)?");
                 var start = Console.ReadLine();
+
                 Console.WriteLine("End Date?");
                 var end = Console.ReadLine();
 
@@ -151,23 +152,6 @@ async Task<bool> MainMenuAsync()
                 {
                     var appointmentHairServices = app.AppointmentHairServices.Select(hairServices => hairServices.HairService.Name);
                     Console.WriteLine($"{app.Id} - customer= '{app.Customer.Name}', employee= '{app.Employee.Name}', start= '{app.StartDate}', end= '{app.EndDate}', hairservices= '{String.Join(", ", appointmentHairServices)}'");
-
-                    //! Varianta mea complicata si proasta:
-                    //var hairServicesIdsInInt = new List<int>();
-                    //foreach (var appointmentHairServices in app.AppointmentHairServices)
-                    //{
-                    //    hairServicesIdsInInt.Add(appointmentHairServices.HairServiceId);
-                    //}
-                    //var servicesByIds = await mediator.Send(new GetHairServicesByIdsQuery
-                    //{
-                    //    HairServicesIds = hairServicesIdsInInt
-                    //});
-
-                    //Console.WriteLine("hairservices:");
-                    //foreach (var service in servicesByIds)
-                    //{
-                    //    Console.WriteLine(service.Name);
-                    //}
                 }
                 return true;
             }
@@ -221,7 +205,7 @@ async Task<bool> MainMenuAsync()
                 foreach (var employee in allEmployees)
                 {
                     var employeeHairServices = employee.EmployeeHairServices.Select(hairServices => hairServices.HairService.Name);
-                    Console.WriteLine($"{employee.Id} - '{employee.Name}', '{String.Join(", ", employeeHairServices)}'");
+                    Console.WriteLine($"{employee.Id} - name= '{employee.Name}', hairservices= '{String.Join(", ", employeeHairServices)}'");
                 }
                 return true;
             }
@@ -233,7 +217,6 @@ async Task<bool> MainMenuAsync()
                 {
                     Console.WriteLine($"'{service.Id}' - '{service.Name}', '{service.Duration}', '{service.Price}'");
                 }
-
                 var hairServicesId = new List<int>();
                 var inputService = Console.ReadLine();
                 while (inputService != "")
@@ -428,7 +411,6 @@ async Task<bool> MainMenuAsync()
                 }
                 return true;
             }
-
         //case "50":
         //    {
         //        Console.WriteLine("Name?");

@@ -12,11 +12,11 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
     // Trebuie sa implementam interfata IRequestHandler, care poate sa primeasca 2 parametrii: request-ul (mesajul = command/query) care este obligatoriu si raspunsul mesajului (ce returneaza el).
     public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointmentCommand>
     {
-        private readonly IAppointmentRepository _appointmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateAppointmentCommandHandler(IAppointmentRepository appointmentRepository)
+        public CreateAppointmentCommandHandler(IUnitOfWork unitOfWork)
         {
-            _appointmentRepository = appointmentRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Unit> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
@@ -33,7 +33,8 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
                     HairServiceId = hsi
                 }).ToList()
             };
-            await _appointmentRepository.CreateAppointmentAsync(appointment);
+            await _unitOfWork.AppointmentRepository.CreateAppointmentAsync(appointment);
+            await _unitOfWork.SaveAsync();
             return Unit.Value;
         }
     }

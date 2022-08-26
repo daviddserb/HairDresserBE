@@ -11,11 +11,11 @@ namespace hairDresser.Application.Employees.Commands.CreateEmployee
 {
     public class CreateEmployeeComandHandler : IRequestHandler<CreateEmployeeComand>
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateEmployeeComandHandler(IEmployeeRepository employeeRepository)
+        public CreateEmployeeComandHandler(IUnitOfWork unitOfWork)
         {
-            _employeeRepository = employeeRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Unit> Handle(CreateEmployeeComand request, CancellationToken cancellationToken)
@@ -28,7 +28,8 @@ namespace hairDresser.Application.Employees.Commands.CreateEmployee
                     HairServiceId = hsi
                 }).ToList()
             };
-            await _employeeRepository.CreateEmployeeAsync(employee);
+            await _unitOfWork.EmployeeRepository.CreateEmployeeAsync(employee);
+            await _unitOfWork.SaveAsync();
             return Unit.Value;
         }
     }

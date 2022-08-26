@@ -22,32 +22,13 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task CreateEmployeeAsync(Employee employee)
         {
             await context.Employees.AddAsync(employee);
-            await context.SaveChangesAsync();
         }
 
         public async Task<IQueryable<Employee>> ReadEmployeesAsync()
         {
-            //BEFORE:
-            //!!! Chiar daca in clasa Employee am navigational property spre alte clase (in ex. de fata WorkingIntervals 
             return context.Employees
                 .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
                 .ThenInclude(hairServices => hairServices.HairService);
-
-            //AFTER (merge dar trebuie cumva sa fac GroupBy() si nu-mi dau seama cum pt. ca am erori):
-            //return context.EmployeesHairServices
-            //.Include(x => x.Employee)
-            //.Include(x => x.HairService);
-
-            // ??? CUM FAC GROUPBY DUPA EMPLOYEEID, adica sa am (in functie de tabelul din DB): 1 - 1, 2, 6; 2 - 2, 3, 5. Adica ceva de tipul: Key -> List<int>.
-            //return context.EmployeesHairServices
-            //.GroupBy(obj => obj.EmployeeId);
-
-            //return context.EmployeesHairServices
-            //.GroupBy(obj => obj.EmployeeId,
-            //(key, list) => new EmployeeHairService { EmployeeId = key, HairServiceId = list.ToList() } );
-            //(key, list) => new { EmployeeId = key, HairServiceId = list.ToList() });
-
-            //throw new NotImplementedException();
         }
 
         public async Task<Employee> GetEmployeeByIdAsync(int employeeId)
@@ -57,13 +38,29 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<Employee>> GetAllEmployeesByServicesAsync(List<int> servicesIds)
         {
-            //var validEmployees = context.Employees.Include(employee => employee.EmployeeHairServices)
+            //???
+            //Exemplu de la Adina (dar este eroare):
+            //return context.Employees.Include(employee => employee.EmployeeHairServices)
             //    .Select(employee => employee.EmployeeHairServices.Where(hairService => servicesIds.Contains(hairService.HairServiceId)));
-            //return validEmployees;
-            throw new NotImplementedException();
-        }
 
-        //public async Task<IQueryable<Employee>> ReadEmployeesAsync()
+            //Ce am incercat sa fac (dar am eroare de can't convert la Contains) Varianta 1:
+            //var validEmployees = context.Employees
+            //    .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
+            //    .ThenInclude(hairServices => hairServices.HairService)
+            //    .Where(hairServices => hairServices.EmployeeHairServices.Contains(servicesIds))
+
+            //Ce am incercat sa fac (dar am eroare cand returnez) Varianta 2:
+            //var validEmployees = context.Employees
+            //    .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
+            //    .ThenInclude(hairServices => hairServices.HairService)
+            //    .Select(employee => employee.EmployeeHairServices.Where(y => servicesIds.Contains(y.HairServiceId)));
+
+            return context.Employees
+                .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
+                .ThenInclude(hairServices => hairServices.HairService);
+                //.Where(hairServices => hairServices.EmployeeHairServices.HairServiceId.Contains(servicesIds));
+                //.Select(employeeHairServices => employeeHairServices.EmployeeHairServices.Where(hairServicesIds => hairServicesIds.HairServiceId.Contains(servicesIds)));
+        }
 
         public async Task<Employee> UpdateEmployeeAsync(Employee employee)
         {
@@ -76,7 +73,6 @@ namespace hairDresser.Infrastructure.Repositories
             {
                 var employee = context.Employees.Single(e => e.Id == employeeId);
                 context.Remove(employee);
-                await context.SaveChangesAsync();
             } catch
             {
                 Console.WriteLine("Nu exista employee-ul cu acel id.");

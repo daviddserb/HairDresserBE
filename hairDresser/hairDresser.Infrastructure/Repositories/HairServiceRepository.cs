@@ -21,7 +21,6 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task CreateHairServiceAsync(HairService hairService)
         {
             await context.HairServices.AddAsync(hairService);
-            await context.SaveChangesAsync();
         }
 
         public async Task<IQueryable<HairService>> ReadHairServicesAsync()

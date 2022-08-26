@@ -21,7 +21,6 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task CreateWorkingDayAsync(WorkingDay workingDay)
         {
             await context.WorkingDays.AddAsync(workingDay);
-            await context.SaveChangesAsync();
         }
 
         public async Task<IQueryable<WorkingDay>> ReadWorkingDaysAsync()

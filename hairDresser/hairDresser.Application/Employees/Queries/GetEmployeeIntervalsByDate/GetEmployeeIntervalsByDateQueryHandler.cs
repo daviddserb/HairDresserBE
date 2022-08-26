@@ -11,39 +11,28 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
 {
     public class GetEmployeeIntervalsByDateQueryHandler : IRequestHandler<GetEmployeeIntervalsByDateQuery, List<(DateTime startDate, DateTime endDate)>>
     {
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IAppointmentRepository _appointmentRepository;
-        private readonly IWorkingDayRepository _workingDayRepository;
-        private readonly IWorkingIntervalRepository _workingIntervalRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetEmployeeIntervalsByDateQueryHandler(IAppointmentRepository appointmentRepository, IEmployeeRepository employeeRepository, IWorkingDayRepository workingDayRepository, IWorkingIntervalRepository workingIntervalRepository)
+        public GetEmployeeIntervalsByDateQueryHandler(IUnitOfWork unitOfWork)
         {
-            _employeeRepository = employeeRepository;
-            _appointmentRepository = appointmentRepository;
-            _workingDayRepository = workingDayRepository;
-            _workingIntervalRepository = workingIntervalRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<List<(DateTime startDate, DateTime endDate)>> Handle(GetEmployeeIntervalsByDateQuery request, CancellationToken cancellationToken)
         {
             Console.WriteLine("\nGetEmployeeIntervalsByDateQueryHandler:");
 
-            //var employee = await _employeeRepository.GetEmployeeAsync(request.EmployeeId);
-            //Console.WriteLine($"employeeName= '{employee.Name}'");
-
             var appointmentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, request.Date);
-            Console.WriteLine($"appointmentDate (ignoram Time-ul, am setat doar Date-ul (Day) in Anul curent si Luna curenta= '{appointmentDate}'");
+            Console.WriteLine($"appointment (ignoram Time-ul, am setat doar Date-ul, adica Day, in Anul curent si Luna curenta)= '{appointmentDate}'");
 
             var duration = TimeSpan.FromMinutes(request.DurationInMinutes);
-            Console.WriteLine($"duration (from minutes transformed in TimeSpan)== '{duration}'");
+            Console.WriteLine($"duration, from minutes to TimeSpan,= '{duration}'");
 
             var employeeAppointmentsDates = new List<(DateTime startDate, DateTime endDate)>();
             Console.WriteLine("\nAll the appointments from the selected employee and the selected date:");
-            foreach (var appointment in await _appointmentRepository.GetAllAppointmentsByEmployeeIdByDateAsync(request.EmployeeId, appointmentDate))
+            foreach (var appointment in await _unitOfWork.AppointmentRepository.GetAllAppointmentsByEmployeeIdByDateAsync(request.EmployeeId, appointmentDate))
             {
                 employeeAppointmentsDates.Add((appointment.StartDate, appointment.EndDate));
-                // 1. Nu trebuie neaparat, nu ajuta la algoritm, dar cum fac sa vad si toate HairServices-urile de la fiecare appointment? Daca reusesc sa inteleg si sa fac asta, imi rezolv si alte probleme pe care le am in cod.
-                // 2. Pe metoda GetAppointmentsInWorkAsync din AppointmentRepository, la return-ul ei am facut join pe Customer, ca aici sa pot face .Customer.Name, dar nu am facut join si pe Employee si de ce pot sa fac .Employee.Name?
                 Console.WriteLine($"{appointment.Id} - customer= '{appointment.Customer.Name}', employee='{appointment.Employee.Name}', start= '{appointment.StartDate}', end= '{appointment.EndDate}'");
             }
 
@@ -57,10 +46,9 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
             var nameOfDay = appointmentDate.ToString("dddd");
             Console.WriteLine($"\nname of the day based on the selected date is= '{nameOfDay}'");
 
-            var workingDay = await _workingDayRepository.GetWorkingDayByNameAsync(nameOfDay);
-            Console.WriteLine($"day: Id= '{workingDay.Id}', Name= '{workingDay.Name}'");
+            var workingDay = await _unitOfWork.WorkingDayRepository.GetWorkingDayByNameAsync(nameOfDay);
 
-            var employeeWorkingIntervals = await _workingIntervalRepository.GetWorkingIntervalByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, workingDay.Id);
+            var employeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, workingDay.Id);
             var possibleIntervals = new List<DateTime>();
             foreach (var intervals in employeeWorkingIntervals)
             {

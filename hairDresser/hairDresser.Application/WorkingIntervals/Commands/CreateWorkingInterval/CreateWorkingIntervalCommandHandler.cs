@@ -11,11 +11,11 @@ namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterva
 {
     public class CreateWorkingIntervalCommandHandler : IRequestHandler<CreateWorkingIntervalCommand>
     {
-        private readonly IWorkingIntervalRepository _workingIntervalRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateWorkingIntervalCommandHandler(IWorkingIntervalRepository workingIntervalRepository)
+        public CreateWorkingIntervalCommandHandler(IUnitOfWork unitOfWork)
         {
-            _workingIntervalRepository = workingIntervalRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Unit> Handle(CreateWorkingIntervalCommand request, CancellationToken cancellationToken)
@@ -27,7 +27,7 @@ namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterva
 
             // Validation for the selected interval (startTime -> endTime) to don't overlap other intervals and to be at least 1 hour between all working intervals.
             Console.WriteLine("Check if the Interval (startTime -> endTime) is not overlapping with other intervals:");
-            var allEmployeeWorkingIntervals = await _workingIntervalRepository.GetWorkingIntervalByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, request.DayId);
+            var allEmployeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, request.DayId);
             var isIntervalGood = true;
             foreach (var intervals in allEmployeeWorkingIntervals)
             {
@@ -51,7 +51,8 @@ namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterva
                     StartTime = startTime,
                     EndTime = endTime,
                 };
-                await _workingIntervalRepository.CreateWorkingIntervalAsync(workingInterval);
+                await _unitOfWork.WorkingIntervalRepository.CreateWorkingIntervalAsync(workingInterval);
+                await _unitOfWork.SaveAsync();
             }
 
             return Unit.Value;

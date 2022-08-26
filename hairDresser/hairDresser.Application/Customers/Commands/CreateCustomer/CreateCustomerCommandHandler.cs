@@ -11,11 +11,11 @@ namespace hairDresser.Application.Customers.Commands.CreateCustomer
 {
     public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand>
     {
-        private readonly ICustomerRepository _customerRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateCustomerCommandHandler(ICustomerRepository customerRepository)
+        public CreateCustomerCommandHandler(IUnitOfWork unitOfWork)
         {
-            _customerRepository = customerRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Unit> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
@@ -29,7 +29,8 @@ namespace hairDresser.Application.Customers.Commands.CreateCustomer
                 Phone = request.Phone,
                 Address = request.Address
             };
-            await _customerRepository.CreateCustomerAsync(customer);
+            await _unitOfWork.CustomerRepository.CreateCustomerAsync(customer);
+            await _unitOfWork.SaveAsync();
             return Unit.Value;
         }
     }

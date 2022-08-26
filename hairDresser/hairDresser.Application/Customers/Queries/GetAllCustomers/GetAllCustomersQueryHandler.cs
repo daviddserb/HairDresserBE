@@ -11,16 +11,16 @@ namespace hairDresser.Application.Customers.Queries.GetAllCustomers
 {
     public class GetAllCustomersQueryHandler : IRequestHandler<GetAllCustomersQuery, IQueryable<Customer>>
     {
-        private readonly ICustomerRepository _customerRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetAllCustomersQueryHandler(ICustomerRepository customerRepository)
+        public GetAllCustomersQueryHandler(IUnitOfWork unitOfWork)
         {
-            _customerRepository = customerRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IQueryable<Customer>> Handle(GetAllCustomersQuery request, CancellationToken cancellationToken)
         {
-            return await _customerRepository.ReadCustomersAsync();
+            return await _unitOfWork.CustomerRepository.ReadCustomersAsync();
         }
     }
 }

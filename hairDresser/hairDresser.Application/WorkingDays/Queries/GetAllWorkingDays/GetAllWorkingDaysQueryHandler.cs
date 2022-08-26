@@ -11,15 +11,15 @@ namespace hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays
 {
     public class GetAllWorkingDaysQueryHandler : IRequestHandler<GetAllWorkingDaysQuery, IQueryable<WorkingDay>>
     {
-        private readonly IWorkingDayRepository _workingDayRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetAllWorkingDaysQueryHandler(IWorkingDayRepository workingDayRepository)
+        public GetAllWorkingDaysQueryHandler(IUnitOfWork unitOfWork)
         {
-            _workingDayRepository = workingDayRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<IQueryable<WorkingDay>> Handle(GetAllWorkingDaysQuery request, CancellationToken cancellationToken)
         {
-            return await _workingDayRepository.ReadWorkingDaysAsync();
+            return await _unitOfWork.WorkingDayRepository.ReadWorkingDaysAsync();
         }
     }
 }

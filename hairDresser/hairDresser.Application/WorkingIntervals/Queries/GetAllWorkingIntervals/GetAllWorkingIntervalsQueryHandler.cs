@@ -11,15 +11,16 @@ namespace hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingInterval
 {
     public class GetAllWorkingIntervalsQueryHandler : IRequestHandler<GetAllWorkingIntervalsQuery, IQueryable<WorkingInterval>>
     {
-        private readonly IWorkingIntervalRepository _workingIntervalRepository;
-        public GetAllWorkingIntervalsQueryHandler(IWorkingIntervalRepository workingIntervalRepository)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public GetAllWorkingIntervalsQueryHandler(IUnitOfWork unitOfWork)
         {
-            _workingIntervalRepository = workingIntervalRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IQueryable<WorkingInterval>> Handle(GetAllWorkingIntervalsQuery request, CancellationToken cancellationToken)
         {
-            var allWorkingIntervals = await _workingIntervalRepository.ReadWorkingIntervalsAsync();
+            var allWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.ReadWorkingIntervalsAsync();
             return allWorkingIntervals;
         }
     }

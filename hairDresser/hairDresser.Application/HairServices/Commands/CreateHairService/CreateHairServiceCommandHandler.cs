@@ -11,11 +11,11 @@ namespace hairDresser.Application.HairServices.Commands.CreateHairService
 {
     public class CreateHairServiceCommandHandler : IRequestHandler<CreateHairServiceCommand>
     {
-        private readonly IHairServiceRepository _hairServiceRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateHairServiceCommandHandler(IHairServiceRepository hairServiceRepository)
+        public CreateHairServiceCommandHandler(IUnitOfWork unitOfWork)
         {
-            _hairServiceRepository = hairServiceRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Unit> Handle(CreateHairServiceCommand request, CancellationToken cancellationToken)
@@ -26,7 +26,8 @@ namespace hairDresser.Application.HairServices.Commands.CreateHairService
                 Duration = TimeSpan.FromMinutes(request.DurationInMinutes),
                 Price = request.Price
             };
-            await _hairServiceRepository.CreateHairServiceAsync(hairService);
+            await _unitOfWork.HairServiceRepository.CreateHairServiceAsync(hairService);
+            await _unitOfWork.SaveAsync();
             return Unit.Value;
         }
     }

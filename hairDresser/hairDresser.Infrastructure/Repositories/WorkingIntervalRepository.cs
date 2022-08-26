@@ -22,7 +22,6 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task CreateWorkingIntervalAsync(WorkingInterval workingInterval)
         {
             await context.WorkingIntervals.AddAsync(workingInterval);
-            await context.SaveChangesAsync();
         }
         public async Task<IQueryable<WorkingInterval>> ReadWorkingIntervalsAsync()
         {
