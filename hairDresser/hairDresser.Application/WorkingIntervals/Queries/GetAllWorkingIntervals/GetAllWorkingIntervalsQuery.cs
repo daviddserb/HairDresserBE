@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingIntervals
 {
-    public class GetAllWorkingIntervalsQuery : IRequest<IEnumerable<WorkingInterval>>{}
+    public class GetAllWorkingIntervalsQuery : IRequest<IQueryable<WorkingInterval>>{}
 }

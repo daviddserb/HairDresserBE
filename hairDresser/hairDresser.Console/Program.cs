@@ -1,11 +1,11 @@
 ﻿using hairDresser.Application.Appointments.Commands.CreateAppointment;
 using hairDresser.Application.Appointments.Queries.GetAllAppointments;
+using hairDresser.Application.Appointments.Queries.GetAllAppointmentsByCustomerId;
 using hairDresser.Application.Customers.Commands.CreateCustomer;
 using hairDresser.Application.Customers.Queries.GetAllCustomers;
 using hairDresser.Application.Employees.Commands.CreateEmployee;
 using hairDresser.Application.Employees.Commands.DeleteEmployeeById;
 using hairDresser.Application.Employees.Queries.GetAllEmployees;
-using hairDresser.Application.Employees.Queries.GetEmployeeById;
 using hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppointmentByDate;
 using hairDresser.Application.Employees.Queries.GetEmployeesByServices;
 using hairDresser.Application.HairServices.Commands.CreateHairService;
@@ -16,34 +16,25 @@ using hairDresser.Application.WorkingDays.Commands.CreateWorkingDay;
 using hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays;
 using hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterval;
 using hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingIntervals;
-using hairDresser.Domain.Models;
 using hairDresser.Infrastructure;
 using hairDresser.Infrastructure.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 //Intrebari -> ???
-// Program -> case "01"
 // Application -> Employees -> Queries -> GetEmployeeIntervalsByDateQueryHandler
 // Application -> Employees -> Queries -> GetEmployeesByServicesQueryHandler
-
-//!!! Unde am modificari de facut dupa ce am amplicat: One-To-Many intre Appointment si Customer, Appointment si Employee + Many-To-Many intre Appointment si HairService.
-// AppointmentRepository
-
-//!!! Unde am modificari de facut dupa ce am amplicat Many-To-Many intre Employee si HairService:
 // EmployeeRepository
 
-/* DB relationships between entities (domain classes)
- * Un Customer poate sa aibe mai multe Appointments dar un Appointment poate avea doar un singur Customer => One-To-Many.
- * Un Employee poate sa aibe mai multe Appointments dar un Appointment poate avea doar un singur Employee => One-To-Many.
- * Un Employee poate sa aibe mai multe HairServices si un HairService poate sa fie la mai multi Employees => Many-To-Many.
- * Un Appointment poate sa aibe mai multe HairServices si un HairService poate sa fie la mai multe Appointments => Many-To-Many.
- * -----------------------------------------------------------------------------------------------------------------------------
- * Un Employee poate sa aiba mai multe WorkingDays si un WorkingDay poate sa fie la mai multi Employee => Many-To-Many. ! Dar aceasta legatura o fac prin intermediul tabelei WorkingInterval, unde:
- * Un Employee poate sa aiba mai multe WorkingIntervals dar un WorkingInterval nu poate sa fie la mai multi Employees.
- * Un WorkingDay poate sa aiba mai multe WorkingIntervals dar un WorkingInterval nu poate sa aiba mai multe WorkingDays.
-*/
+//    DB relationships between entities (domain classes)
+// Un Customer poate sa aibe mai multe Appointments dar un Appointment poate avea doar un singur Customer => One-To-Many.
+// Un Employee poate sa aibe mai multe Appointments dar un Appointment poate avea doar un singur Employee => One-To-Many.
+// Un Employee poate sa aibe mai multe HairServices si un HairService poate sa fie la mai multi Employees => Many-To-Many.
+// Un Appointment poate sa aibe mai multe HairServices si un HairService poate sa fie la mai multe Appointments => Many-To-Many.
+//-----------------------------------------------------------------------------------------------------------------------------
+// Un Employee poate sa aiba mai multe WorkingDays si un WorkingDay poate sa fie la mai multi Employee => Many-To-Many. Observatie, aceasta legatura o fac prin intermediul tabelei WorkingInterval, unde:
+// Un Employee poate sa aiba mai multe WorkingIntervals dar un WorkingInterval nu poate sa fie la mai multi Employees.
+// Un WorkingDay poate sa aiba mai multe WorkingIntervals dar un WorkingInterval nu poate sa aiba mai multe WorkingDays.
 
 bool showMenu = true;
 
@@ -79,15 +70,15 @@ async Task<bool> MainMenuAsync()
     Console.WriteLine("\nCRUD Appointment:");
     Console.WriteLine("00 - CreateAppointment");
     Console.WriteLine("01 - ReadAppointments");
-    Console.WriteLine("02 - GetAllAppointmnetsByCustomerId"); //!!! trebuie sa o implementez
+    Console.WriteLine("02 - GetAllppointmentsByCustomerId");
     //Console.WriteLine("03 - UpdateAppointment");
     //Console.WriteLine("04 - DeleteAppointment");
 
     Console.WriteLine("\nCRUD Employee:");
     Console.WriteLine("10 - CreateEmployee");
     Console.WriteLine("11 - ReadEmployees");
-    Console.WriteLine("12 - GetAllEmpoyeesByServices"); //!!! -> nu functioneaza
-    Console.WriteLine("13 - GetEmployeeIntervalsByDate"); //!!! -> nu functioneaza
+    Console.WriteLine("12 - GetAllEmpoyeesByServices"); //!!!??? -> nu functioneaza (trebuie sa incerc)
+    Console.WriteLine("13 - GetEmployeeIntervalsByDate"); //!!!??? -> nu functioneaza (trebuie sa incerc)
     //Update
     Console.WriteLine("15 - DeleteEmployee");
 
@@ -155,41 +146,46 @@ async Task<bool> MainMenuAsync()
             }
         case "01":
             {
-                var customerAppointments = await mediator.Send(new GetAllAppointmentsQuery());
-                foreach (var app in customerAppointments)
+                var customersAppointments = await mediator.Send(new GetAllAppointmentsQuery());
+                foreach (var app in customersAppointments)
                 {
-                    //??? Cum fac sa printez HairServices-urile de la fiecare appointment in parte? Am facut partial dar nu-mi prea place cum am facut.
-                    // Ce mi-a zis Adina sa fac dar nu am imi merge:
-                    //query ...
-                    //var appointmentHairServices = HairServiceRepository.GetHairServiceByIdsAsync(app.AppointmentHairService.Select(a => a.HairServiceId).ToList());
+                    var appointmentHairServices = app.AppointmentHairServices.Select(hairServices => hairServices.HairService.Name);
+                    Console.WriteLine($"{app.Id} - customer= '{app.Customer.Name}', employee= '{app.Employee.Name}', start= '{app.StartDate}', end= '{app.EndDate}', hairservices= '{String.Join(", ", appointmentHairServices)}'");
 
-                    Console.WriteLine($"{app.Id} - customer= '{app.Customer.Name}', employee= '{app.Employee.Name}', start= '{app.StartDate}', end= '{app.EndDate}'");
-                    // Aici pot sa vad id-urile de la fiecare hairservice pt. fiecare appointment in parte
-                    //foreach (var hs in app.AppointmentHairServices)
+                    //! Varianta mea complicata si proasta:
+                    //var hairServicesIdsInInt = new List<int>();
+                    //foreach (var appointmentHairServices in app.AppointmentHairServices)
                     //{
-                    //    Console.WriteLine($"hs= " + hs.HairServiceId);
+                    //    hairServicesIdsInInt.Add(appointmentHairServices.HairServiceId);
                     //}
+                    //var servicesByIds = await mediator.Send(new GetHairServicesByIdsQuery
+                    //{
+                    //    HairServicesIds = hairServicesIdsInInt
+                    //});
 
-                    var hairServicesIdsInInt = new List<int>();
-                    foreach (var appointmentHairServices in app.AppointmentHairServices)
-                    {
-                        hairServicesIdsInInt.Add(appointmentHairServices.HairServiceId);
-                    }
-                    var servicesByIds = await mediator.Send(new GetHairServicesByIdsQuery
-                    {
-                        HairServicesIds = hairServicesIdsInInt
-                    });
-
-                    Console.WriteLine("hairservices:");
-                    foreach (var service in servicesByIds)
-                    {
-                        Console.WriteLine(service.Name);
-                    }
+                    //Console.WriteLine("hairservices:");
+                    //foreach (var service in servicesByIds)
+                    //{
+                    //    Console.WriteLine(service.Name);
+                    //}
                 }
                 return true;
             }
         case "02":
             {
+                Console.WriteLine("Customer Id?");
+                var customerId = Int32.Parse(Console.ReadLine());
+
+                var customerAppointments = await mediator.Send(new GetAllAppointmentsByCustomerIdQuery
+                {
+                    CustomerId = customerId
+                });
+
+                foreach (var appointment in customerAppointments)
+                {
+                    var appointmentHairServices = appointment.AppointmentHairServices.Select(hairServices => hairServices.HairService.Name);
+                    Console.WriteLine($"{appointment.Id} - customer= '{appointment.Customer.Name}', employee= '{appointment.Employee.Name}', start= '{appointment.StartDate}',  end= '{appointment.EndDate}',  hairservices= '{String.Join(", ", appointmentHairServices)}'");
+                }
                 return true;
             }
         case "10":
@@ -222,15 +218,10 @@ async Task<bool> MainMenuAsync()
             {
                 var allEmployees = await mediator.Send(new GetAllEmployeesQuery());
                 Console.Write("All employees:\n");
-                //???Cum pot accesa Hairservices a unui Employee, cand am o legatura de Many-To-Many intre ei? Aici nu cred ca mai pot si nu are rost sa fac join (include) intre Employee si HairServices, ci sa lucrez direct pe tabela EmployeeHairServices, dar dupa ce returnez context.EmployeeHairServices in repository (intrebare: ii ok sa returnez in repository-ul Employee ceva de tipul altei clase, in cazul de fata EmployeeHairServices?), aici nu pot sa fac object.EmployeeHairServices.Employee de exemplu.
                 foreach (var employee in allEmployees)
                 {
-                    Console.WriteLine("employee= " + employee.Name);
-                    //BEFORE:
-                    //Console.WriteLine($"{employee.Id} - name= '{employee.Name}', specializations= '?'");
-
-                    //AFTER: (merge dar trebuie cumva sa fac GroupBy() cred in Repository si am erori)
-                    //Console.WriteLine($"{employee.EmployeeId} - '{employee.Employee.Name}', '{employee.HairService.Name}'");
+                    var employeeHairServices = employee.EmployeeHairServices.Select(hairServices => hairServices.HairService.Name);
+                    Console.WriteLine($"{employee.Id} - '{employee.Name}', '{String.Join(", ", employeeHairServices)}'");
                 }
                 return true;
             }

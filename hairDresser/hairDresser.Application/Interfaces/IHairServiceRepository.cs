@@ -10,9 +10,9 @@ namespace hairDresser.Application.Interfaces
     public interface IHairServiceRepository
     {
         Task CreateHairServiceAsync(HairService hairService);
-        Task<IEnumerable<HairService>> GetHairServicesByIdsAsync(List<int> hairServicesId);
-        Task<IEnumerable<HairService>> ReadHairServicesAsync();
-        Task UpdateHairServiceAsync(int hairServiceId);
+        Task<IQueryable<HairService>> ReadHairServicesAsync();
+        Task<IQueryable<HairService>> GetHairServicesByIdsAsync(List<int> hairServicesId);
+        Task<HairService> UpdateHairServiceAsync(HairService hairService);
         Task DeleteHairServiceAsync(int hairServiceId);
     }
 }

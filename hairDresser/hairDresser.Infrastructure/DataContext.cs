@@ -31,6 +31,7 @@ namespace hairDresser.Infrastructure
         {
             optionBuilder
                 .UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDb;Trusted_Connection=True;MultipleActiveResultSets=true");
+            //optionBuilder.UseLazyLoadingProxies(true);
         }
 
         // DE VERIFICAT: !!!??? Am vazut pe net ca pe langa legaturile by convention, chiar daca am facut tabelul intermediar, tot am nevoie si de asta, ca sa pot accesa tabelul de legatura... este adevarat? La call s-a spus ca nu este nevoie, din cate am inteles eu.

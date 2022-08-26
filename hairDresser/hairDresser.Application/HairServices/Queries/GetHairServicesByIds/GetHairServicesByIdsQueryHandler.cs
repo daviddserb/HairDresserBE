@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.HairServices.Queries.GetHairServicesByIds
 {
-    public class GetHairServicesByIdsQueryHandler : IRequestHandler<GetHairServicesByIdsQuery, IEnumerable<HairService>>
+    public class GetHairServicesByIdsQueryHandler : IRequestHandler<GetHairServicesByIdsQuery, IQueryable<HairService>>
     {
         private readonly IHairServiceRepository _hairServiceRepository;
         public GetHairServicesByIdsQueryHandler(IHairServiceRepository hairServiceRepository)
         {
             _hairServiceRepository = hairServiceRepository;
         }
-        public async Task<IEnumerable<HairService>> Handle(GetHairServicesByIdsQuery request, CancellationToken cancellationToken)
+        public async Task<IQueryable<HairService>> Handle(GetHairServicesByIdsQuery request, CancellationToken cancellationToken)
         {
             //Console.WriteLine("GetHairServicesByIdsQueryHandler:");
             var selectedHairServices = await _hairServiceRepository.GetHairServicesByIdsAsync(request.HairServicesIds);

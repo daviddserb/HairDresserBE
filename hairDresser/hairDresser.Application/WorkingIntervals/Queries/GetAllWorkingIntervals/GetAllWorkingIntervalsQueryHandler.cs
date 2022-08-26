@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingIntervals
 {
-    public class GetAllWorkingIntervalsQueryHandler : IRequestHandler<GetAllWorkingIntervalsQuery, IEnumerable<WorkingInterval>>
+    public class GetAllWorkingIntervalsQueryHandler : IRequestHandler<GetAllWorkingIntervalsQuery, IQueryable<WorkingInterval>>
     {
         private readonly IWorkingIntervalRepository _workingIntervalRepository;
         public GetAllWorkingIntervalsQueryHandler(IWorkingIntervalRepository workingIntervalRepository)
@@ -17,7 +17,7 @@ namespace hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingInterval
             _workingIntervalRepository = workingIntervalRepository;
         }
 
-        public async Task<IEnumerable<WorkingInterval>> Handle(GetAllWorkingIntervalsQuery request, CancellationToken cancellationToken)
+        public async Task<IQueryable<WorkingInterval>> Handle(GetAllWorkingIntervalsQuery request, CancellationToken cancellationToken)
         {
             var allWorkingIntervals = await _workingIntervalRepository.ReadWorkingIntervalsAsync();
             return allWorkingIntervals;

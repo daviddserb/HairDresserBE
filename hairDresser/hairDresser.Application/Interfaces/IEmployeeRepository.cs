@@ -11,9 +11,9 @@ namespace hairDresser.Application.Interfaces
     {
         Task CreateEmployeeAsync(Employee employee);
         Task<IQueryable<Employee>> ReadEmployeesAsync();
-        Task<Employee> GetEmployeeAsync(int employeeId);
-        Task<IQueryable<Employee>> GetEmployeesAsync(List<int> services);
-        Task UpdateEmployeeAsync(Employee employee);
+        Task<Employee> GetEmployeeByIdAsync(int employeeId);
+        Task<IQueryable<Employee>> GetAllEmployeesByServicesAsync(List<int> services);
+        Task<Employee> UpdateEmployeeAsync(Employee employee);
         Task DeleteEmployeeAsync(int employeeId);
     }
 }

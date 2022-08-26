@@ -10,10 +10,10 @@ namespace hairDresser.Application.Interfaces
     public interface IWorkingIntervalRepository
     {
         Task CreateWorkingIntervalAsync(WorkingInterval workingInterval);
-        Task<IEnumerable<WorkingInterval>> ReadWorkingIntervalsAsync();
-        Task<WorkingInterval> GetWorkingIntervalAsync(int dayId);
-        Task<IEnumerable<WorkingInterval>> GetWorkingIntervalByEmployeeIdByWorkingDayIdAsync(int employeeId, int workingDayId);
-        Task UpdateWorkingIntervalAsync();
-        Task DeleteWorkingIntervalAsync();
+        Task<IQueryable<WorkingInterval>> ReadWorkingIntervalsAsync();
+        Task<WorkingInterval> GetWorkingIntervalAsync(int workingDayId);
+        Task<IQueryable<WorkingInterval>> GetWorkingIntervalByEmployeeIdByWorkingDayIdAsync(int employeeId, int workingDayId);
+        Task<WorkingInterval> UpdateWorkingIntervalAsync(WorkingInterval workingInterval);
+        Task DeleteWorkingIntervalAsync(int workingIntervalId);
     }
 }

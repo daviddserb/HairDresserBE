@@ -34,11 +34,12 @@ namespace hairDresser.Infrastructure.Repositories
             return context.Customers.First(customer => customer.Id == customerId);
         }
 
-        public async Task UpdateCustomerAsync(Customer customer)
+        public async Task<Customer> UpdateCustomerAsync(Customer customer)
         {
             throw new NotImplementedException();
         }
-        public async Task DeleteCustomerAsync(Customer customer)
+
+        public async Task DeleteCustomerAsync(int customerId)
         {
             throw new NotImplementedException();
         }

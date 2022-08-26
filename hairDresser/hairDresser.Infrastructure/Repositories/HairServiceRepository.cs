@@ -17,17 +17,19 @@ namespace hairDresser.Infrastructure.Repositories
         {
             this.context = context;
         }
+
         public async Task CreateHairServiceAsync(HairService hairService)
         {
             await context.HairServices.AddAsync(hairService);
             await context.SaveChangesAsync();
         }
-        public async Task<IEnumerable<HairService>> ReadHairServicesAsync()
+
+        public async Task<IQueryable<HairService>> ReadHairServicesAsync()
         {
             return context.HairServices;
         }
 
-        public async Task<IEnumerable<HairService>> GetHairServicesByIdsAsync(List<int> hairServicesIds)
+        public async Task<IQueryable<HairService>> GetHairServicesByIdsAsync(List<int> hairServicesIds)
         {
             //Console.WriteLine("HairServiceRepository -> GetHairServiceByIdsAsync");
             var hairServices = context.HairServices.Where(service => hairServicesIds.Contains(service.Id));
@@ -39,7 +41,7 @@ namespace hairDresser.Infrastructure.Repositories
             return hairServices;
         }
 
-        public async Task UpdateHairServiceAsync(int hairServiceId)
+        public async Task<HairService> UpdateHairServiceAsync(HairService hairService)
         {
             throw new NotImplementedException();
         }

@@ -24,27 +24,27 @@ namespace hairDresser.Infrastructure.Repositories
             await context.Appointments.AddAsync(appointment);
             await context.SaveChangesAsync();
         }
+
         public async Task<IQueryable<Appointment>> ReadAppointmentsAsync()
         {
-            //return context.Appointments
-            //    .Include(customer => customer.Customer)
-            //    .Include(employee => employee.Employee)
-            //    .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices);
-
-            return context.Appointments;
+            return context.Appointments
+                .Include(customers => customers.Customer)
+                .Include(employees => employees.Employee)
+                .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
+                .ThenInclude(hairServices => hairServices.HairService);
         }
 
-        public async Task<IQueryable<Appointment>> GetAllAppointmnetsByCustomerIdAsync(int customerId)
+        public async Task<IQueryable<Appointment>> GetAllppointmentsByCustomerIdAsync(int customerId)
         {
-            throw new NotImplementedException();
+            return context.Appointments
+                .Where(appointment => appointment.CustomerId == customerId)
+                .Include(customers => customers.Customer)
+                .Include(employees => employees.Employee)
+                .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
+                .ThenInclude(hairServices => hairServices.HairService);
         }
 
-        public async Task<IQueryable<Appointment>> GetAllInWorkAppointmnetsByCustomerIdAsync(int customerId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IQueryable<Appointment>> GetAppointmentsInWorkAsync(int employeeId, DateTime customerDate)
+        public async Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdByDateAsync(int employeeId, DateTime customerDate)
         {
             return context.Appointments
                 // ??? Conteaza unde pun Include, adica in fata de Where sau dupa? Stiu (parca) ca JOIN in SQL se pune inainte de WHERE.
@@ -53,12 +53,12 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(customer => customer.Customer);
         }
 
-        public async Task UpdateAppointmentAsync(Appointment appointment)
+        public async Task<Appointment> UpdateAppointmentAsync(Appointment appointment)
         {
             throw new NotImplementedException();
         }
 
-        public async Task DeleteAppointmentAsync(Appointment appointment)
+        public async Task DeleteAppointmentAsync(int appointmentId)
         {
             throw new NotImplementedException();
         }

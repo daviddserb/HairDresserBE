@@ -17,6 +17,7 @@ namespace hairDresser.Infrastructure.Repositories
         {
             this.context = context;
         }
+
         public async Task CreateWorkingDayAsync(WorkingDay workingDay)
         {
             await context.WorkingDays.AddAsync(workingDay);

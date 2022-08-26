@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays
 {
-    public class GetAllWorkingDaysQueryHandler : IRequestHandler<GetAllWorkingDaysQuery, IEnumerable<WorkingDay>>
+    public class GetAllWorkingDaysQueryHandler : IRequestHandler<GetAllWorkingDaysQuery, IQueryable<WorkingDay>>
     {
         private readonly IWorkingDayRepository _workingDayRepository;
 
@@ -17,7 +17,7 @@ namespace hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays
         {
             _workingDayRepository = workingDayRepository;
         }
-        public async Task<IEnumerable<WorkingDay>> Handle(GetAllWorkingDaysQuery request, CancellationToken cancellationToken)
+        public async Task<IQueryable<WorkingDay>> Handle(GetAllWorkingDaysQuery request, CancellationToken cancellationToken)
         {
             return await _workingDayRepository.ReadWorkingDaysAsync();
         }

@@ -21,7 +21,7 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeesByServices
         public async Task<IEnumerable<Employee>> Handle(GetEmployeesByServicesQuery request, CancellationToken cancellationToken)
         {
             Console.WriteLine("Handle:");
-            var validEmployees = await _employeeRepository.GetEmployeesAsync(request.HairServicesId);
+            var validEmployees = await _employeeRepository.GetAllEmployeesByServicesAsync(request.HairServicesId);
             return await Task.FromResult(validEmployees);
         }
     }

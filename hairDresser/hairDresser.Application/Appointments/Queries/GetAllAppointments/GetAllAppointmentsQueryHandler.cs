@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Appointments.Queries.GetAllAppointments
 {
-    public class GetAllAppointmentsQueryHandler : IRequestHandler<GetAllAppointmentsQuery, IEnumerable<Appointment>>
+    public class GetAllAppointmentsQueryHandler : IRequestHandler<GetAllAppointmentsQuery, IQueryable<Appointment>>
     {
         private readonly IAppointmentRepository _appointmentRepository;
 
@@ -17,7 +17,7 @@ namespace hairDresser.Application.Appointments.Queries.GetAllAppointments
         {
             _appointmentRepository = appointmentRepository;
         }
-        public async Task<IEnumerable<Appointment>> Handle(GetAllAppointmentsQuery request, CancellationToken cancellationToken)
+        public async Task<IQueryable<Appointment>> Handle(GetAllAppointmentsQuery request, CancellationToken cancellationToken)
         {
             return await _appointmentRepository.ReadAppointmentsAsync();
         }

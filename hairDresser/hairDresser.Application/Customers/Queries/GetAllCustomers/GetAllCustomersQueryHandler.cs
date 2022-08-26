@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Customers.Queries.GetAllCustomers
 {
-    public class GetAllCustomersQueryHandler : IRequestHandler<GetAllCustomersQuery, IEnumerable<Customer>>
+    public class GetAllCustomersQueryHandler : IRequestHandler<GetAllCustomersQuery, IQueryable<Customer>>
     {
         private readonly ICustomerRepository _customerRepository;
 
@@ -18,7 +18,7 @@ namespace hairDresser.Application.Customers.Queries.GetAllCustomers
             _customerRepository = customerRepository;
         }
 
-        public async Task<IEnumerable<Customer>> Handle(GetAllCustomersQuery request, CancellationToken cancellationToken)
+        public async Task<IQueryable<Customer>> Handle(GetAllCustomersQuery request, CancellationToken cancellationToken)
         {
             return await _customerRepository.ReadCustomersAsync();
         }

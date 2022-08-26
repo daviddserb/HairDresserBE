@@ -29,7 +29,9 @@ namespace hairDresser.Infrastructure.Repositories
         {
             //BEFORE:
             //!!! Chiar daca in clasa Employee am navigational property spre alte clase (in ex. de fata WorkingIntervals 
-            return context.Employees.Include(obj => obj.WorkingIntervals).Include(obj => obj.EmployeeHairServices);
+            return context.Employees
+                .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
+                .ThenInclude(hairServices => hairServices.HairService);
 
             //AFTER (merge dar trebuie cumva sa fac GroupBy() si nu-mi dau seama cum pt. ca am erori):
             //return context.EmployeesHairServices
@@ -48,12 +50,12 @@ namespace hairDresser.Infrastructure.Repositories
             //throw new NotImplementedException();
         }
 
-        public async Task<Employee> GetEmployeeAsync(int employeeId)
+        public async Task<Employee> GetEmployeeByIdAsync(int employeeId)
         {
             return context.Employees.First(obj => obj.Id == employeeId);
         }
 
-        public async Task<IQueryable<Employee>> GetEmployeesAsync(List<int> servicesIds)
+        public async Task<IQueryable<Employee>> GetAllEmployeesByServicesAsync(List<int> servicesIds)
         {
             //var validEmployees = context.Employees.Include(employee => employee.EmployeeHairServices)
             //    .Select(employee => employee.EmployeeHairServices.Where(hairService => servicesIds.Contains(hairService.HairServiceId)));
@@ -63,10 +65,11 @@ namespace hairDresser.Infrastructure.Repositories
 
         //public async Task<IQueryable<Employee>> ReadEmployeesAsync()
 
-        public async Task UpdateEmployeeAsync(Employee employee)
+        public async Task<Employee> UpdateEmployeeAsync(Employee employee)
         {
             throw new NotImplementedException();
         }
+
         public async Task DeleteEmployeeAsync(int employeeId)
         {
             try

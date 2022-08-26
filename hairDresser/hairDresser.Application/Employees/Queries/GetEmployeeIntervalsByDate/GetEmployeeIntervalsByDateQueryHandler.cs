@@ -39,7 +39,7 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
 
             var employeeAppointmentsDates = new List<(DateTime startDate, DateTime endDate)>();
             Console.WriteLine("\nAll the appointments from the selected employee and the selected date:");
-            foreach (var appointment in await _appointmentRepository.GetAppointmentsInWorkAsync(request.EmployeeId, appointmentDate))
+            foreach (var appointment in await _appointmentRepository.GetAllAppointmentsByEmployeeIdByDateAsync(request.EmployeeId, appointmentDate))
             {
                 employeeAppointmentsDates.Add((appointment.StartDate, appointment.EndDate));
                 // 1. Nu trebuie neaparat, nu ajuta la algoritm, dar cum fac sa vad si toate HairServices-urile de la fiecare appointment? Daca reusesc sa inteleg si sa fac asta, imi rezolv si alte probleme pe care le am in cod.
