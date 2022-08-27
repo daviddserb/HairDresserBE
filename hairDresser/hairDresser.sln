@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hairDresser.Console", "hair
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hairDresser.Infrastructure", "hairDresser.Infrastructure\hairDresser.Infrastructure.csproj", "{D18B0960-6E46-4226-B518-AFE47A35E374}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hairDresser.Application", "hairDresser.Application\hairDresser.Application.csproj", "{D2921E3B-F00A-44D4-8B3C-EF63C4399E2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hairDresser.Application", "hairDresser.Application\hairDresser.Application.csproj", "{D2921E3B-F00A-44D4-8B3C-EF63C4399E2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hairDresser.Presentation", "hairDresser.Api\hairDresser.Presentation.csproj", "{957267F9-8BCE-4112-AE34-5224154DCFE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{D2921E3B-F00A-44D4-8B3C-EF63C4399E2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2921E3B-F00A-44D4-8B3C-EF63C4399E2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2921E3B-F00A-44D4-8B3C-EF63C4399E2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{957267F9-8BCE-4112-AE34-5224154DCFE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{957267F9-8BCE-4112-AE34-5224154DCFE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{957267F9-8BCE-4112-AE34-5224154DCFE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{957267F9-8BCE-4112-AE34-5224154DCFE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
