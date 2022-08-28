@@ -18,8 +18,9 @@ namespace hairDresser.Api.Controllers
             _logger = logger;
         }
 
+        // ??? De ce nu ma lasa sa pun si aceasta metoda? Ma gandesc ca ii pt. ca nu fac diferenta intre asta si cea cu GetById()?
         //[HttpGet(Name = "GetWeatherForecast")]
-        //public IEnumerable<WeatherForecast> Get()
+        //public IEnumerable<WeatherForecast> GetAll()
         //{
         //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         //    {
@@ -31,9 +32,8 @@ namespace hairDresser.Api.Controllers
         //}
 
         // Ce adaug eu mai departe:
-
         [HttpGet(Name = "GetWeatherForecast")]
-        public WeatherForecast Get([FromQuery] int index)
+        public WeatherForecast GetById([FromQuery] int index)
         {
             return new WeatherForecast
             {

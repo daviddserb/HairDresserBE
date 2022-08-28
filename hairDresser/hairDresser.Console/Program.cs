@@ -21,18 +21,23 @@ using hairDresser.Infrastructure.Repositories;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-//Intrebari -> ???
-//EmployeeRepository (care are legatura cu GetEmployeeIntervalsByDateQueryHandler)
+//???
+// Trebuie sa pun Async la numele metodelor din Controllers?
+// Atunci cand returnez toate appointments in API, vad hairservicesid, ii ok asa sau ar trebui numele? In consola apare numele. Si daca trebuie sa pun numele, cum sa fac?
+// EmployeeRepository (care are legatura cu GetEmployeeIntervalsByDateQueryHandler)
 
-//    DB relationships between entities (domain classes)
-// Un Customer poate sa aibe mai multe Appointments dar un Appointment poate avea doar un singur Customer => One-To-Many.
-// Un Employee poate sa aibe mai multe Appointments dar un Appointment poate avea doar un singur Employee => One-To-Many.
-// Un Employee poate sa aibe mai multe HairServices si un HairService poate sa fie la mai multi Employees => Many-To-Many.
-// Un Appointment poate sa aibe mai multe HairServices si un HairService poate sa fie la mai multe Appointments => Many-To-Many.
-//-----------------------------------------------------------------------------------------------------------------------------
-// Un Employee poate sa aiba mai multe WorkingDays si un WorkingDay poate sa fie la mai multi Employee => Many-To-Many. Observatie, aceasta legatura o fac prin intermediul tabelei WorkingInterval, unde:
-// Un Employee poate sa aiba mai multe WorkingIntervals dar un WorkingInterval nu poate sa fie la mai multi Employees.
-// Un WorkingDay poate sa aiba mai multe WorkingIntervals dar un WorkingInterval nu poate sa aiba mai multe WorkingDays.
+
+/*
+ * DB relationships between entities (domain classes):
+ * Un Customer poate sa aibe mai multe Appointments dar un Appointment poate avea doar un singur Customer => One-To-Many.
+ * Un Employee poate sa aibe mai multe Appointments dar un Appointment poate avea doar un singur Employee => One-To-Many.
+ * Un Employee poate sa aibe mai multe HairServices si un HairService poate sa fie la mai multi Employees => Many-To-Many.
+ * Un Appointment poate sa aibe mai multe HairServices si un HairService poate sa fie la mai multe Appointments => Many-To-Many.
+-----------------------------------------------------------------------------------------------------------------------------
+ * Un Employee poate sa aiba mai multe WorkingDays si un WorkingDay poate sa fie la mai multi Employee => Many-To-Many. Observatie, aceasta legatura o fac prin intermediul tabelei WorkingInterval, unde:
+ * Un Employee poate sa aiba mai multe WorkingIntervals dar un WorkingInterval nu poate sa fie la mai multi Employees.
+ * Un WorkingDay poate sa aiba mai multe WorkingIntervals dar un WorkingInterval nu poate sa aiba mai multe WorkingDays.
+*/
 
 bool showMenu = true;
 

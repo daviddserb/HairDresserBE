@@ -43,15 +43,19 @@ namespace hairDresser.Infrastructure.Repositories
                 .ThenInclude(hairServices => hairServices.HairService);
         }
 
+        // Asta ajuta cand Customer vrea sa faca un Appointment, si trebuie sa aleaga un Employee si un Date.
         public async Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdByDateAsync(int employeeId, DateTime customerDate)
         {
             return context.Appointments
                 // ??? Conteaza unde pun Include, adica in fata de Where sau dupa? Stiu (parca) ca JOIN in SQL se pune inainte de WHERE.
-                .Where(date => date.StartDate.Date == customerDate.Date)
+                // ??? aici aveam inainte asa: date => date.StartDate.Date (ca sa iau doar Date-ul din StartDate, nu si Time-ul). Sa verific daca o sa am probleme. Cred ca a trebuit sa schimb pt. ca am pus in clasa din Domain, ? dupa Datetime, ca sa nu-i dea o valoarea default, ca sa aiba rost acel [Required].
+                .Where(date => date.StartDate == customerDate.Date)
                 .Where(id => id.EmployeeId == employeeId)
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee);
         }
+
+        // As mai putea sa fac una la fel (ca cea deasupra) unde un employee vrea sa-si vada toate history appointments.
 
         public async Task<Appointment> UpdateAppointmentAsync(Appointment appointment)
         {

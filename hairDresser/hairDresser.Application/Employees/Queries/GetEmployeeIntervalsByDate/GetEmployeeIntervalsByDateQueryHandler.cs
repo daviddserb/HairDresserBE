@@ -32,7 +32,8 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
             Console.WriteLine("\nAll the appointments from the selected employee and the selected date:");
             foreach (var appointment in await _unitOfWork.AppointmentRepository.GetAllAppointmentsByEmployeeIdByDateAsync(request.EmployeeId, appointmentDate))
             {
-                employeeAppointmentsDates.Add((appointment.StartDate, appointment.EndDate));
+                // ??? Inainte aveam asa: employeeAppointmentsDates.Add((appointment.StartDate, appointment.EndDate));. A trebuit sa schimb pt. ca in clasa Appointment, am adaugat ? dupa DateTime.
+                employeeAppointmentsDates.Add(((DateTime startDate, DateTime endDate))(appointment.StartDate, appointment.EndDate));
                 Console.WriteLine($"{appointment.Id} - customer= '{appointment.Customer.Name}', employee='{appointment.Employee.Name}', start= '{appointment.StartDate}', end= '{appointment.EndDate}'");
             }
 

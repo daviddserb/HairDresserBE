@@ -11,9 +11,15 @@ namespace hairDresser.Infrastructure
 {
     public class DataContext : DbContext
     {
-        public DataContext() 
+        //public DataContext() 
+        //{
+        //    this.ChangeTracker.LazyLoadingEnabled = false;
+        //}
+
+        // !!! S-ar putea cand lucrez pe consola, sa trebuiasca sa comentez acest constructor.
+        public DataContext(DbContextOptions options) : base(options)
         {
-            this.ChangeTracker.LazyLoadingEnabled = false;
+
         }
 
         public DbSet<Appointment> Appointments => Set<Appointment>();
@@ -22,6 +28,7 @@ namespace hairDresser.Infrastructure
         public DbSet<HairService> HairServices => Set<HairService>();
         public DbSet<WorkingInterval> WorkingIntervals => Set<WorkingInterval>();
         public DbSet<WorkingDay> WorkingDays => Set<WorkingDay>();
+
         // Chiar daca tabelul de legatura (many-to-many) iti este creat automat in DB, daca ii faci si DbSet te ajuta, adica il poti accesa.
         public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();
         public DbSet<AppointmentHairService> AppointmentsHairServices => Set<AppointmentHairService>();
@@ -30,15 +37,8 @@ namespace hairDresser.Infrastructure
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
             optionBuilder
-                .UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDb;Trusted_Connection=True;MultipleActiveResultSets=true");
+                .UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDb;Trusted_Connection=True;MultipleActiveResultSets=True;");
             //optionBuilder.UseLazyLoadingProxies(true);
         }
-
-        // DE VERIFICAT: !!!??? Am vazut pe net ca pe langa legaturile by convention, chiar daca am facut tabelul intermediar, tot am nevoie si de asta, ca sa pot accesa tabelul de legatura... este adevarat? La call s-a spus ca nu este nevoie, din cate am inteles eu.
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<AppointmentHairService>()
-        //        .HasKey(ah => new { ah.AppointmentId, ah.HairServiceId });
-        //}
     }
 }

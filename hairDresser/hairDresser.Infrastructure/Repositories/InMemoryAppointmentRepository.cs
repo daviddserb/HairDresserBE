@@ -67,8 +67,10 @@ namespace hairDresser.Infrastructure.Repositories
         // Asta ajuta cand caut Possible Intervals, pt. un Customer Appointment, dupa selectarea Employee-ului si a Date-ului. 
         public async Task<IEnumerable<Appointment>> GetAppointmentsInWorkAsync(string employeeName, DateTime date)
         {
-            return AppointmentList
-                .Where(obj => obj.StartDate.Date == date.Date);
+            throw new NotImplementedException();
+
+            //return AppointmentList
+            //    .Where(obj => obj.StartDate.Date == date.Date);
                 //.Where(obj => obj.EmployeeName == employeeName);
         }
 
