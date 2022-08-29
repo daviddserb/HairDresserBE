@@ -20,7 +20,7 @@ namespace hairDresser.Application.Appointments.Queries.GetAllAppointmentsByCusto
 
         public async Task<IQueryable<Appointment>> Handle(GetAllAppointmentsByCustomerIdQuery request, CancellationToken cancellationToken)
         {
-            return await _unitOfWork.AppointmentRepository.GetAllppointmentsByCustomerIdAsync(request.CustomerId);
+            return await _unitOfWork.AppointmentRepository.GetAllAppointmentsByCustomerIdAsync(request.CustomerId);
         }
     }
 }

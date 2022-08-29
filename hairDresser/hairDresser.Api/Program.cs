@@ -14,7 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// What I added:
+// What I added (START):
 // De fiecare data cand vei vedea ca cineva depinde de IHairServiceRepository, creezi o instanta de HairServiceRepository (la fel si pt. restul).
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IHairServiceRepository, HairServiceRepository>();
@@ -33,9 +33,10 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Cu toate ca noi avem mai multe .AddScoped(), adaugam doar unul dintre ele la typeof() si MediatR le scaneaza pe toate din layer-ul de unde typeof() face parte, adica IHairServiceRepository face parte din Application.
 builder.Services.AddMediatR(typeof(IHairServiceRepository));
 
+ // maparea
 builder.Services.AddAutoMapper(typeof(Program));
+// What I added (STOP).
 
-// ---
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

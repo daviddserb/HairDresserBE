@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 {
     // Trebuie sa implementam interfata IRequestHandler, care poate sa primeasca 2 parametrii: request-ul (mesajul = command/query) care este obligatoriu si raspunsul mesajului (ce returneaza el).
-    public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointmentCommand>
+    public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointmentCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -19,7 +19,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
         {
             var appointment = new Appointment
             {
@@ -35,7 +35,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             };
             await _unitOfWork.AppointmentRepository.CreateAppointmentAsync(appointment);
             await _unitOfWork.SaveAsync();
-            return Unit.Value;
+            return appointment.Id;
         }
     }
 }

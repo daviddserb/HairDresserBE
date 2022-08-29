@@ -16,10 +16,11 @@ namespace hairDresser.Presentation.Profiles
             // Apoi cand facem comparatia intre proprietatile (tip si nume) din Appointment si AppointmentGetDto, difera tipul colectiei. Astfel trebuie sa o mapam.
             CreateMap<Appointment, AppointmentGetDto>().ReverseMap();
             // Aici o mapez.
-            CreateMap<AppointmentHairService, AppointmentHairServiceDto>();
+            CreateMap<AppointmentHairService, AppointmentHairServiceDto>().ReverseMap();
 
-            //??? Trebuie sa dau Command-ul care creaza appointment-ul...?
-            CreateMap<AppointmentPostDto, CreateAppointmentCommand>();
+            //???
+            CreateMap<AppointmentPostDto, CreateAppointmentCommand>().ReverseMap();
+            //CreateMap<AppointmentPostDto, Appointment>();
         }
     }
 }

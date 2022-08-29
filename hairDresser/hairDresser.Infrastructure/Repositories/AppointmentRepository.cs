@@ -21,7 +21,8 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task CreateAppointmentAsync(Appointment appointment)
         {
-            await context.Appointments.AddAsync(appointment);
+            await context.Appointments
+                .AddAsync(appointment);
         }
 
         public async Task<IQueryable<Appointment>> ReadAppointmentsAsync()
@@ -32,11 +33,33 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
                 .ThenInclude(hairServices => hairServices.HairService);
         }
+        public async Task<Appointment> GetAppointmentById(int appointmentId)
+        {
+            return context.Appointments
+                //.Include(customers => customers.Customer)
+                //.Include(employees => employees.Employee)
+                //.Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
+                //.ThenInclude(hairServices => hairServices.HairService)
+                .First(appointment => appointment.Id == appointmentId);
+        }
 
-        public async Task<IQueryable<Appointment>> GetAllppointmentsByCustomerIdAsync(int customerId)
+        // Pt. istoricul de appointment-uri ale unui customer (toate).
+        public async Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdAsync(int customerId)
         {
             return context.Appointments
                 .Where(appointment => appointment.CustomerId == customerId)
+                .Include(customers => customers.Customer)
+                .Include(employees => employees.Employee)
+                .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
+                .ThenInclude(hairServices => hairServices.HairService);
+        }
+
+        // Pt. appointment-urile din viitor (neterminate) ale unui customer.
+        public async Task<IQueryable<Appointment>> GetInWorkAppointmentsByCustomerIdAsync(int customerId)
+        {
+            return context.Appointments
+                .Where(appointment => appointment.CustomerId == customerId)
+                .Where(date => date.StartDate >= DateTime.Now.Date)
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
@@ -55,7 +78,7 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(employees => employees.Employee);
         }
 
-        // As mai putea sa fac una la fel (ca cea deasupra) unde un employee vrea sa-si vada toate history appointments.
+        // ??? Sa fac sau nu?: employee history appointments?
 
         public async Task<Appointment> UpdateAppointmentAsync(Appointment appointment)
         {

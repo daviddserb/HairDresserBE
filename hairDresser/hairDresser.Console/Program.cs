@@ -1,6 +1,7 @@
 ﻿using hairDresser.Application.Appointments.Commands.CreateAppointment;
 using hairDresser.Application.Appointments.Queries.GetAllAppointments;
 using hairDresser.Application.Appointments.Queries.GetAllAppointmentsByCustomerId;
+using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByCustomerId;
 using hairDresser.Application.Customers.Commands.CreateCustomer;
 using hairDresser.Application.Customers.Queries.GetAllCustomers;
 using hairDresser.Application.Employees.Commands.CreateEmployee;
@@ -24,7 +25,8 @@ using Microsoft.Extensions.DependencyInjection;
 //???
 // Trebuie sa pun Async la numele metodelor din Controllers?
 // Atunci cand returnez toate appointments in API, vad hairservicesid, ii ok asa sau ar trebui numele? In consola apare numele. Si daca trebuie sa pun numele, cum sa fac?
-// EmployeeRepository (care are legatura cu GetEmployeeIntervalsByDateQueryHandler)
+// EmployeeRepository (care are legatura cu GetEmployeeIntervalsByDateQueryHandler).
+// De ce imi da eroare 500 in Swagger dar in tabelele din DB mi se salveaza ce am adaugat ca input din Swagger?
 
 
 /*
@@ -74,9 +76,10 @@ async Task<bool> MainMenuAsync()
     Console.WriteLine("\nCRUD Appointment:");
     Console.WriteLine("00 - CreateAppointment");
     Console.WriteLine("01 - ReadAppointments");
-    Console.WriteLine("02 - GetAllppointmentsByCustomerId");
-    //Console.WriteLine("03 - UpdateAppointment");
-    //Console.WriteLine("04 - DeleteAppointment");
+    Console.WriteLine("02 - GetAllAppointmentsByCustomerId");
+    Console.WriteLine("03 - GetInWorkAppointmentsByCustomerId");
+    //Console.WriteLine("04 - UpdateAppointment");
+    //Console.WriteLine("05 - DeleteAppointment");
 
     Console.WriteLine("\nCRUD Employee:");
     Console.WriteLine("10 - CreateEmployee");
@@ -140,14 +143,17 @@ async Task<bool> MainMenuAsync()
                 Console.WriteLine("End Date?");
                 var end = Console.ReadLine();
 
-                await mediator.Send(new CreateAppointmentCommand
+                var command = new CreateAppointmentCommand
                 {
                     CustomerId = customerId,
                     EmployeeId = employeeId,
                     HairServicesId = hairServicesId,
                     StartDate = start,
                     EndDate = end
-                });
+                };
+                var appointmentId = await mediator.Send(command);
+
+                Console.WriteLine($"Appointment created with the id: '{appointmentId}'");
                 return true;
             }
         case "01":
@@ -175,6 +181,24 @@ async Task<bool> MainMenuAsync()
                     var appointmentHairServices = appointment.AppointmentHairServices.Select(hairServices => hairServices.HairService.Name);
                     Console.WriteLine($"{appointment.Id} - customer= '{appointment.Customer.Name}', employee= '{appointment.Employee.Name}', start= '{appointment.StartDate}',  end= '{appointment.EndDate}',  hairservices= '{String.Join(", ", appointmentHairServices)}'");
                 }
+                return true;
+            }
+        case "03":
+            {
+                Console.WriteLine("Customer Id?");
+                var customerId = Int32.Parse(Console.ReadLine());
+
+                var customerAppointments = await mediator.Send(new GetInWorkAppointmentsByCustomerIdQuery
+                {
+                    CustomerId = customerId
+                });
+
+                foreach (var appointment in customerAppointments)
+                {
+                    var appointmentHairServices = appointment.AppointmentHairServices.Select(hairServices => hairServices.HairService.Name);
+                    Console.WriteLine($"{appointment.Id} - customer= '{appointment.Customer.Name}', employee= '{appointment.Employee.Name}', start= '{appointment.StartDate}',  end= '{appointment.EndDate}',  hairservices= '{String.Join(", ", appointmentHairServices)}'");
+                }
+
                 return true;
             }
         case "10":
