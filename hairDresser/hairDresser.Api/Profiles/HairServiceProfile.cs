@@ -8,7 +8,7 @@ namespace hairDresser.Presentation.Profiles
     {
         public HairServiceProfile()
         {
-            CreateMap<HairService, HairServiceGetDto>().ReverseMap();
+            CreateMap<HairService, HairServiceGetDto>().ReverseMap().ReverseMap();
         }
     }
 }

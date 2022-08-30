@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser.Application.Employees.Commands.DeleteEmployeeById
+namespace hairDresser.Application.Employees.Commands.DeleteEmployee
 {
-    public class DeleteEmployeeByIdCommand : IRequest
+    public class DeleteEmployeeCommand : IRequest<Employee>
     {
         public int Id { get; set; }
     }

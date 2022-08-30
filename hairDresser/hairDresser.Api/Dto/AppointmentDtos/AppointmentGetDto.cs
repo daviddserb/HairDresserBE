@@ -13,7 +13,6 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
 
         public CustomerGetDto Customer { get; set; }
 
-        //??? trebuie sa ii dau tipul de date EmployeeGetDto sau Employee? Tind sa cred ca cea cu Dto.
         public EmployeeGetDto Employee { get; set; }
 
         public DateTime StartDate { get; set; }

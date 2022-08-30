@@ -33,13 +33,17 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<Employee> GetEmployeeByIdAsync(int employeeId)
         {
-            return await context.Employees.FirstOrDefaultAsync(employee => employee.Id == employeeId);
+            return await context.Employees
+                .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
+                .ThenInclude(hairServices => hairServices.HairService)
+                .FirstOrDefaultAsync(employee => employee.Id == employeeId);
         }
 
         public async Task<IQueryable<Employee>> GetAllEmployeesByServicesAsync(List<int> servicesIds)
         {
             var validEmployees = context.Employees
                 .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
+                .ThenInclude(hairServices => hairServices.HairService)
                 .ToList()
                 .Where(employee => servicesIds.All(serviceId => employee.EmployeeHairServices.Any(hairservice => hairservice.HairServiceId == serviceId)));
             return validEmployees.AsQueryable();
@@ -47,13 +51,14 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<Employee> UpdateEmployeeAsync(Employee employee)
         {
-            throw new NotImplementedException();
+            context.Employees.Update(employee);
+            return employee;
         }
 
         public async Task DeleteEmployeeAsync(int employeeId)
         {
             var employee = await context.Employees.FirstOrDefaultAsync(employee => employee.Id == employeeId);
-            context.Remove(employee);
+            context.Employees.Remove(employee);
         }
     }
 }

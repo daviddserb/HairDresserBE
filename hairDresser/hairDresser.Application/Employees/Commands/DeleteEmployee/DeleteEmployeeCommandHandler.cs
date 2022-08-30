@@ -7,30 +7,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser.Application.Employees.Commands.DeleteEmployeeById
+namespace hairDresser.Application.Employees.Commands.DeleteEmployee
 {
     // public class DeleteEmployeeByIdCommandHandler : IRequestHandler<DeleteEmployeeByIdCommand, Unit> -> este la fel daca sau nu declari Unit, care este un tip de void.
-    public class DeleteEmployeeByIdCommandHandler : IRequestHandler<DeleteEmployeeByIdCommand>
+    public class DeleteEmployeeCommandHandler : IRequestHandler<DeleteEmployeeCommand, Employee>
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteEmployeeByIdCommandHandler(IUnitOfWork unitOfWork)
+        public DeleteEmployeeCommandHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(DeleteEmployeeByIdCommand request, CancellationToken cancellationToken)
+        public async Task<Employee> Handle(DeleteEmployeeCommand request, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Handle:");
-            // ???!!! Sa vad daca am nevoie de employee
-            var employee = new Employee
-            {
-                Id = request.Id
-            };
+            var employee = await _unitOfWork.EmployeeRepository.GetEmployeeByIdAsync(request.Id);
+
+            if (employee == null) return null;
 
             await _unitOfWork.EmployeeRepository.DeleteEmployeeAsync(employee.Id);
             await _unitOfWork.SaveAsync();
-            return Unit.Value;
+            return employee;
         }
     }
 }

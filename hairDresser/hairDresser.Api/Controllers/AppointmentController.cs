@@ -74,13 +74,13 @@ namespace hairDresser.Presentation.Controllers
         {
             var query = new GetAllAppointmentsByCustomerIdQuery { CustomerId = customerId };
 
-            var result = await _mediator.Send(query);
+            var customerAppointments = await _mediator.Send(query);
 
-            if (!result.Any()) return NotFound();
+            if (!customerAppointments.Any()) return NotFound();
 
-            var mappedResult = _mapper.Map<List<AppointmentGetDto>>(result);
+            var mappedCustomerAppointments = _mapper.Map<List<AppointmentGetDto>>(customerAppointments);
 
-            return Ok(mappedResult);
+            return Ok(mappedCustomerAppointments);
         }
 
         [HttpGet]
@@ -100,7 +100,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpPut]
         [Route("{appointmentId}")]
-        // ??? Ar trebui sa fac un DTO diferit pt. Put? Pt. ca practic nu as vrea sa ii ofer la customer sa isi poata schimba customerId, nu?
+        // ??? Ar trebui sa fac un DTO diferit pt. Put? Intreb pt. ca practic nu as vrea sa ii ofer la customer sa isi poata schimba customerId, nu?
         public async Task<IActionResult> UpdateAppointment(int appointmentId, [FromBody] AppointmentPostPutDto editedAppointment)
         {
             var command = new UpdateAppointmentCommand

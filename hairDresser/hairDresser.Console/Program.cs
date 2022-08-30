@@ -6,7 +6,7 @@ using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByCustom
 using hairDresser.Application.Customers.Commands.CreateCustomer;
 using hairDresser.Application.Customers.Queries.GetAllCustomers;
 using hairDresser.Application.Employees.Commands.CreateEmployee;
-using hairDresser.Application.Employees.Commands.DeleteEmployeeById;
+using hairDresser.Application.Employees.Commands.DeleteEmployee;
 using hairDresser.Application.Employees.Queries.GetAllEmployees;
 using hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppointmentByDate;
 using hairDresser.Application.Employees.Queries.GetEmployeesByServices;
@@ -25,10 +25,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 //???
 // Trebuie sa pun Async la numele metodelor din Controllers?
-// Atunci cand returnez toate appointments in API, vad hairservicesid, ii ok asa sau ar trebui numele? In consola apare numele. Si daca trebuie sa pun numele, cum sa fac?
-// EmployeeRepository (care are legatura cu GetEmployeeIntervalsByDateQueryHandler).
-// De ce imi da eroare 500 in Swagger dar in tabelele din DB mi se salveaza ce am adaugat ca input din Swagger?
-
+// Nu imi dau seama in care Controller sa pun 'GetEmployeeIntervalsByDate', unde tu dai un employeeId si un date, si primesti inapoi, calculat pe intervalele de lucru ale unui employee si appointment-urile lui, intervalele posibile la care iti poti face un appointment la employee-ul ales (dupa id primit).
 
 /*
  * DB relationships between entities (domain classes):
@@ -318,7 +315,7 @@ async Task<bool> MainMenuAsync()
                 Console.WriteLine("Employee Id?");
                 var employeeId = Int32.Parse(Console.ReadLine());
 
-                await mediator.Send(new DeleteEmployeeByIdCommand
+                await mediator.Send(new DeleteEmployeeCommand
                 {
                     Id = employeeId
                 });
