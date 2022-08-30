@@ -33,33 +33,16 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<Employee> GetEmployeeByIdAsync(int employeeId)
         {
-            return context.Employees.First(obj => obj.Id == employeeId);
+            return await context.Employees.FirstOrDefaultAsync(employee => employee.Id == employeeId);
         }
 
         public async Task<IQueryable<Employee>> GetAllEmployeesByServicesAsync(List<int> servicesIds)
         {
-            //???
-            //Exemplu de la Adina (dar este eroare):
-            //return context.Employees.Include(employee => employee.EmployeeHairServices)
-            //    .Select(employee => employee.EmployeeHairServices.Where(hairService => servicesIds.Contains(hairService.HairServiceId)));
-
-            //Ce am incercat sa fac (dar am eroare de can't convert la Contains) Varianta 1:
-            //var validEmployees = context.Employees
-            //    .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
-            //    .ThenInclude(hairServices => hairServices.HairService)
-            //    .Where(hairServices => hairServices.EmployeeHairServices.Contains(servicesIds))
-
-            //Ce am incercat sa fac (dar am eroare cand returnez) Varianta 2:
-            //var validEmployees = context.Employees
-            //    .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
-            //    .ThenInclude(hairServices => hairServices.HairService)
-            //    .Select(employee => employee.EmployeeHairServices.Where(y => servicesIds.Contains(y.HairServiceId)));
-
-            return context.Employees
+            var validEmployees = context.Employees
                 .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
-                .ThenInclude(hairServices => hairServices.HairService);
-                //.Where(hairServices => hairServices.EmployeeHairServices.HairServiceId.Contains(servicesIds));
-                //.Select(employeeHairServices => employeeHairServices.EmployeeHairServices.Where(hairServicesIds => hairServicesIds.HairServiceId.Contains(servicesIds)));
+                .ToList()
+                .Where(employee => servicesIds.All(serviceId => employee.EmployeeHairServices.Any(hairservice => hairservice.HairServiceId == serviceId)));
+            return validEmployees.AsQueryable();
         }
 
         public async Task<Employee> UpdateEmployeeAsync(Employee employee)
@@ -69,14 +52,8 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task DeleteEmployeeAsync(int employeeId)
         {
-            try
-            {
-                var employee = context.Employees.Single(e => e.Id == employeeId);
-                context.Remove(employee);
-            } catch
-            {
-                Console.WriteLine("Nu exista employee-ul cu acel id.");
-            }
+            var employee = await context.Employees.FirstOrDefaultAsync(employee => employee.Id == employeeId);
+            context.Remove(employee);
         }
     }
 }

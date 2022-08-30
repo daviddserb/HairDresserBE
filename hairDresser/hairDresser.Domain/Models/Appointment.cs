@@ -18,7 +18,7 @@ namespace hairDresser.Domain.Models
         [Range(1, int.MaxValue)]
         public int? CustomerId { get; set; }
 
-        public Employee? Employee { get; set; }
+        public Employee Employee { get; set; }
 
         [Required(ErrorMessage = "Employee id required.")]
         [Range(1, int.MaxValue)]

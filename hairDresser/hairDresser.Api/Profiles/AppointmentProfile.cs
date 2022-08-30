@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using hairDresser.Application.Appointments.Commands.CreateAppointment;
+using hairDresser.Application.Appointments.Commands.UpdateAppointment;
 using hairDresser.Domain.Models;
 using hairDresser.Presentation.Dto.AppointmentDtos;
 using hairDresser.Presentation.Dto.AppointmentHairServiceDtos;
+using hairDresser.Presentation.Dto.EmployeeDtos;
 
 namespace hairDresser.Presentation.Profiles
 {
@@ -18,9 +20,10 @@ namespace hairDresser.Presentation.Profiles
             // Aici o mapez.
             CreateMap<AppointmentHairService, AppointmentHairServiceDto>().ReverseMap();
 
-            //???
-            CreateMap<AppointmentPostDto, CreateAppointmentCommand>().ReverseMap();
-            //CreateMap<AppointmentPostDto, Appointment>();
+            CreateMap<AppointmentPostPutDto, CreateAppointmentCommand>().ReverseMap();
+
+            CreateMap<AppointmentPostPutDto, UpdateAppointmentCommand>().ReverseMap();
+
         }
     }
 }

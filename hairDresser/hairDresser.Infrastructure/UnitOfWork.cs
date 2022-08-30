@@ -41,9 +41,9 @@ namespace hairDresser.Infrastructure
             await _dataContext.SaveChangesAsync();
         }
 
-        public void Dispose()
+        public async void Dispose()
         {
-            _dataContext.Dispose();
+            await _dataContext.DisposeAsync();
         }
     }
 }

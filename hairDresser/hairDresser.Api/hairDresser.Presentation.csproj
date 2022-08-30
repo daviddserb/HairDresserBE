@@ -20,9 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dto\CustomerDtos\" />
-    <Folder Include="Dto\EmployeeDtos\" />
-    <Folder Include="Dto\HairServiceDtos\" />
     <Folder Include="Dto\WorkingIntervalDtos\" />
   </ItemGroup>
 

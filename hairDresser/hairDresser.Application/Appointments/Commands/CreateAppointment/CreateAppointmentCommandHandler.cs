@@ -25,16 +25,18 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             {
                 CustomerId = request.CustomerId,
                 EmployeeId = request.EmployeeId,
-                StartDate = DateTime.Parse(request.StartDate),
-                EndDate = DateTime.Parse(request.EndDate),
                 AppointmentHairServices = request.HairServicesId.Select(hsi => new AppointmentHairService()
                 {
                     //Salvez doar id-ul de la hairservices, pt. ca cel de la appointment inca nu exista, ci va exista dupa ce s-a inserat in tabela Appointments si el il va lua de acolo si il salveaza in AppointmentsHairService.
                     HairServiceId = hsi
-                }).ToList()
+                }).ToList(),
+                StartDate = DateTime.Parse(request.StartDate),
+                EndDate = DateTime.Parse(request.EndDate)
             };
+
             await _unitOfWork.AppointmentRepository.CreateAppointmentAsync(appointment);
             await _unitOfWork.SaveAsync();
+
             return appointment.Id;
         }
     }

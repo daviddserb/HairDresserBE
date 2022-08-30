@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace hairDresser.Presentation.Dto.AppointmentDtos
 {
-    public class AppointmentPostDto
+    public class AppointmentPostPutDto
     {
         public int CustomerId { get; set; }
         public int EmployeeId { get; set; }

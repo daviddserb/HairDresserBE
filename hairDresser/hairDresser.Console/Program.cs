@@ -1,6 +1,7 @@
 ﻿using hairDresser.Application.Appointments.Commands.CreateAppointment;
 using hairDresser.Application.Appointments.Queries.GetAllAppointments;
 using hairDresser.Application.Appointments.Queries.GetAllAppointmentsByCustomerId;
+using hairDresser.Application.Appointments.Queries.GetAppointmentById;
 using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByCustomerId;
 using hairDresser.Application.Customers.Commands.CreateCustomer;
 using hairDresser.Application.Customers.Queries.GetAllCustomers;
@@ -76,10 +77,11 @@ async Task<bool> MainMenuAsync()
     Console.WriteLine("\nCRUD Appointment:");
     Console.WriteLine("00 - CreateAppointment");
     Console.WriteLine("01 - ReadAppointments");
-    Console.WriteLine("02 - GetAllAppointmentsByCustomerId");
-    Console.WriteLine("03 - GetInWorkAppointmentsByCustomerId");
-    //Console.WriteLine("04 - UpdateAppointment");
-    //Console.WriteLine("05 - DeleteAppointment");
+    Console.WriteLine("02 - GetAppointmentById");
+    Console.WriteLine("03 - GetAllAppointmentsByCustomerId");
+    Console.WriteLine("04 - GetInWorkAppointmentsByCustomerId");
+    //Console.WriteLine("05 - UpdateAppointment");
+    //Console.WriteLine("06 - DeleteAppointment");
 
     Console.WriteLine("\nCRUD Employee:");
     Console.WriteLine("10 - CreateEmployee");
@@ -168,6 +170,21 @@ async Task<bool> MainMenuAsync()
             }
         case "02":
             {
+                Console.WriteLine("Appointment Id?");
+                var appointmentId = Int32.Parse(Console.ReadLine());
+
+                var appointment = await mediator.Send(new GetAppointmentByIdQuery
+                {
+                    AppointmentId = appointmentId
+                });
+
+                var appointmentHairServices = appointment.AppointmentHairServices.Select(hairServices => hairServices.HairService.Name);
+                Console.WriteLine($"{appointment.Id} - customer= '{appointment.Customer.Name}', employee= '{appointment.Employee.Name}', start= '{appointment.StartDate}',  end= '{appointment.EndDate}',  hairservices= '{String.Join(", ", appointmentHairServices)}'");
+
+                return true;
+            }
+        case "03":
+            {
                 Console.WriteLine("Customer Id?");
                 var customerId = Int32.Parse(Console.ReadLine());
 
@@ -183,7 +200,7 @@ async Task<bool> MainMenuAsync()
                 }
                 return true;
             }
-        case "03":
+        case "04":
             {
                 Console.WriteLine("Customer Id?");
                 var customerId = Int32.Parse(Console.ReadLine());
@@ -223,7 +240,7 @@ async Task<bool> MainMenuAsync()
                 await mediator.Send(new CreateEmployeeComand
                 {
                     Name = name,
-                    SpecializationsIds = specializationsIds
+                    HairServicesIds = specializationsIds
                 });
                 return true;
             }
