@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using hairDresser.Application.HairServices.Commands.CreateHairService;
+using hairDresser.Application.HairServices.Commands.UpdateHairService;
 using hairDresser.Domain.Models;
 using hairDresser.Presentation.Dto.HairServiceDtos;
 
@@ -8,7 +10,11 @@ namespace hairDresser.Presentation.Profiles
     {
         public HairServiceProfile()
         {
-            CreateMap<HairService, HairServiceGetDto>().ReverseMap().ReverseMap();
+            CreateMap<HairServicePostPutDto, CreateHairServiceCommand>().ReverseMap();
+
+            CreateMap<HairService, HairServiceGetDto>().ReverseMap();
+
+            CreateMap<HairServicePostPutDto, UpdateHairServiceCommand>().ReverseMap();
         }
     }
 }

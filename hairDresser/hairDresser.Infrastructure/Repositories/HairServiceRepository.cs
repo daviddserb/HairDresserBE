@@ -1,6 +1,7 @@
 ﻿using hairDresser.Application.Interfaces;
 using hairDresser.Domain;
 using hairDresser.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,25 +29,25 @@ namespace hairDresser.Infrastructure.Repositories
             return context.HairServices;
         }
 
-        public async Task<IQueryable<HairService>> GetHairServicesByIdsAsync(List<int> hairServicesIds)
+        public async Task<HairService> GetHairServiceByIdAsync(int hairServiceId)
         {
-            //Console.WriteLine("HairServiceRepository -> GetHairServiceByIdsAsync");
-            var hairServices = context.HairServices.Where(service => hairServicesIds.Contains(service.Id));
-            // Daca vreau sa returnez doar id-urile: context.HairServices.Where(service => hairServicesIds.Contains(service.Id)).Select(service => service.Id)
-            //foreach (var services in hairServices)
-            //{
-            //    Console.WriteLine($"{services.Id} - '{services.Name}', '{services.Duration}', '{services.Price}'");
-            //}
-            return hairServices;
+            return await context.HairServices.FirstOrDefaultAsync(HairService => HairService.Id == hairServiceId);
+        }
+
+        public async Task<IQueryable<HairService>> GetAllHairServicesByIdsAsync(List<int> hairServicesIds)
+        {
+            return context.HairServices.Where(HairService => hairServicesIds.Contains(HairService.Id));
         }
 
         public async Task<HairService> UpdateHairServiceAsync(HairService hairService)
         {
-            throw new NotImplementedException();
+            context.HairServices.Update(hairService);
+            return hairService;
         }
         public async Task DeleteHairServiceAsync(int hairServiceId)
         {
-            throw new NotImplementedException();
+            var hairService = await context.HairServices.FirstOrDefaultAsync(hairService => hairService.Id == hairServiceId);
+            context.HairServices.Remove(hairService);
         }
     }
 }

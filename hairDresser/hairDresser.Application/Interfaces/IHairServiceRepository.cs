@@ -11,7 +11,8 @@ namespace hairDresser.Application.Interfaces
     {
         Task CreateHairServiceAsync(HairService hairService);
         Task<IQueryable<HairService>> ReadHairServicesAsync();
-        Task<IQueryable<HairService>> GetHairServicesByIdsAsync(List<int> hairServicesId);
+        Task<HairService> GetHairServiceByIdAsync(int hairServiceId);
+        Task<IQueryable<HairService>> GetAllHairServicesByIdsAsync(List<int> hairServicesId);
         Task<HairService> UpdateHairServiceAsync(HairService hairService);
         Task DeleteHairServiceAsync(int hairServiceId);
     }

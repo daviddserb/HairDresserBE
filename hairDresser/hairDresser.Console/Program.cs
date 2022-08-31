@@ -12,7 +12,7 @@ using hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppointme
 using hairDresser.Application.Employees.Queries.GetEmployeesByServices;
 using hairDresser.Application.HairServices.Commands.CreateHairService;
 using hairDresser.Application.HairServices.Queries;
-using hairDresser.Application.HairServices.Queries.GetHairServicesByIds;
+using hairDresser.Application.HairServices.Queries.GetAllHairServicesByIds;
 using hairDresser.Application.Interfaces;
 using hairDresser.Application.WorkingDays.Commands.CreateWorkingDay;
 using hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays;
@@ -442,7 +442,7 @@ async Task<bool> MainMenuAsync()
                     inputService = Console.ReadLine();
                 }
 
-                var servicesByIds = await mediator.Send(new GetHairServicesByIdsQuery
+                var servicesByIds = await mediator.Send(new GetAllHairServicesByIdsQuery
                 {
                     HairServicesIds = hairServicesId
                 });
