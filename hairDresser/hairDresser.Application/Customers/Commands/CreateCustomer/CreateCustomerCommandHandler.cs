@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Customers.Commands.CreateCustomer
 {
-    public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand>
+    public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, int>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -18,7 +18,7 @@ namespace hairDresser.Application.Customers.Commands.CreateCustomer
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
             var customer = new Customer
             {
@@ -31,7 +31,7 @@ namespace hairDresser.Application.Customers.Commands.CreateCustomer
             };
             await _unitOfWork.CustomerRepository.CreateCustomerAsync(customer);
             await _unitOfWork.SaveAsync();
-            return Unit.Value;
+            return customer.Id;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using hairDresser.Application.Interfaces;
 using hairDresser.Domain;
 using hairDresser.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,17 +31,19 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<Customer> GetCustomerByIdAsync(int customerId)
         {
-            return context.Customers.First(customer => customer.Id == customerId);
+            return await context.Customers.FirstOrDefaultAsync(customer => customer.Id == customerId);
         }
 
         public async Task<Customer> UpdateCustomerAsync(Customer customer)
         {
-            throw new NotImplementedException();
+            context.Customers.Update(customer);
+            return customer;
         }
 
         public async Task DeleteCustomerAsync(int customerId)
         {
-            throw new NotImplementedException();
+            var customer = await context.Customers.FirstOrDefaultAsync(customer => customer.Id == customerId);
+            context.Customers.Remove(customer);
         }
     }
 }
