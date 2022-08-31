@@ -26,7 +26,7 @@ namespace hairDresser.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAppointmentAsync([FromBody] AppointmentPostPutDto appointment)
+        public async Task<IActionResult> CreateAppointmentAsync([FromBody] AppointmentPostDto appointment)
         {
             // Create the object of type CreateAppointmentCommand.
             var command = _mapper.Map<CreateAppointmentCommand>(appointment);
@@ -100,8 +100,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpPut]
         [Route("{appointmentId}")]
-        // ??? Ar trebui sa fac un DTO diferit pt. Put? Intreb pt. ca practic nu as vrea sa ii ofer la customer sa isi poata schimba customerId, nu?
-        public async Task<IActionResult> UpdateAppointment(int appointmentId, [FromBody] AppointmentPostPutDto editedAppointment)
+        public async Task<IActionResult> UpdateAppointment(int appointmentId, [FromBody] AppointmentPutDto editedAppointment)
         {
             var command = new UpdateAppointmentCommand
             {

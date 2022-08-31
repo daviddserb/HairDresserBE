@@ -20,9 +20,9 @@ namespace hairDresser.Presentation.Profiles
             // Aici o mapez.
             CreateMap<AppointmentHairService, AppointmentHairServiceDto>().ReverseMap();
 
-            CreateMap<AppointmentPostPutDto, CreateAppointmentCommand>().ReverseMap();
+            CreateMap<AppointmentPostDto, CreateAppointmentCommand>().ReverseMap();
 
-            CreateMap<AppointmentPostPutDto, UpdateAppointmentCommand>().ReverseMap();
+            CreateMap<AppointmentPutDto, UpdateAppointmentCommand>().ReverseMap();
 
         }
     }
