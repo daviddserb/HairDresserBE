@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterval
+namespace hairDresser.Application.WorkingIntervals.Commands.UpdateWorkingInterval
 {
-    public class CreateWorkingIntervalCommand : IRequest<int>
+    public class UpdateWorkingIntervalCommand : IRequest<WorkingInterval>
     {
+        public int WorkingIntervalId { get; set; }
         public int WorkingDayId { get; set; }
-        public int EmployeeId { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }
     }

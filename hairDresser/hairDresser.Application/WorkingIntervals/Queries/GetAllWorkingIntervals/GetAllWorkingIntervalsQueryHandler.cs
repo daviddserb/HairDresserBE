@@ -20,8 +20,7 @@ namespace hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingInterval
 
         public async Task<IQueryable<WorkingInterval>> Handle(GetAllWorkingIntervalsQuery request, CancellationToken cancellationToken)
         {
-            var allWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.ReadWorkingIntervalsAsync();
-            return allWorkingIntervals;
+            return await _unitOfWork.WorkingIntervalRepository.ReadWorkingIntervalsAsync();
         }
     }
 }

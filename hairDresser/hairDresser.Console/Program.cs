@@ -26,6 +26,7 @@ using Microsoft.Extensions.DependencyInjection;
 //???
 // Trebuie sa pun Async la numele metodelor din Controllers?
 // Nu imi dau seama in care Controller sa pun 'GetEmployeeIntervalsByDate', unde tu dai un employeeId si un date, si primesti inapoi, calculat pe intervalele de lucru ale unui employee si appointment-urile lui, intervalele posibile la care iti poti face un appointment la employee-ul ales (dupa id primit).
+//CreateWorkingIntervalCommandHandler -> la acel return -1 cand nu-i bun intervalul ca se overlapuie.
 
 /*
  * DB relationships between entities (domain classes):
@@ -381,7 +382,7 @@ async Task<bool> MainMenuAsync()
 
                 await mediator.Send(new CreateWorkingIntervalCommand
                 {
-                    DayId = dayId,
+                    WorkingDayId = dayId,
                     EmployeeId = employeeId,
                     StartTime = start,
                     EndTime = end

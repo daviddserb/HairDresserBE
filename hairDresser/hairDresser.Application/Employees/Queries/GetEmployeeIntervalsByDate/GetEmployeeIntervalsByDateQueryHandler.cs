@@ -49,7 +49,7 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
 
             var workingDay = await _unitOfWork.WorkingDayRepository.GetWorkingDayByNameAsync(nameOfDay);
 
-            var employeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, workingDay.Id);
+            var employeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, workingDay.Id);
             var possibleIntervals = new List<DateTime>();
             foreach (var intervals in employeeWorkingIntervals)
             {
