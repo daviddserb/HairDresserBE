@@ -14,6 +14,5 @@ namespace hairDresser.Domain.Models
         public float Price { get; set; }
         public ICollection<AppointmentHairService> AppointmentHairServices { get; set; }
         public ICollection<EmployeeHairService> EmployeeHairServices { get; set; }
-
     }
 }

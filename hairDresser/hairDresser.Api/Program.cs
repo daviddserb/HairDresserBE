@@ -5,6 +5,16 @@ using hairDresser.Presentation.Middleware;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
+//??? Intrebari:
+// 1. Atunci cand creezi un appointment si dai un customerId care nu exista sau un employeeId care nu exista sau un hairServiceId care nu exista, in loc sa imi apara exceptie in cod, cum fac sa las sa mearga aplicatia (codul) si sa ii trimit un Http Code gresit (adica care sa il avertizeze de eroarea produsa) si in care sa ii zic exact ce a introdus gresit. Acest lucru il fac la cererile de Get (ca verifici daca ce ai cautat este null de ex.), dar la cel de Post, am vazut ca pot sa il realizez doar cu try catch (sunt si alte metode?) in Handler, pt. ca alta idee nu am cum sa verific daca este ceva gresit, pt. ca eroarea imi da cand se face await _unitOfWork.SaveAsync();. Totusi, eu in Handler returnez un id, care este de tip int, si atunci cand am eroare returnez -1, doar ca sa stiu eu sa o tratez. Cum pot sa fac altcumva, in loc sa returnez -1?
+// 2. Trebuie sa pun Async la numele metodelor din Controllers?
+// 3. Sa mai adaug si WorkingDays pe API... are rost?
+
+//!!! De facut:
+// 1. Dupa ce primesc raspuns la intreabarea 1., sa fac si aici: CreateWorkingIntervalCommandHandler. Si cred ca trebuie si in restul claselor de Controller, la Create, adica Post.
+// 2. Nu imi dau seama in care Controller sa pun 'GetEmployeeIntervalsByDate', unde tu dai un employeeId si un date, si primesti inapoi, calculat pe intervalele de lucru ale unui employee si appointment-urile lui, intervalele posibile la care iti poti face un appointment la employee-ul ales (dupa id primit).
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

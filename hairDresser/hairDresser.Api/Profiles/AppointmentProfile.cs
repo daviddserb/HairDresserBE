@@ -14,16 +14,15 @@ namespace hairDresser.Presentation.Profiles
         {
             // Source -> Destionation
 
-            // Cand vrem sa facem Get la Appointment, noi il extragem din DB si este de tipul Appointment, si aici il facem de tipul AppointmentGetDto.
-            // Apoi cand facem comparatia intre proprietatile (tip si nume) din Appointment si AppointmentGetDto, difera tipul colectiei. Astfel trebuie sa o mapam.
-            CreateMap<Appointment, AppointmentGetDto>().ReverseMap();
-            // Aici o mapez.
-            CreateMap<AppointmentHairService, AppointmentHairServiceDto>().ReverseMap();
-
             CreateMap<AppointmentPostDto, CreateAppointmentCommand>().ReverseMap();
 
-            CreateMap<AppointmentPutDto, UpdateAppointmentCommand>().ReverseMap();
+            // Cand vrem sa facem Get la Appointment, noi il extragem din DB si este de tipul Appointment, si aici il facem de tipul AppointmentGetDto.
+            // Apoi cand facem comparatia intre proprietatile (tipul de date si nume) din Appointment si AppointmentGetDto, difera tipul colectiei => trebuie sa o mapam si pe ea.
+            CreateMap<Appointment, AppointmentGetDto>().ReverseMap();
+            // Aici mapez si tipurile de la colectie.
+            CreateMap<AppointmentHairService, AppointmentHairServiceDto>().ReverseMap();
 
+            CreateMap<AppointmentPutDto, UpdateAppointmentCommand>().ReverseMap();
         }
     }
 }

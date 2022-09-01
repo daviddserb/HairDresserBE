@@ -16,10 +16,10 @@ namespace hairDresser.Presentation.Controllers
     [Route("api/[controller]")]
     public class AppointmentController : ControllerBase
     {
-        public readonly IMapper _mapper;
         public readonly IMediator _mediator;
+        public readonly IMapper _mapper;
 
-        public AppointmentController(IMapper mapper, IMediator mediator)
+        public AppointmentController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;
@@ -28,14 +28,18 @@ namespace hairDresser.Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAppointmentAsync([FromBody] AppointmentPostDto appointment)
         {
+            // Get an object of type AppointmentPostDto, which means that the object has the properties from its type.
+
             // Create the object of type CreateAppointmentCommand.
             var command = _mapper.Map<CreateAppointmentCommand>(appointment);
 
-            // Call the Handler method.
+            // Send() method calls the Handler, so we will have the result from the Handle method.
             var appointmentId = await _mediator.Send(command);
 
-            //??? N-am prea inteles cu ce ma ajuta acel string uri din Created().
-            return Created("", appointmentId);
+            if (appointmentId == -1) return BadRequest();
+
+            //??? N-am prea inteles cu ce ma ajuta acel string uri din Created(), de aceea am dat unul gol, adica nu am vazut vreo diferenta daca am scris ceva in el. Ar trebui sa reprezinte ceva?
+            return Created("dsa123###", appointmentId);
         }
 
         [HttpGet]
@@ -48,9 +52,9 @@ namespace hairDresser.Presentation.Controllers
 
             if (!allAppointments.Any()) return NotFound();
 
-            var mappedAppointments = _mapper.Map<List<AppointmentGetDto>>(allAppointments);
+            var mappeAllAppointments = _mapper.Map<List<AppointmentGetDto>>(allAppointments);
 
-            return Ok(mappedAppointments);
+            return Ok(mappeAllAppointments);
         }
 
         [HttpGet]

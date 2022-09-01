@@ -21,23 +21,28 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 
         public async Task<int> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
         {
-            var appointment = new Appointment
+            try
             {
-                CustomerId = request.CustomerId,
-                EmployeeId = request.EmployeeId,
-                AppointmentHairServices = request.HairServicesId.Select(hsi => new AppointmentHairService()
+                var appointment = new Appointment
                 {
-                    //Salvez doar id-ul de la hairservices, pt. ca cel de la appointment inca nu exista, ci va exista dupa ce s-a inserat in tabela Appointments si el il va lua de acolo si il salveaza in AppointmentsHairService.
-                    HairServiceId = hsi
-                }).ToList(),
-                StartDate = DateTime.Parse(request.StartDate),
-                EndDate = DateTime.Parse(request.EndDate)
-            };
-
-            await _unitOfWork.AppointmentRepository.CreateAppointmentAsync(appointment);
-            await _unitOfWork.SaveAsync();
-
-            return appointment.Id;
+                    CustomerId = request.CustomerId,
+                    EmployeeId = request.EmployeeId,
+                    AppointmentHairServices = request.HairServicesIds.Select(hairServiceId => new AppointmentHairService()
+                    {
+                        // Salvez doar id-ul de la HairServiceId, pt. ca id-ul pt. AppointmentId inca nu exista (nu il stiu), ci va exista dupa ce va fi inserat in tabela Appointments, si apoi EF il va lua de acolo si il salveaza in AppointmentsHairService.
+                        HairServiceId = hairServiceId
+                    }).ToList(),
+                    StartDate = request.StartDate,
+                    EndDate = request.EndDate
+                };
+                await _unitOfWork.AppointmentRepository.CreateAppointmentAsync(appointment);
+                await _unitOfWork.SaveAsync();
+                return appointment.Id;
+            }
+            catch
+            {
+                return -1;
+            }
         }
     }
 }

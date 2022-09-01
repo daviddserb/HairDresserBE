@@ -5,10 +5,10 @@
         public int Id { get; set; }
         public string Name { get; set; }
 
-        //era string aici inainte
-        public int Duration { get; set; }
+        //era int inainte
+        public TimeSpan Duration { get; set; }
 
-        //era string aici inainte
+        //era float inainte
         public float Price { get; set; }
     }
 }
