@@ -18,17 +18,20 @@ namespace hairDresser.Presentation.Controllers
     {
         public readonly IMediator _mediator;
         public readonly IMapper _mapper;
+        private readonly ILogger<AppointmentController> _logger;
 
-        public AppointmentController(IMediator mediator, IMapper mapper)
+        public AppointmentController(IMediator mediator, IMapper mapper, ILogger<AppointmentController> logger)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateAppointmentAsync([FromBody] AppointmentPostDto appointment)
         {
             // Get an object of type AppointmentPostDto, which means that the object has the properties from its type.
+            _logger.LogInformation("Start process create appointment...");
 
             // Create the object of type CreateAppointmentCommand.
             var command = _mapper.Map<CreateAppointmentCommand>(appointment);
@@ -36,9 +39,14 @@ namespace hairDresser.Presentation.Controllers
             // Send() method calls the Handler, so we will have the result from the Handle method.
             var appointmentId = await _mediator.Send(command);
 
-            if (appointmentId == -1) return BadRequest();
+            if (appointmentId == null) 
+            {
+                _logger.LogError("Can't create appointment because invalid data input.");
+                return BadRequest();
+            }
 
-            //??? N-am prea inteles cu ce ma ajuta acel string uri din Created(), de aceea am dat unul gol, adica nu am vazut vreo diferenta daca am scris ceva in el. Ar trebui sa reprezinte ceva?
+            //??? N-am prea inteles cu ce ma ajuta acel string uri din Created() aici in API (am vazut ca se afla in Response headers in location)? O sa ajute cumva cu ceva pe partea de frotnend?
+            _logger.LogInformation("Appointment created successfully.");
             return Created("dsa123###", appointmentId);
         }
 

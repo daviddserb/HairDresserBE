@@ -31,12 +31,49 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<HairService> GetHairServiceByIdAsync(int hairServiceId)
         {
-            return await context.HairServices.FirstOrDefaultAsync(HairService => HairService.Id == hairServiceId);
+            var hairService = await context.HairServices.FirstOrDefaultAsync(HairService => HairService.Id == hairServiceId);
+            if (hairService == null) return null;
+            return hairService;
         }
 
         public async Task<IQueryable<HairService>> GetAllHairServicesByIdsAsync(List<int> hairServicesIds)
         {
-            return context.HairServices.Where(HairService => hairServicesIds.Contains(HairService.Id));
+            //???
+            // imi aduce doar rezultatele care sunt in lista, dar de ex. daca am dat: 1, 5, 9 si 9 nu se afla in lista, returneaza 1 si 5, dar eu vreau sa nu mai returneze nimic, ca nu toate se afla in lista.
+            var hairServices = context.HairServices
+                .Where(hairService => hairServicesIds.Contains(hairService.Id));
+
+            // Varianta 2:
+            // ??? Merge bine dar este cu true si fals...
+            var result2 = hairServicesIds
+                .Intersect(context.HairServices.Select(hairService => hairService.Id))
+                .Count() == hairServicesIds.Count();
+
+            // Varianta 3:
+            // ??? Merge bine dar este cu true si fals...
+            var result3 = hairServicesIds
+                .All(hairServiceId => context.HairServices.Select(hairService => hairService.Id).Contains(hairServiceId));
+
+            //???
+            var result4 = context.HairServices
+                .Where(hairService => hairServicesIds.All(hairServiceId => hairService.Id == hairServiceId));
+
+            //???
+            var result5 = context.HairServices
+                .Where(hairService => hairServicesIds.All(hairServiceId => hairServicesIds.Contains(hairService.Id)));
+
+            //Testing:
+            // Metoda 1: ??? Merge, dar eu trebuie sa fac pe tabela.Except(lista input) si atunci nu ii bine.
+            var superset = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            var subset = new[] { 2, 4, 6, 8 };
+            var test1 = subset.Except(superset);
+            bool contained = !subset.Except(superset).Any();
+
+
+
+            if (hairServices == null) return null;
+
+            return hairServices;
         }
 
         public async Task<HairService> UpdateHairServiceAsync(HairService hairService)

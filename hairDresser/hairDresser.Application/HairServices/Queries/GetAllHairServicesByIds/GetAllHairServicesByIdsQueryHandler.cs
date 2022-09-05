@@ -20,8 +20,7 @@ namespace hairDresser.Application.HairServices.Queries.GetAllHairServicesByIds
 
         public async Task<IQueryable<HairService>> Handle(GetAllHairServicesByIdsQuery request, CancellationToken cancellationToken)
         {
-            var selectedHairServices = await _unitOfWork.HairServiceRepository.GetAllHairServicesByIdsAsync(request.HairServicesIds);
-            return selectedHairServices;
+            return await _unitOfWork.HairServiceRepository.GetAllHairServicesByIdsAsync(request.HairServicesIds);
         }
     }
 }

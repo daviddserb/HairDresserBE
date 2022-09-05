@@ -18,9 +18,12 @@ namespace hairDresser.Application.Appointments.Queries.GetAppointmentById
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Appointment> Handle(GetAppointmentByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Appointment?> Handle(GetAppointmentByIdQuery request, CancellationToken cancellationToken)
         {
-            return await _unitOfWork.AppointmentRepository.GetAppointmentByIdAsync(request.AppointmentId);
+            var appointment = await _unitOfWork.AppointmentRepository.GetAppointmentByIdAsync(request.AppointmentId);
+
+            if (appointment == null) return null;
+            return appointment;
         }
     }
 }

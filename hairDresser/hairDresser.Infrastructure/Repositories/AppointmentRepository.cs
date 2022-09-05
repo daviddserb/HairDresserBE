@@ -35,13 +35,12 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<Appointment> GetAppointmentByIdAsync(int appointmentId)
         {
-            var appointment = await context.Appointments
+            return await context.Appointments
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
                 .ThenInclude(hairServices => hairServices.HairService)
                 .FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
-            return appointment;
         }
 
         // Pt. istoricul de appointment-uri ale unui customer (toate).
@@ -71,8 +70,7 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdByDateAsync(int employeeId, DateTime customerDate)
         {
             return context.Appointments
-                // ???!!! aveam inainte asa: date => date.StartDate.Date (ca sa iau doar Date-ul din StartDate, nu si Time-ul). Sa verific daca o sa am probleme. Cred ca a trebuit sa schimb pt. ca am pus in clasa din Domain, ? dupa Datetime, ca sa nu-i dea o valoarea default, ca sa aiba rost acel [Required].
-                .Where(date => date.StartDate == customerDate.Date)
+                .Where(date => date.StartDate.Date == customerDate.Date)
                 .Where(id => id.EmployeeId == employeeId)
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee);

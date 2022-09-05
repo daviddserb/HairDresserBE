@@ -8,7 +8,7 @@ using hairDresser.Application.Customers.Queries.GetAllCustomers;
 using hairDresser.Application.Employees.Commands.CreateEmployee;
 using hairDresser.Application.Employees.Commands.DeleteEmployee;
 using hairDresser.Application.Employees.Queries.GetAllEmployees;
-using hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppointmentByDate;
+using hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForAppointmentByDate;
 using hairDresser.Application.Employees.Queries.GetEmployeesByServices;
 using hairDresser.Application.HairServices.Commands.CreateHairService;
 using hairDresser.Application.HairServices.Queries;
@@ -79,7 +79,7 @@ async Task<bool> MainMenuAsync()
     Console.WriteLine("\nCRUD Employee:");
     Console.WriteLine("10 - CreateEmployee");
     Console.WriteLine("11 - ReadEmployees");
-    Console.WriteLine("12 - GetAllEmpoyeesByServices"); // X
+    Console.WriteLine("12 - GetAllEmpoyeesByServices");
     Console.WriteLine("13 - GetEmployeeIntervalsByDate");
     //Update
     Console.WriteLine("15 - DeleteEmployee");
@@ -142,9 +142,9 @@ async Task<bool> MainMenuAsync()
                 {
                     CustomerId = customerId,
                     EmployeeId = employeeId,
-                    HairServicesId = hairServicesId,
-                    StartDate = start,
-                    EndDate = end
+                    HairServicesIds = hairServicesId,
+                    StartDate = DateTime.Parse(start),
+                    EndDate = DateTime.Parse(end)
                 };
                 var appointmentId = await mediator.Send(command);
 
@@ -292,7 +292,7 @@ async Task<bool> MainMenuAsync()
                 Console.WriteLine("Time, in minutes?");
                 var durationInMinutes = Int32.Parse(Console.ReadLine());
 
-                var validIntervals = await mediator.Send(new GetEmployeeIntervalsByDateQuery
+                var validIntervals = await mediator.Send(new GetEmployeeFreeIntervalsForAppointmentByDateQuery
                 {
                     EmployeeId = employeeId,
                     Date = date,

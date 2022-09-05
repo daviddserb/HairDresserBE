@@ -33,10 +33,13 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<Employee> GetEmployeeByIdAsync(int employeeId)
         {
-            return await context.Employees
+            var employee = await context.Employees
                 .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
                 .ThenInclude(hairServices => hairServices.HairService)
                 .FirstOrDefaultAsync(employee => employee.Id == employeeId);
+
+            if (employee == null) return null;
+            return employee;
         }
 
         public async Task<IQueryable<Employee>> GetAllEmployeesByServicesAsync(List<int> servicesIds)

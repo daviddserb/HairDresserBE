@@ -21,6 +21,7 @@ namespace hairDresser.Application.Appointments.Commands.DeleteAppointment
         public async Task<Appointment> Handle(DeleteAppointmentCommand request, CancellationToken cancellationToken)
         {
             var appointment = await _unitOfWork.AppointmentRepository.GetAppointmentByIdAsync(request.AppointmentId);
+
             if (appointment == null) return null;
 
             await _unitOfWork.AppointmentRepository.DeleteAppointmentAsync(request.AppointmentId);

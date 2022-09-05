@@ -4,6 +4,7 @@ using hairDresser.Application.Employees.Commands.DeleteEmployee;
 using hairDresser.Application.Employees.Commands.UpdateEmployee;
 using hairDresser.Application.Employees.Queries.GetAllEmployees;
 using hairDresser.Application.Employees.Queries.GetEmployeeById;
+using hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForAppointmentByDate;
 using hairDresser.Application.Employees.Queries.GetEmployeesByServices;
 using hairDresser.Presentation.Dto.EmployeeDtos;
 using MediatR;
@@ -36,7 +37,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("all")]
-        public async Task<IActionResult> GetAllAppointments()
+        public async Task<IActionResult> GetAllEmployees()
         {
             var query = new GetAllEmployeesQuery();
 
@@ -59,9 +60,29 @@ namespace hairDresser.Presentation.Controllers
 
             if (employee == null) return NotFound();
 
-            var mappedAppointment = _mapper.Map<EmployeeGetDto>(employee);
+            var mappedEmployee = _mapper.Map<EmployeeGetDto>(employee);
 
-            return Ok(mappedAppointment);
+            return Ok(mappedEmployee);
+        }
+
+        [HttpGet]
+        [Route("free-intervals")]
+        public async Task<IActionResult> GetEmployeeFreeIntervalsByDate(int employeeId, int date, int durationInMinutes)
+        {
+            var query = new GetEmployeeFreeIntervalsForAppointmentByDateQuery
+            {
+                EmployeeId = employeeId,
+                Date = date,
+                DurationInMinutes = durationInMinutes
+            };
+
+            var freeIntervals = await _mediator.Send(query);
+
+            if (!freeIntervals.Any()) return NotFound();
+
+            var mappedFreeIntervals = _mapper.Map<List<EmployeeFreeIntervalsGetDto>>(freeIntervals);
+
+            return Ok(mappedFreeIntervals);
         }
 
         [HttpGet]
@@ -78,9 +99,6 @@ namespace hairDresser.Presentation.Controllers
 
             return Ok(mappedValidEmployees);
         }
-
-        //???
-        //get intervale de la employee
 
         [HttpPut]
         [Route("{employeeId}")]
@@ -102,7 +120,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpDelete]
         [Route("{employeeId}")]
-        public async Task<IActionResult> DeleteAppointment(int employeeId)
+        public async Task<IActionResult> DeleteEmployee(int employeeId)
         {
             var command = new DeleteEmployeeCommand { Id = employeeId };
 

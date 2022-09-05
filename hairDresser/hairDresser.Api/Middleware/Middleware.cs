@@ -9,13 +9,16 @@
         {
             _next = next;
             _logger = logger;
+            _logger.LogInformation("Middleware is started.");
+            _logger.LogWarning("Something went wrong (testing).");
+            _logger.LogError("Application error (testing).");
         }
 
         public async Task Invoke(HttpContext httpContext)
         {
-            _logger.LogInformation("log in 1");
+            _logger.LogInformation("Log in.");
             await _next.Invoke(httpContext);
-            _logger.LogInformation("log out 1");
+            _logger.LogInformation("Log out.");
         }
     }
     public static class MiddlewareExtensions

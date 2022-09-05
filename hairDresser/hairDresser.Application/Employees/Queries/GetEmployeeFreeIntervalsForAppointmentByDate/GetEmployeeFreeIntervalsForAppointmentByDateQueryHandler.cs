@@ -7,18 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppointmentByDate
+namespace hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForAppointmentByDate
 {
-    public class GetEmployeeIntervalsByDateQueryHandler : IRequestHandler<GetEmployeeIntervalsByDateQuery, List<(DateTime startDate, DateTime endDate)>>
+    public class GetEmployeeFreeIntervalsForAppointmentByDateQueryHandler : IRequestHandler<GetEmployeeFreeIntervalsForAppointmentByDateQuery, List<EmployeeFreeInterval>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public GetEmployeeIntervalsByDateQueryHandler(IUnitOfWork unitOfWork)
+        public GetEmployeeFreeIntervalsForAppointmentByDateQueryHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<(DateTime startDate, DateTime endDate)>> Handle(GetEmployeeIntervalsByDateQuery request, CancellationToken cancellationToken)
+        public async Task<List<EmployeeFreeInterval>> Handle(GetEmployeeFreeIntervalsForAppointmentByDateQuery request, CancellationToken cancellationToken)
         {
             Console.WriteLine("\nGetEmployeeIntervalsByDateQueryHandler:");
 
@@ -32,8 +32,7 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
             Console.WriteLine("\nAll the appointments from the selected employee and the selected date:");
             foreach (var appointment in await _unitOfWork.AppointmentRepository.GetAllAppointmentsByEmployeeIdByDateAsync(request.EmployeeId, appointmentDate))
             {
-                // ??? Inainte aveam asa: employeeAppointmentsDates.Add((appointment.StartDate, appointment.EndDate));. A trebuit sa schimb pt. ca in clasa Appointment, am adaugat ? dupa DateTime.
-                employeeAppointmentsDates.Add(((DateTime startDate, DateTime endDate))(appointment.StartDate, appointment.EndDate));
+                employeeAppointmentsDates.Add((appointment.StartDate, appointment.EndDate));
                 Console.WriteLine($"{appointment.Id} - customer= '{appointment.Customer.Name}', employee='{appointment.Employee.Name}', start= '{appointment.StartDate}', end= '{appointment.EndDate}'");
             }
 
@@ -71,7 +70,9 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
                 Console.WriteLine(intervals);
             }
 
-            var validIntervals = new List<(DateTime startDate, DateTime endDate)>();
+            // Am lista asta doar de testare a intervalelor. !!! Ca sa scap de ea, as putea sa parsez lista de EmployeeFreeInterval, dar trebuie sa invat sa vad cum fac asta.
+            //var validIntervals = new List<(DateTime startDate, DateTime endDate)>();
+            var employeeFreeIntervalList = new List<EmployeeFreeInterval>();
             Console.WriteLine("\nCheck for valid intervals:");
             for (int i = 0; i < possibleIntervals.Count - 1; i += 2)
             {
@@ -83,7 +84,8 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
                 while ((startOfInterval += duration) <= endOfInterval)
                 {
                     Console.WriteLine(copy_startOfInterval.TimeOfDay + " - " + startOfInterval.TimeOfDay);
-                    validIntervals.Add((copy_startOfInterval, startOfInterval));
+                    //validIntervals.Add((copy_startOfInterval, startOfInterval));
+                    employeeFreeIntervalList.Add(new EmployeeFreeInterval { StartDate = copy_startOfInterval, EndDate = startOfInterval });
                     copy_startOfInterval = startOfInterval;
                 }
             }
@@ -92,7 +94,8 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeIntervalsForAppoi
             //{
             //    Console.WriteLine($"start= '{intervals.startDate}', end= '{intervals.endDate}'");
             //}
-            return await Task.FromResult(validIntervals);
+
+            return await Task.FromResult(employeeFreeIntervalList);
         }
     }
 }
