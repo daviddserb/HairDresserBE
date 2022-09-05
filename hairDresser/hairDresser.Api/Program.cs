@@ -7,8 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 //??? Intrebari:
 // 1. HairServiceRepository - GetAllHairServicesByIdsAsync.
-// 2. AppointmentControllerFixture - ultimele 2 teste.
-// 3.
+// 2.
 //Cu Dto comunicam cu clientul, asta inseamna ca toate input-urile, din API, trebuie sa fie de tip Dto (in loc de Query de ex.)?
 //Si la fel cand ii trimitem rezultatul pe API (in return-ul metodei din Controller), trebuie sa fie tot de tipul Dto sau nu? Sau nu trebuie neapart Dto, dar sa nu fie de tipul clasei din Domain, adica poate sa fie de tipul unui Command de ex.?
 

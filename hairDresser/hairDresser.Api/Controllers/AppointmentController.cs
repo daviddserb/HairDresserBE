@@ -31,7 +31,7 @@ namespace hairDresser.Presentation.Controllers
         public async Task<IActionResult> CreateAppointmentAsync([FromBody] AppointmentPostDto appointment)
         {
             // Get an object of type AppointmentPostDto, which means that the object has the properties from its type.
-            _logger.LogInformation("Start process create appointment...");
+            _logger.LogInformation("Start process: Create appointment...");
 
             // Create the object of type CreateAppointmentCommand.
             var command = _mapper.Map<CreateAppointmentCommand>(appointment);
@@ -45,8 +45,9 @@ namespace hairDresser.Presentation.Controllers
                 return BadRequest();
             }
 
-            //??? N-am prea inteles cu ce ma ajuta acel string uri din Created() aici in API (am vazut ca se afla in Response headers in location)? O sa ajute cumva cu ceva pe partea de frotnend?
             _logger.LogInformation("Appointment created successfully.");
+
+            //??? N-am prea inteles cu ce ma ajuta acel string uri din Created() aici in API (am vazut ca se afla in Response headers in location)? O sa ajute cumva cu ceva pe partea de frotnend?
             return Created("dsa123###", appointmentId);
         }
 

@@ -302,7 +302,7 @@ async Task<bool> MainMenuAsync()
                 Console.WriteLine("All valid intervals from the selected employee and in the selected date:");
                 foreach (var interval in validIntervals)
                 {
-                    Console.WriteLine(interval.startDate + " - " + interval.endDate);
+                    Console.WriteLine(interval.StartDate + " - " + interval.EndDate);
                 }
                 return true;
             }
