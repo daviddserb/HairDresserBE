@@ -72,7 +72,7 @@ namespace hairDresser.Presentation.Controllers
 
             var hairServices = await _mediator.Send(query);
 
-            if (!hairServices.Any()) return NotFound();
+            if (hairServices == null) return NotFound();
 
             var mappedhairServices = _mapper.Map<List<HairServiceGetDto>>(hairServices);
 

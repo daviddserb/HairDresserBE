@@ -39,9 +39,13 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task<IQueryable<HairService>> GetAllHairServicesByIdsAsync(List<int> hairServicesIds)
         {
             //???
-            // imi aduce doar rezultatele care sunt in lista, dar de ex. daca am dat: 1, 5, 9 si 9 nu se afla in lista, returneaza 1 si 5, dar eu vreau sa nu mai returneze nimic, ca nu toate se afla in lista.
+            // Imi aduce doar rezultatele care sunt in lista, dar de ex. daca am dat: 1, 5, 9 si 9 nu se afla in lista, returneaza 1 si 5, dar eu vreau sa nu mai returneze nimic, ca nu toate se afla in lista.
+            // Cum pot imbunatati si atunci nu mai am nevoie de if/else, returnez direct ce trebuie.
             var hairServices = context.HairServices
                 .Where(hairService => hairServicesIds.Contains(hairService.Id));
+
+            if (hairServices.Count() == hairServicesIds.Count()) return hairServices;
+            else return null;
 
             // Varianta 2:
             // ??? Merge bine dar este cu true si fals...
@@ -54,11 +58,11 @@ namespace hairDresser.Infrastructure.Repositories
             var result3 = hairServicesIds
                 .All(hairServiceId => context.HairServices.Select(hairService => hairService.Id).Contains(hairServiceId));
 
-            //???
+            //??? gresit
             var result4 = context.HairServices
                 .Where(hairService => hairServicesIds.All(hairServiceId => hairService.Id == hairServiceId));
 
-            //???
+            //??? gresit
             var result5 = context.HairServices
                 .Where(hairService => hairServicesIds.All(hairServiceId => hairServicesIds.Contains(hairService.Id)));
 
@@ -68,12 +72,6 @@ namespace hairDresser.Infrastructure.Repositories
             var subset = new[] { 2, 4, 6, 8 };
             var test1 = subset.Except(superset);
             bool contained = !subset.Except(superset).Any();
-
-
-
-            if (hairServices == null) return null;
-
-            return hairServices;
         }
 
         public async Task<HairService> UpdateHairServiceAsync(HairService hairService)
