@@ -13,7 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace hairDresser.Presentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    //??? [Route("api/[controller]")] sau [Route("api/appointment")] ca sa fie cu litera mica cum zice in reguli?
+    [Route("api/appointment")]
     public class AppointmentController : ControllerBase
     {
         public readonly IMediator _mediator;
