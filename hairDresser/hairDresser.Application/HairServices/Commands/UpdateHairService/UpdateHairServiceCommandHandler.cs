@@ -25,8 +25,8 @@ namespace hairDresser.Application.HairServices.Commands.UpdateHairService
             if (hairService == null) return null;
 
             hairService.Name = request.Name;
-            hairService.Duration = TimeSpan.FromMinutes(request.DurationInMinutes);
-            hairService.Price = request.Price;
+            hairService.Duration = TimeSpan.FromMinutes((double)request.DurationInMinutes);
+            hairService.Price = (float)request.Price;
 
             await _unitOfWork.HairServiceRepository.UpdateHairServiceAsync(hairService);
             await _unitOfWork.SaveAsync();

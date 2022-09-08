@@ -21,7 +21,8 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task CreateEmployeeAsync(Employee employee)
         {
-            await context.Employees.AddAsync(employee);
+            await context.Employees
+                .AddAsync(employee);
         }
 
         public async Task<IQueryable<Employee>> ReadEmployeesAsync()

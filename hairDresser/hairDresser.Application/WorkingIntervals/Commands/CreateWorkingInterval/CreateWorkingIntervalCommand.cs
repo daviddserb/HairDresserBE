@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterval
 {
-    public class CreateWorkingIntervalCommand : IRequest<int>
+    public class CreateWorkingIntervalCommand : IRequest<WorkingInterval>
     {
         public int WorkingDayId { get; set; }
         public int EmployeeId { get; set; }

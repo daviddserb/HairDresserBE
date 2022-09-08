@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace hairDresser.Presentation.Controllers
 {
     [ApiController]
-    //??? [Route("api/[controller]")] sau [Route("api/appointment")] ca sa fie cu litera mica cum zice in reguli?
     [Route("api/appointment")]
     public class AppointmentController : ControllerBase
     {
@@ -29,46 +28,49 @@ namespace hairDresser.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAppointmentAsync([FromBody] AppointmentPostDto appointment)
+        public async Task<IActionResult> CreateAppointmentAsync([FromBody] AppointmentPostDto appointmentInput)
         {
             // Get an object of type AppointmentPostDto, which means that the object has the properties from its type.
+
             _logger.LogInformation("Start process: Create appointment...");
 
-            // Create the object of type CreateAppointmentCommand.
-            var command = _mapper.Map<CreateAppointmentCommand>(appointment);
+            // Map the object type, which means change the type from AppointmentPostDto to CreateAppointmentCommand and match (map) as well the properties (by type and name)
+            var command = _mapper.Map<CreateAppointmentCommand>(appointmentInput);
 
             // Send() method calls the Handler, so we will have the result from the Handle method.
-            var appointmentId = await _mediator.Send(command);
+            var appointment = await _mediator.Send(command);
 
-            if (appointmentId == null) 
+            if (appointment == null)
             {
                 _logger.LogError("Can't create appointment because invalid data input.");
                 return BadRequest();
             }
 
+            var mappedAppointment = _mapper.Map<AppointmentGetDto>(appointment);
+
             _logger.LogInformation("Appointment created successfully.");
 
-            //??? N-am prea inteles cu ce ma ajuta acel string uri din Created() aici in API (am vazut ca se afla in Response headers in location)? O sa ajute cumva cu ceva pe partea de frotnend?
-            return Created("dsa123###", appointmentId);
+            return CreatedAtAction(nameof(GetAppointmentById),
+                new { appointmentId = mappedAppointment.Id },
+                mappedAppointment);
         }
 
         [HttpGet]
         [Route("all")]
-        public async Task<IActionResult> GetAllAppointments()
+        public async Task<IActionResult> GetAllAppointments([FromQuery] GetAllAppointmentsQuery paginationQuery)
         {
-            var query = new GetAllAppointmentsQuery();
-
-            var allAppointments = await _mediator.Send(query);
+            var allAppointments = await _mediator.Send(paginationQuery);
 
             if (!allAppointments.Any()) return NotFound();
 
-            var mappeAllAppointments = _mapper.Map<List<AppointmentGetDto>>(allAppointments);
+            var mappedAllAppointments = _mapper.Map<List<AppointmentGetDto>>(allAppointments);
 
-            return Ok(mappeAllAppointments);
+            return Ok(mappedAllAppointments);
         }
 
         [HttpGet]
         [Route("{appointmentId}")]
+        [ActionName(nameof(GetAppointmentById))]
         public async Task<IActionResult> GetAppointmentById(int appointmentId)
         {
             var query = new GetAppointmentByIdQuery { AppointmentId = appointmentId };
@@ -88,13 +90,14 @@ namespace hairDresser.Presentation.Controllers
         {
             var query = new GetAllAppointmentsByCustomerIdQuery { CustomerId = customerId };
 
-            var customerAppointments = await _mediator.Send(query);
+            var allCustomerAppointments = await _mediator.Send(query);
 
-            if (!customerAppointments.Any()) return NotFound();
+            if (!allCustomerAppointments.Any()) return NotFound();
 
-            var mappedCustomerAppointments = _mapper.Map<List<AppointmentGetDto>>(customerAppointments);
+            var mappedCustomerAppointments = _mapper.Map<List<AppointmentGetDto>>(allCustomerAppointments);
 
             return Ok(mappedCustomerAppointments);
+
         }
 
         [HttpGet]
@@ -103,13 +106,13 @@ namespace hairDresser.Presentation.Controllers
         {
             var query = new GetInWorkAppointmentsByCustomerIdQuery { CustomerId = customerId };
 
-            var result = await _mediator.Send(query);
+            var allCustomerInWorkAppointments = await _mediator.Send(query);
 
-            if (!result.Any()) return NotFound();
+            if (!allCustomerInWorkAppointments.Any()) return NotFound();
 
-            var mappedResult = _mapper.Map<List<AppointmentGetDto>>(result);
+            var mappedAllCustomerInWorkAppointments = _mapper.Map<List<AppointmentGetDto>>(allCustomerInWorkAppointments);
 
-            return Ok(mappedResult);
+            return Ok(mappedAllCustomerInWorkAppointments);
         }
 
         [HttpPut]

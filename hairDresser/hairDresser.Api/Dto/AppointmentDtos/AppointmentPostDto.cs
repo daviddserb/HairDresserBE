@@ -5,10 +5,19 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
 {
     public class AppointmentPostDto
     {
-        public int CustomerId { get; set; }
-        public int EmployeeId { get; set; }
-        public List<int> HairServicesIds { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        [Required]
+        public int? CustomerId { get; set; }
+
+        [Required]
+        public int? EmployeeId { get; set; }
+
+        [Required]
+        public List<int>? HairServicesIds { get; set; }
+
+        [Required]
+        public DateTime? StartDate { get; set; }
+
+        [Required]
+        public DateTime? EndDate { get; set; }
     }
 }

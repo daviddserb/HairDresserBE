@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace hairDresser.Presentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/hairservice")]
     public class HairServiceController : ControllerBase
     {
         public readonly IMapper _mapper;
@@ -25,13 +25,17 @@ namespace hairDresser.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateHairServiceAsync([FromBody] HairServicePostPutDto hairService)
+        public async Task<IActionResult> CreateHairServiceAsync([FromBody] HairServicePostPutDto hairServiceInput)
         {
-            var command = _mapper.Map<CreateHairServiceCommand>(hairService);
+            var command = _mapper.Map<CreateHairServiceCommand>(hairServiceInput);
 
-            var hairServiceId = await _mediator.Send(command);
+            var hairService = await _mediator.Send(command);
 
-            return Created("", hairServiceId);
+            var mappedHairService = _mapper.Map<HairServiceGetDto>(hairService);
+
+            return CreatedAtAction(nameof(GetHairServiceById),
+                new { id = mappedHairService.Id },
+                mappedHairService);
         }
 
         [HttpGet]
@@ -81,14 +85,14 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> UpdateHairService(int id, [FromBody] HairServicePostPutDto editedHairService)
+        public async Task<IActionResult> UpdateHairService(int id, [FromBody] HairServicePostPutDto? editedHairService)
         {
             var command = new UpdateHairServiceCommand
             {
                 Id = id,
                 Name = editedHairService.Name,
                 DurationInMinutes = editedHairService.DurationInMinutes,
-                Price = editedHairService.Price
+                Price = (float)editedHairService.Price
             };
 
             var result = await _mediator.Send(command);

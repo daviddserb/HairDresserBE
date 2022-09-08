@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 {
     // Trebuie sa implementam interfata IRequestHandler, care poate sa primeasca 2 parametrii: request-ul (mesajul = command/query) care este obligatoriu si raspunsul mesajului (ce returneaza el).
-    public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointmentCommand, int?>
+    public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointmentCommand, Appointment>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -19,7 +19,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int?> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
+        public async Task<Appointment> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
         {
             var appointment = new Appointment();
 
@@ -32,9 +32,6 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             var hairServices = await _unitOfWork.HairServiceRepository.GetAllHairServicesByIdsAsync(request.HairServicesIds);
             if (hairServices == null) return null;
 
-            // ??? Poate mai trebuie sa adaug si ceva verificare la startdate si enddate, de ex. sa fie startdate in viitor si enddate mai mare decat startdate.
-
-            // ??? Dupa ce am facut verificarea daca exista customer cu id-ul primit din API (var customer = await ...), aici la appointment.CustomerId, pe care id al trebui sa-l salvez (chiar daca ii acelasi)? Cel primit de pe frontend (request.CustomerId) sau cel primit din metoda din repository (_unitOfWork.CustomerRepository.GetCustomerByIdAsync(request.CustomerId).Id)?
             appointment.CustomerId = customer.Id;
             appointment.EmployeeId = employee.Id;
             appointment.AppointmentHairServices = request.HairServicesIds.Select(hairServiceId => new AppointmentHairService()
@@ -48,7 +45,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             await _unitOfWork.AppointmentRepository.CreateAppointmentAsync(appointment);
             await _unitOfWork.SaveAsync();
 
-            return appointment.Id;
+            return appointment;
         }
     }
 }

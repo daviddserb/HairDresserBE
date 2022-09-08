@@ -33,12 +33,12 @@ namespace hairDresser.Infrastructure
         public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();
         public DbSet<AppointmentHairService> AppointmentsHairServices => Set<AppointmentHairService>();
 
-        //!!! Am conectarea cu connection string-ul de la DB si in Program, diContainer, dar daca sterg OnConfiguring cu string connection-ul am ceva erori.
-        protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
-        {
-            optionBuilder
-                .UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDb;Trusted_Connection=True;MultipleActiveResultSets=True;");
-            //optionBuilder.UseLazyLoadingProxies(true);
-        }
+        //!!! Ca sa ruleze aplicatia din Consola, trebuie sa decomentez metoda OnConfiguring().
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
+        //{
+        //    optionBuilder
+        //        .UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDb;Trusted_Connection=True;MultipleActiveResultSets=True;");
+        //    //optionBuilder.UseLazyLoadingProxies(true);
+        //}
     }
 }

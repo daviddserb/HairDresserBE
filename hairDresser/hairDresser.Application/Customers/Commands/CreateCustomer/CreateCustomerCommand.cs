@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using hairDresser.Domain.Models;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Customers.Commands.CreateCustomer
 {
-    public class CreateCustomerCommand : IRequest<int>
+    public class CreateCustomerCommand : IRequest<Customer>
     {
         public string Name { get; set; }
         public string Username { get; set; }

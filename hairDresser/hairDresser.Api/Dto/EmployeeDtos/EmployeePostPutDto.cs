@@ -2,7 +2,7 @@
 {
     public class EmployeePostPutDto
     {
-        public string Name { get; set; }
-        public List<int> HairServicesIds { get; set; }
+        public string? Name { get; set; }
+        public List<int>? HairServicesIds { get; set; }
     }
 }

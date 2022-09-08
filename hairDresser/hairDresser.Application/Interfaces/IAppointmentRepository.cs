@@ -10,7 +10,7 @@ namespace hairDresser.Application.Interfaces
     public interface IAppointmentRepository
     {
         Task CreateAppointmentAsync(Appointment appointment);
-        Task<IQueryable<Appointment>> ReadAppointmentsAsync();
+        Task<IQueryable<Appointment>> ReadAppointmentsAsync(int pageNumber, int pageSize);
         Task<Appointment> GetAppointmentByIdAsync(int appointmentId);
         Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdAsync(int customerId);
         Task<IQueryable<Appointment>> GetInWorkAppointmentsByCustomerIdAsync(int customerId);

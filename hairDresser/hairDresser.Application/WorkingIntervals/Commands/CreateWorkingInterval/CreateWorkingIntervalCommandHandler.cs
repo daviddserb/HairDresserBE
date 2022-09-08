@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterval
 {
-    public class CreateWorkingIntervalCommandHandler : IRequestHandler<CreateWorkingIntervalCommand, int>
+    public class CreateWorkingIntervalCommandHandler : IRequestHandler<CreateWorkingIntervalCommand, WorkingInterval>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -18,7 +18,7 @@ namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterva
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> Handle(CreateWorkingIntervalCommand request, CancellationToken cancellationToken)
+        public async Task<WorkingInterval> Handle(CreateWorkingIntervalCommand request, CancellationToken cancellationToken)
         {
             var startTime = TimeSpan.Parse(request.StartTime);
             var endTime = TimeSpan.Parse(request.EndTime);
@@ -49,12 +49,15 @@ namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterva
                     StartTime = startTime,
                     EndTime = endTime,
                 };
+
                 await _unitOfWork.WorkingIntervalRepository.CreateWorkingIntervalAsync(workingInterval);
                 await _unitOfWork.SaveAsync();
-                return workingInterval.Id;
+
+                return workingInterval;
             }
 
-            return -1;
+            // If the interval is not good, because it does overlap, I send an empty/null object.
+            return new WorkingInterval();
         }
     }
 }

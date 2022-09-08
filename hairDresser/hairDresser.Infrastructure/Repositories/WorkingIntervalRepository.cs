@@ -34,6 +34,8 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task<WorkingInterval> GetWorkingIntervalByIdAsync(int workingIntervalId)
         {
             return await context.WorkingIntervals
+                .Include(obj => obj.WorkingDay)
+                .Include(obj => obj.Employee)
                 .FirstOrDefaultAsync(workingInterval => workingInterval.Id == workingIntervalId);
         }
 

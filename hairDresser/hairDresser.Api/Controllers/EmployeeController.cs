@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace hairDresser.Presentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/employee")]
     public class EmployeeController : ControllerBase
     {
         public readonly IMapper _mapper;
@@ -26,13 +26,16 @@ namespace hairDresser.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEmployeeAsync([FromBody] EmployeePostPutDto employee)
+        public async Task<IActionResult> CreateEmployeeAsync([FromBody] EmployeePostPutDto employeeInput)
         {
-            var command = _mapper.Map<CreateEmployeeComand>(employee);
+            var command = _mapper.Map<CreateEmployeeComand>(employeeInput);
 
-            var employeeId = await _mediator.Send(command);
+            var employee = await _mediator.Send(command);
 
-            return Created("", employeeId);
+            var mappedEmployee = _mapper.Map<EmployeeGetDto>(employee);
+
+            // ??? Cum fac sa se vada si numele specilizarilor?
+            return CreatedAtAction(nameof(GetEmployeeById), new { employeeId = mappedEmployee.Id }, mappedEmployee);
         }
 
         [HttpGet]

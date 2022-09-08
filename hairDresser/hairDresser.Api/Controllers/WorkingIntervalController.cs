@@ -5,6 +5,7 @@ using hairDresser.Application.WorkingIntervals.Commands.UpdateWorkingInterval;
 using hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingIntervals;
 using hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingIntervalsByEmployeeId;
 using hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingIntervalsByEmployeeIdByDate;
+using hairDresser.Application.WorkingIntervals.Queries.GetWorkingIntervalById;
 using hairDresser.Presentation.Dto.WorkingIntervalDtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace hairDresser.Presentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/workinginterval")]
     public class WorkingIntervalController : ControllerBase
     {
         public readonly IMapper _mapper;
@@ -25,15 +26,20 @@ namespace hairDresser.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateWorkingIntervalAsync([FromBody] WorkingIntervalPostDto workingInterval)
+        public async Task<IActionResult> CreateWorkingIntervalAsync([FromBody] WorkingIntervalPostDto workingIntervalInput)
         {
-            var command = _mapper.Map<CreateWorkingIntervalCommand>(workingInterval);
+            var command = _mapper.Map<CreateWorkingIntervalCommand>(workingIntervalInput);
 
-            var workingIntervalId = await _mediator.Send(command);
+            var workingInterval = await _mediator.Send(command);
 
-            if (workingIntervalId == -1) return BadRequest(); //interval overlapping
-                        
-            return Created("", workingIntervalId);
+            if (workingInterval == null) return BadRequest(); //interval overlapping
+
+            var mappedWorkingInterval = _mapper.Map<WorkingIntervalGetDto>(workingInterval);
+
+            // ??? Cum fac sa se vada si workingDay si employee?
+            return CreatedAtAction(nameof(GetWorkingIntervalById),
+                new { workingIntervalId = mappedWorkingInterval.Id },
+                mappedWorkingInterval);
         }
 
         [HttpGet]
@@ -49,6 +55,21 @@ namespace hairDresser.Presentation.Controllers
             var mappedWorkingIntervals = _mapper.Map<List<WorkingIntervalGetDto>>(allWorkingIntervals);
 
             return Ok(mappedWorkingIntervals);
+        }
+
+        [HttpGet]
+        [Route("{workingIntervalId}")]
+        public async Task<IActionResult> GetWorkingIntervalById(int workingIntervalId)
+        {
+            var query = new GetWorkingIntervalByIdQuery { WorkingIntervalId = workingIntervalId };
+
+            var workingInterval = await _mediator.Send(query);
+
+            if (workingInterval == null) return NotFound();
+
+            var mappedWorkingInterval = _mapper.Map<WorkingIntervalGetDto>(workingInterval);
+
+            return Ok(mappedWorkingInterval);
         }
 
         [HttpGet]

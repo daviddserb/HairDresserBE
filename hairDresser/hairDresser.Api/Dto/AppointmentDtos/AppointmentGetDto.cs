@@ -11,8 +11,10 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
 
         public int Id { get; set; }
 
+        public int CustomerId { get; set; } //!!! am adaugat (daca da erori ii ceva pe aici)
         public CustomerGetDto Customer { get; set; }
 
+        public int EmployeeId { get; set; } //!!! am adaugat (daca da erori ii ceva pe aici)
         public EmployeeGetDto Employee { get; set; }
 
         public DateTime StartDate { get; set; }

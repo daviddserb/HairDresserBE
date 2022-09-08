@@ -2,8 +2,8 @@
 {
     public class HairServicePostPutDto
     {
-        public string Name { get; set; }
-        public int DurationInMinutes { get; set; }
-        public float Price { get; set; }
+        public string? Name { get; set; }
+        public int? DurationInMinutes { get; set; }
+        public float? Price { get; set; }
     }
 }

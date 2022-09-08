@@ -10,20 +10,13 @@ namespace hairDresser.IntegrationTests
 {
     public class AppointmentControllerTests
     {
-        private static WebApplicationFactory<Program> _factory;
-    
-        public static void ClassInit()
-        {
-            _factory = new CustomWebApplicationFactory<Program>();
-        }
+        private static WebApplicationFactory<Program> _factory = new CustomWebApplicationFactory<Program>();
 
         [Fact]
         public async Task GetAllAppointmnets_ShouldReturnOkReponse()
         {
-            // ??? am eroare aici (Object reference not set to an instance of an object)
             var client = _factory.CreateClient();
 
-            // ! s-ar putea sa nu fie buna ruta din GetAsync(), adica api/...
             var response = await client.GetAsync("api/appointment/all");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -33,7 +26,5 @@ namespace hairDresser.IntegrationTests
         {
             _factory.Dispose();
         }
-
-
     }
 }

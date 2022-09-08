@@ -34,7 +34,13 @@ namespace hairDresser.UnitTests
 
             //Act:
             var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
-            await controller.GetAllAppointments();
+
+            var pagination = new GetAllAppointmentsQuery
+            {
+                PageNumber = 1,
+                PageSize = 1
+            };
+            await controller.GetAllAppointments(pagination);
 
             //Assert:
             _mockMediator.Verify(x => x.Send(It.IsAny<GetAllAppointmentsQuery>(), It.IsAny<CancellationToken>()), Times.Once());
@@ -135,29 +141,57 @@ namespace hairDresser.UnitTests
         }
 
         [Fact]
-        public async Task CallCreateAppointmentAsync_ReturnsAppointmentId()
+        public async Task CallCreateAppointmentAsync_ReturnsAppointment()
         {
             //Arrange:
             var appointmentPostDto = new AppointmentPostDto
             {
                 CustomerId = 1,
-                EmployeeId = 2,
-                //HairServicesIds = { 3, 4 }, // ??? De ce am eroare.
+                EmployeeId = 1,
+                //HairServicesIds = { 1, 1 }, // ??? De ce am eroare.
                 StartDate = DateTime.Now,
                 EndDate = DateTime.Now
             };
-
-            _mockMediator
-                .Setup(mediator => mediator.Send(It.IsAny<CreateAppointmentCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(1);
 
             _mockMapper
                 .Setup(mapper => mapper.Map<CreateAppointmentCommand>(It.Is<AppointmentPostDto>(app => app == appointmentPostDto)))
                 .Returns(new CreateAppointmentCommand
                 {
                     CustomerId = 1,
-                    EmployeeId = 1,
+                    EmployeeId = 2,
                     //HairServicesIds = { 1, 2 }, // ??? De ce am eroare.
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now
+                });
+
+            _mockMediator
+                .Setup(mediator => mediator.Send(It.IsAny<CreateAppointmentCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Appointment
+                {
+                    CustomerId = 2,
+                    EmployeeId = 1,
+                    //HairServicesIds = { 2, 1 }, // ??? De ce am eroare.
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now
+                });
+
+            // ???
+            var appointment = new Appointment
+            {
+                CustomerId = 2,
+                EmployeeId = 2,
+                //HairServicesIds = { 2, 2 }, // ??? De ce am eroare.
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now
+            };
+
+            _mockMapper
+                .Setup(mapper => mapper.Map<AppointmentGetDto>(It.Is<Appointment>(app => app == appointment)))
+                .Returns(new AppointmentGetDto
+                {
+                    CustomerId = 3,
+                    EmployeeId = 2,
+                    //HairServicesIds = { 3, 2 }, // ??? De ce am eroare.
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now
                 });
@@ -166,7 +200,9 @@ namespace hairDresser.UnitTests
 
             //Act:
             var result = await controller.CreateAppointmentAsync(appointmentPostDto);
-            var okResult = result as CreatedResult;
+
+            //var okResult = result as CreatedResult; //before
+            var okResult = result as CreatedAtActionResult; //after (pt. ca am modificar return type-ul din Controller)
 
             //Assert:
             Assert.Equal(appointmentPostDto.CustomerId, okResult.Value);

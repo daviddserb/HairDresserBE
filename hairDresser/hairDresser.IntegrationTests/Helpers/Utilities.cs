@@ -38,7 +38,8 @@ namespace hairDresser.IntegrationTests.Helpers
                 EndDate = DateTime.Now,
             };
             db.Appointments.AddRange(appointment1, appointment2, appointment3);
-            db.SaveChanges();
+            // ???
+            //db.SaveChanges();
 
             var hairServices1 = new HairService
             {
@@ -62,7 +63,7 @@ namespace hairDresser.IntegrationTests.Helpers
                 Price = 200
             };
             db.HairServices.AddRange(hairServices1, hairServices2, hairServices3);
-            db.SaveChanges();
+            //db.SaveChanges();
         }
     }
 }

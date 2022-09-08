@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace hairDresser.Presentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/customer")]
     public class CustomerController : ControllerBase
     {
         public readonly IMapper _mapper;
@@ -23,15 +23,18 @@ namespace hairDresser.Presentation.Controllers
             _mapper = mapper;
         }
 
-        // ??????????????????????????????????????
         [HttpPost]
-        public async Task<IActionResult> CreateCustomerAsync([FromBody] CustomerPostPutDto customer)
+        public async Task<IActionResult> CreateCustomerAsync([FromBody] CustomerPostPutDto customerInput)
         {
-            var command = _mapper.Map<CreateCustomerCommand>(customer);
+            var command = _mapper.Map<CreateCustomerCommand>(customerInput);
 
-            var customerId = await _mediator.Send(command);
+            var customer = await _mediator.Send(command);
 
-            return Created("", customerId);
+            var mappedCustomer = _mapper.Map<CustomerGetDto>(customer);
+
+            return CreatedAtAction(nameof(GetCustomerById),
+                new { id = mappedCustomer.Id },
+                mappedCustomer);
         }
 
         [HttpGet]

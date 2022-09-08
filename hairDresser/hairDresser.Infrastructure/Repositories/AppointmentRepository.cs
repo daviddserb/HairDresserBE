@@ -24,13 +24,15 @@ namespace hairDresser.Infrastructure.Repositories
             await context.Appointments.AddAsync(appointment);
         }
 
-        public async Task<IQueryable<Appointment>> ReadAppointmentsAsync()
+        public async Task<IQueryable<Appointment>> ReadAppointmentsAsync(int pageNumber, int PageSize)
         {
             return context.Appointments
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
-                .ThenInclude(hairServices => hairServices.HairService);
+                .ThenInclude(hairServices => hairServices.HairService)
+                .Skip((pageNumber - 1) * PageSize)
+                .Take(PageSize);
         }
 
         public async Task<Appointment> GetAppointmentByIdAsync(int appointmentId)
