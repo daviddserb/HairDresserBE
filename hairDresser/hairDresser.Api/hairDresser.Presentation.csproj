@@ -25,4 +25,8 @@
     <ProjectReference Include="..\hairDresser.Infrastructure\hairDresser.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CustomDataValidations\" />
+  </ItemGroup>
+
 </Project>

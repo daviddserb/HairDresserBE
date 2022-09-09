@@ -4,13 +4,16 @@ namespace hairDresser.Presentation.Dto.WorkingIntervalDtos
 {
     public class WorkingIntervalPostDto
     {
+        [Required]
         public int? WorkingDayId { get; set; }
+
+        [Required]
         public int? EmployeeId { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [Required]
         public string? StartTime { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [Required]
         public string? EndTime { get; set; }
     }
 }

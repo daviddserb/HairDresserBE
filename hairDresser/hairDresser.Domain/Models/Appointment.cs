@@ -9,26 +9,15 @@ namespace hairDresser.Domain.Models
 {
     public class Appointment
     {
-        //[Range(1, int.MaxValue)]
         public int Id { get; set; }
 
         public Customer Customer { get; set; }
-
-        //[Required(ErrorMessage = "Customer id required.")]
-        //[Range(1, int.MaxValue)]
         public int CustomerId { get; set; }
 
         public Employee Employee { get; set; }
-
-        //[Required(ErrorMessage = "Employee id required.")]
-        //[Range(1, int.MaxValue)]
         public int EmployeeId { get; set; }
 
-        //[Required(ErrorMessage = "Starrrt date id required.")]
-        //[Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
-
-        //[Required(ErrorMessage = "Enddateeee id required.")]
         public DateTime EndDate { get; set; }
 
         public ICollection<AppointmentHairService>? AppointmentHairServices { get; set; }

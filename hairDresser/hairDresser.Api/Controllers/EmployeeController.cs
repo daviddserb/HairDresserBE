@@ -69,26 +69,6 @@ namespace hairDresser.Presentation.Controllers
         }
 
         [HttpGet]
-        [Route("free-intervals")]
-        public async Task<IActionResult> GetEmployeeFreeIntervalsByDate(int employeeId, int date, int durationInMinutes)
-        {
-            var query = new GetEmployeeFreeIntervalsForAppointmentByDateQuery
-            {
-                EmployeeId = employeeId,
-                Date = date,
-                DurationInMinutes = durationInMinutes
-            };
-
-            var freeIntervals = await _mediator.Send(query);
-
-            if (!freeIntervals.Any()) return NotFound();
-
-            var mappedFreeIntervals = _mapper.Map<List<EmployeeFreeIntervalsGetDto>>(freeIntervals);
-
-            return Ok(mappedFreeIntervals);
-        }
-
-        [HttpGet]
         [Route("all/by-services")]
         public async Task<IActionResult> GetEmployeesByHairServices([FromQuery] List<int> hairServicesIds)
         {
@@ -101,6 +81,27 @@ namespace hairDresser.Presentation.Controllers
             var mappedValidEmployees = _mapper.Map<List<EmployeeGetDto>>(validEmployees);
 
             return Ok(mappedValidEmployees);
+        }
+
+        [HttpGet]
+        [Route("free-intervals")]
+        public async Task<IActionResult> GetEmployeeFreeIntervalsByDate(int employeeId, int date, int durationInMinutes, int customerId)
+        {
+            var query = new GetEmployeeFreeIntervalsForAppointmentByDateQuery
+            {
+                EmployeeId = employeeId,
+                Date = date,
+                DurationInMinutes = durationInMinutes,
+                CustomerId = customerId
+            };
+
+            var freeIntervals = await _mediator.Send(query);
+
+            if (!freeIntervals.Any()) return NotFound();
+
+            var mappedFreeIntervals = _mapper.Map<List<EmployeeFreeIntervalsGetDto>>(freeIntervals);
+
+            return Ok(mappedFreeIntervals);
         }
 
         [HttpPut]

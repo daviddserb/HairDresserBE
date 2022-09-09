@@ -34,7 +34,6 @@ namespace hairDresser.Infrastructure.Repositories
                 .Skip((pageNumber - 1) * PageSize)
                 .Take(PageSize);
         }
-
         public async Task<Appointment> GetAppointmentByIdAsync(int appointmentId)
         {
             return await context.Appointments
@@ -45,6 +44,13 @@ namespace hairDresser.Infrastructure.Repositories
                 .FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
         }
 
+        public async Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdByDateAsync(int customerId, DateTime appointmentDate)
+        {
+            return context.Appointments
+                .Where(date => date.StartDate.Date == appointmentDate.Date)
+                .Where(id => id.CustomerId == customerId)
+                .OrderBy(date => date.StartDate);
+        }
         // Pt. istoricul de appointment-uri ale unui customer (toate).
         public async Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdAsync(int customerId)
         {
@@ -55,7 +61,6 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
                 .ThenInclude(hairServices => hairServices.HairService);
         }
-
         // Pt. appointment-urile din viitor (neterminate) ale unui customer.
         public async Task<IQueryable<Appointment>> GetInWorkAppointmentsByCustomerIdAsync(int customerId)
         {
@@ -67,18 +72,32 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
                 .ThenInclude(hairServices => hairServices.HairService);
         }
-
-        // Asta ajuta cand Customer vrea sa faca un Appointment, si trebuie sa aleaga un Employee si un Date.
-        public async Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdByDateAsync(int employeeId, DateTime customerDate)
+        public async Task<int> GetHowManyAppointmentsCustomerHasInLastMonth(int customerId)
         {
             return context.Appointments
-                .Where(date => date.StartDate.Date == customerDate.Date)
+                .Where(appointment => appointment.CustomerId == customerId)
+                .Where(date => date.StartDate >= DateTime.Today.AddDays(-30))
+                .Count();
+        }
+
+        // Asta ajuta cand Customer vrea sa faca un Appointment, si trebuie sa aleaga un Employee si un Date.
+        public async Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdByDateAsync(int employeeId, DateTime appointmentDate)
+        {
+            return context.Appointments
+                .Where(date => date.StartDate.Date == appointmentDate.Date)
                 .Where(id => id.EmployeeId == employeeId)
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee);
         }
-
-        // ??? Sa fac sau nu si pt. employee history appointments?
+        public async Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdAsync(int employeeId)
+        {
+            return context.Appointments
+                .Where(appointment => appointment.EmployeeId == employeeId)
+                .Include(customers => customers.Customer)
+                .Include(employees => employees.Employee)
+                .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
+                .ThenInclude(hairServices => hairServices.HairService);
+        }
 
         public async Task<Appointment> UpdateAppointmentAsync(Appointment appointment)
         {

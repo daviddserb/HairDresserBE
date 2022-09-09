@@ -42,15 +42,18 @@ namespace hairDresser.Presentation.Middleware
 
             await _next.Invoke(httpContext);
 
-            // ??? Multe din aceste informatii nu prea ajuta, sa mai caut si altele
             _logger.LogInformation($"Request content type: {httpContext.Request.Headers["Accept"]}" + $"{System.Environment.NewLine}" +
                 $"Request path: {request.Path}" + $"{System.Environment.NewLine}" +
                 $"Response type: {response.ContentType}" + $"{System.Environment.NewLine}" +
                 $"Response length: {response.ContentLength ?? buffer.Length}");
 
             buffer.Position = 0;
-
             await buffer.CopyToAsync(stream);
+
+            var uniqueResponseHeaders = httpContext.Response.Headers
+                                                                .Select(x => x.Key)
+                                                                .Distinct();
+            _logger.Log(LogLevel.Information, string.Join(", ", uniqueResponseHeaders));
 
             _logger.LogInformation("Log out.");
         }

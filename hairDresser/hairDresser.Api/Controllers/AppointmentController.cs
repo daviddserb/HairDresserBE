@@ -4,6 +4,7 @@ using hairDresser.Application.Appointments.Commands.DeleteAppointment;
 using hairDresser.Application.Appointments.Commands.UpdateAppointment;
 using hairDresser.Application.Appointments.Queries.GetAllAppointments;
 using hairDresser.Application.Appointments.Queries.GetAllAppointmentsByCustomerId;
+using hairDresser.Application.Appointments.Queries.GetAllAppointmentsByEmployeeId;
 using hairDresser.Application.Appointments.Queries.GetAppointmentById;
 using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByCustomerId;
 using hairDresser.Presentation.Dto.AppointmentDtos;
@@ -50,9 +51,7 @@ namespace hairDresser.Presentation.Controllers
 
             _logger.LogInformation("Appointment created successfully.");
 
-            return CreatedAtAction(nameof(GetAppointmentById),
-                new { appointmentId = mappedAppointment.Id },
-                mappedAppointment);
+            return CreatedAtAction(nameof(GetAppointmentById), new { appointmentId = mappedAppointment.Id }, mappedAppointment);
         }
 
         [HttpGet]
@@ -85,7 +84,7 @@ namespace hairDresser.Presentation.Controllers
         }
 
         [HttpGet]
-        [Route("all/{customerId}")]
+        [Route("all/customer/{customerId}")]
         public async Task<IActionResult> GetAppointmentsByCustomerId(int customerId)
         {
             var query = new GetAllAppointmentsByCustomerIdQuery { CustomerId = customerId };
@@ -101,7 +100,7 @@ namespace hairDresser.Presentation.Controllers
         }
 
         [HttpGet]
-        [Route("in-work/{customerId}")]
+        [Route("in-work/customer/{customerId}")]
         public async Task<IActionResult> GetInWorkAppointmentsByCustomerId(int customerId)
         {
             var query = new GetInWorkAppointmentsByCustomerIdQuery { CustomerId = customerId };
@@ -113,6 +112,22 @@ namespace hairDresser.Presentation.Controllers
             var mappedAllCustomerInWorkAppointments = _mapper.Map<List<AppointmentGetDto>>(allCustomerInWorkAppointments);
 
             return Ok(mappedAllCustomerInWorkAppointments);
+        }
+
+        [HttpGet]
+        [Route("all/employee/{employeeId}")]
+        public async Task<IActionResult> GetAppointmentsByEmployeeId(int employeeId)
+        {
+            var query = new GetAllAppointmentsByEmployeeIdQuery { EmployeeId = employeeId };
+
+            var allEmployeeAppointments = await _mediator.Send(query);
+
+            if (!allEmployeeAppointments.Any()) return NotFound();
+
+            var mappedEmployeeAppointments = _mapper.Map<List<AppointmentGetDto>>(allEmployeeAppointments);
+
+            return Ok(mappedEmployeeAppointments);
+
         }
 
         [HttpPut]

@@ -16,5 +16,7 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForA
         public int Date { get; set; }
 
         public int DurationInMinutes { get; set; }
+
+        public int CustomerId { get; set; }
     }
 }

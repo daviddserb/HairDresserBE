@@ -14,32 +14,31 @@ namespace hairDresser.IntegrationTests.Helpers
         {
             var appointment1 = new Appointment
             {
-                Id = 1,
                 CustomerId = 1,
                 EmployeeId = 1,
                 // !!! sa vad cum o sa salvez si hairservices (asta vad eu, nu-i eroare fara ele cred)
                 StartDate = DateTime.Now,
-                EndDate = DateTime.Now,
+                EndDate = DateTime.Now
             };
             var appointment2 = new Appointment
             {
-                Id = 2,
                 CustomerId = 2,
                 EmployeeId = 2,
                 StartDate = DateTime.Now,
-                EndDate = DateTime.Now,
+                EndDate = DateTime.Now
             };
             var appointment3 = new Appointment
             {
-                Id = 3,
                 CustomerId = 3,
                 EmployeeId = 3,
                 StartDate = DateTime.Now,
-                EndDate = DateTime.Now,
+                EndDate = DateTime.Now
             };
+
+            // Varianta 1:
             db.Appointments.AddRange(appointment1, appointment2, appointment3);
-            // ???
-            //db.SaveChanges();
+            // ??? am nevoie de SaveChanges cand folosesc AddRange sau nu?
+            db.SaveChanges();
 
             var hairServices1 = new HairService
             {

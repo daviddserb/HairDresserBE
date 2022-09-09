@@ -22,11 +22,16 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForA
         {
             Console.WriteLine("\nGetEmployeeIntervalsByDateQueryHandler:");
 
+            // ???
+            var customerAppointmentsLastMonth = await _unitOfWork.AppointmentRepository.GetHowManyAppointmentsCustomerHasInLastMonth(request.CustomerId);
+            var maxAppointmentsCustomerPerMonth = 5;
+            //if (customerAppointmentsLastMonth > maxAppointmentsCustomerPerMonth) {} // daca le-a depasit ce fac, cum ii spun ca nu mai poate? aici sau in controller?
+
             var appointmentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, request.Date);
             Console.WriteLine($"appointment (ignoram Time-ul, am setat doar Date-ul, adica Day, in Anul curent si Luna curenta)= '{appointmentDate}'");
 
             var duration = TimeSpan.FromMinutes(request.DurationInMinutes);
-            Console.WriteLine($"duration, from minutes to TimeSpan,= '{duration}'");
+            Console.WriteLine($"\nduration, from minutes to TimeSpan,= '{duration}'");
 
             var employeeAppointmentsDates = new List<(DateTime startDate, DateTime endDate)>();
             Console.WriteLine("\nAll the appointments from the selected employee and the selected date:");
@@ -89,11 +94,44 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForA
                     copy_startOfInterval = startOfInterval;
                 }
             }
-            //Console.WriteLine("\nAll valid intervals:");
-            //foreach (var intervals in validIntervals)
-            //{
-            //    Console.WriteLine($"start= '{intervals.startDate}', end= '{intervals.endDate}'");
-            //}
+            Console.WriteLine("\nEMPLOYEE FREE INTERVALS FOR APPOINTMENT:");
+            foreach (var employeeFreeInterval in employeeFreeIntervalList)
+            {
+                Console.WriteLine($"start= '{employeeFreeInterval.StartDate}', end= '{employeeFreeInterval.EndDate}'");
+            }
+
+            var customerAppointmentsInSelectedDate = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByCustomerIdByDateAsync(request.CustomerId, appointmentDate);
+            Console.WriteLine("\nCUSTOMER CURRENT APPOINTMENTS:");
+            foreach (var customerAppointments in customerAppointmentsInSelectedDate)
+            {
+                Console.WriteLine($"start= '{customerAppointments.StartDate}', end= '{customerAppointments.EndDate}'");
+            }
+
+            // Check, all the possible free intervals from the employee in the selected date, to don't overlap with the appointments from the customer in the selected date.
+            for (int i = 0; i < employeeFreeIntervalList.Count; ++i)
+            {
+                //Console.WriteLine("i= " + i);
+                //Console.WriteLine($"EMPLOYEE: start= '{employeeFreeIntervalList[i].StartDate}', end= '{employeeFreeIntervalList[i].EndDate}'");
+                foreach (var customerAppointments in customerAppointmentsInSelectedDate)
+                {
+                    //Console.WriteLine($"CUSTOMER: start= '{customerAppointments.StartDate}', end= '{customerAppointments.EndDate}'");
+                    bool overlap = employeeFreeIntervalList[i].StartDate < customerAppointments.EndDate && customerAppointments.StartDate < employeeFreeIntervalList[i].EndDate;
+                    //Console.WriteLine("overlap= " + overlap);
+                    if (overlap)
+                    {
+                        employeeFreeIntervalList.RemoveAt(i);
+                        --i; // ! Because otherwise it will jump over the next element when it will remove the current one (think about how the algorithm of removing works and it makes sense).
+                        break;
+                    }
+                }
+                //Console.WriteLine("---\n");
+            }
+
+            Console.WriteLine("\nFINAL VALID INTERVALS:");
+            foreach (var employeeFreeInterval in employeeFreeIntervalList)
+            {
+                Console.WriteLine($"start= '{employeeFreeInterval.StartDate}', end= '{employeeFreeInterval.EndDate}'");
+            }
 
             return await Task.FromResult(employeeFreeIntervalList);
         }
