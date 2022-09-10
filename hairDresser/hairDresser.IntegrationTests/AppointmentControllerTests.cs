@@ -12,15 +12,25 @@ namespace hairDresser.IntegrationTests
     {
         private static WebApplicationFactory<Program> _factory = new CustomWebApplicationFactory<Program>();
 
-        //[Fact]
-        //public async Task GetAllAppointments_ShouldReturnOkReponse()
-        //{
-        //    var client = _factory.CreateClient();
+        [Fact]
+        public async Task GetAllAppointments_ShouldReturnOkReponse()
+        {
+            var client = _factory.CreateClient();
 
-        //    var response = await client.GetAsync("api/appointment/all");
+            var response = await client.GetAsync("api/appointment/all");
 
-        //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        //}
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteAppointment_ShouldReturnNoContent()
+        {
+            var client = _factory.CreateClient();
+
+            var response = await client.DeleteAsync("api/appointment/1");
+
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        }
 
         public static void ClassCleanup()
         {

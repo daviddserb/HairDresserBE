@@ -34,15 +34,16 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 
             appointment.CustomerId = customer.Id;
             appointment.EmployeeId = employee.Id;
-            appointment.AppointmentHairServices = request.HairServicesIds
-                .Select(hairServiceId => new AppointmentHairService()
-                    {
-                        // Salvez doar id-ul de la HairServiceId, pt. ca id-ul pt. AppointmentId inca nu exista (nu il stiu), ci va exista dupa ce va fi inserat in tabela Appointments, si apoi EF il va lua de acolo si il salveaza in AppointmentsHairService.
-                        HairServiceId = hairServiceId
-                    })
-                .ToList();
             appointment.StartDate = request.StartDate;
             appointment.EndDate = request.EndDate;
+            appointment.AppointmentHairServices = request.HairServicesIds
+                .Select(hairServiceId => new AppointmentHairService()
+                {
+                    // Save only the HairServiceId, because AppointmentId still doesn't exist, it will exist only after the row is inserted in the Appointments table, and after EF Core will
+                    //know how to make the link between the Id from the Appointment table and the AppointmentId from the AppointmentsHairService table.
+                    HairServiceId = hairServiceId
+                })
+                .ToList();
 
             await _unitOfWork.AppointmentRepository.CreateAppointmentAsync(appointment);
             await _unitOfWork.SaveAsync();
