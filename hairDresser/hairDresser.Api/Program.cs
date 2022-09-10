@@ -7,10 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 //??? Intrebari:
 //1. EmployeeController (am aceeasi problema si la WorkingIntervalController).
-//2. GetEmployeeFreeIntervalsForAppointmentByDateQueryHandler -> Dupa ce calculez cate appointment-uri are customer-ul in ultima luna si vad ca nu mai poate sa faca appointment-uri pt.
+//2. De ex. cand apelez metoda de GetAllCustomers(), normal ca vreau sa vad fiecare customer in parte cu mai multe informatii despre fiecare, dar cand apelez metoda de GetAllAppointments,
+//eu vreau sa vad doar CustomerName de ex., nu vreau sa vad toate proprietatile pe care le vad si cand fac GetAllCustomers. Astfel, are rost sa fac ceva pt. asta? Stiu ca se va complica
+//treaba pt. ca va trebui sa fac multe Dto-uri si multe legaturi in Profile.
+//3. GetEmployeeFreeIntervalsForAppointmentByDateQueryHandler -> Dupa ce calculez cate appointment-uri are customer-ul in ultima luna si vad ca nu mai poate sa faca appointment-uri pt.
 //ca a depasit limita impusa de mine, ce ar trebui sa fac, pt. ca eu verificarea o fac in Handler, astfel trebuie sa returnez ceva si apoi sa tratez exceptia in Controller sau o tratez
 //direct in metoda din Handler dar atunci tot cred ca o sa mi se intre si in Controller, pt. ca nu am pus un return ceva.
-//* 3. HairServiceRepository - GetAllHairServicesByIdsAsync - merge dar se poate imbunatati si nu stiu cum sa o fac intr-un singur query.
+//* HairServiceRepository -> GetAllHairServicesByIdsAsync() - merge dar se poate imbunatati si nu stiu cum sa o fac intr-un singur query.
 
 //!!! De facut:
 // Custom Data Validations pt. AppointmentPostDto la StartDate sa NU fie in trecut (adica sa fie >= prezent) si EndDate sa fie mai mare decat StartDate.

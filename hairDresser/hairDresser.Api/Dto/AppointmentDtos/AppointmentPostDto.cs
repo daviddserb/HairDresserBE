@@ -1,4 +1,5 @@
-﻿using hairDresser.Presentation.Dto.AppointmentHairServiceDtos;
+﻿using hairDresser.Presentation.CustomDataValidations;
+using hairDresser.Presentation.Dto.AppointmentHairServiceDtos;
 using System.ComponentModel.DataAnnotations;
 
 namespace hairDresser.Presentation.Dto.AppointmentDtos
@@ -16,11 +17,12 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
         [Required]
         public List<int>? HairServicesIds { get; set; }
 
-        [Required(ErrorMessage = "Start date required.")]
-        [Display(Name = "Start Date")]
+        [Required]
+        //???
+        //[DateNotInPast(StartDate)]
         public DateTime? StartDate { get; set; }
 
-        [Required(ErrorMessage = "End date required.")]
+        [Required]
         public DateTime? EndDate { get; set; }
     }
 }

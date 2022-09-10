@@ -34,11 +34,13 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 
             appointment.CustomerId = customer.Id;
             appointment.EmployeeId = employee.Id;
-            appointment.AppointmentHairServices = request.HairServicesIds.Select(hairServiceId => new AppointmentHairService()
-            {
-                // Salvez doar id-ul de la HairServiceId, pt. ca id-ul pt. AppointmentId inca nu exista (nu il stiu), ci va exista dupa ce va fi inserat in tabela Appointments, si apoi EF il va lua de acolo si il salveaza in AppointmentsHairService.
-                HairServiceId = hairServiceId
-            }).ToList();
+            appointment.AppointmentHairServices = request.HairServicesIds
+                .Select(hairServiceId => new AppointmentHairService()
+                    {
+                        // Salvez doar id-ul de la HairServiceId, pt. ca id-ul pt. AppointmentId inca nu exista (nu il stiu), ci va exista dupa ce va fi inserat in tabela Appointments, si apoi EF il va lua de acolo si il salveaza in AppointmentsHairService.
+                        HairServiceId = hairServiceId
+                    })
+                .ToList();
             appointment.StartDate = request.StartDate;
             appointment.EndDate = request.EndDate;
 
