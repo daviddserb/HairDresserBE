@@ -148,7 +148,7 @@ namespace hairDresser.UnitTests
             {
                 CustomerId = 1,
                 EmployeeId = 1,
-                //HairServicesIds = { 1, 1 }, // ??? De ce am eroare.
+                //HairServicesIds = { 1, 2 }, // ??? De ce am eroare.
                 StartDate = DateTime.Now,
                 EndDate = DateTime.Now
             };
@@ -159,7 +159,7 @@ namespace hairDresser.UnitTests
                 {
                     CustomerId = 1,
                     EmployeeId = 2,
-                    //HairServicesIds = { 1, 2 }, // ??? De ce am eroare.
+                    //HairServicesIds = { 1, 3 }, // ??? De ce am eroare.
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now
                 });
@@ -168,7 +168,7 @@ namespace hairDresser.UnitTests
             {
                 CustomerId = 2,
                 EmployeeId = 2,
-                //HairServicesIds = { 2, 2 }, // ??? De ce am eroare.
+                //HairServicesIds = { 1, 4 }, // ??? De ce am eroare.
                 StartDate = DateTime.Now,
                 EndDate = DateTime.Now
             };
@@ -183,7 +183,7 @@ namespace hairDresser.UnitTests
                 {
                     CustomerId = 1,
                     EmployeeId = 2,
-                    //HairServicesIds = { 3, 2 }, // ??? De ce am eroare.
+                    //HairServicesIds = { 1, 5 }, // ??? De ce am eroare.
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now
                 });

@@ -39,14 +39,14 @@ namespace hairDresser.IntegrationTests
         {
             var newHairService = new HairServicePostPutDto
             {
-                Name = "premium haircute",
+                Name = "premium haircut",
                 DurationInMinutes = 60,
                 Price = 300
             };
 
             var client = _factory.CreateClient();
 
-            var response = await client.PostAsync("/api/hairservice",
+            var response = await client.PostAsync("api/hairservice",
                 new StringContent(JsonConvert.SerializeObject(newHairService), Encoding.UTF8, "application/json"));
             
             var result = await response.Content.ReadAsStringAsync();

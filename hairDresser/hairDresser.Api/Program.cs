@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 //direct in metoda din Handler dar atunci tot cred ca o sa mi se intre si in Controller, pt. ca nu am un return ceva.
 //4. AppointmentControllerTests -> GetAllAppointments_ShouldReturnOkReponse - imi returneaza empty la appointments pt. ca mi se intra in AppointmentController -> GetAllAppointments
 //si paginationQuery, mai exact Number si Size vor fi ambele 0 si ii normal sa nu imi returneze appointment-uri. Astfel, ce work-around sa fac?
+//5. AppointmentControllerTests -> CreateAppointment_ShouldReturnCreatedAppointment.
 //* HairServiceRepository -> GetAllHairServicesByIdsAsync() - merge dar se poate imbunatati si nu stiu cum sa o fac intr-un singur query.
 
 //!!! De facut:
