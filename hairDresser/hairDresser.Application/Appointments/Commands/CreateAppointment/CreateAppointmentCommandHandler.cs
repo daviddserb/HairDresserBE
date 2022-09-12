@@ -24,7 +24,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             var appointment = new Appointment();
 
             var customer = await _unitOfWork.CustomerRepository.GetCustomerByIdAsync(request.CustomerId);
-            if (customer == null) return null;
+            if (customer == null) return null; // ??? sa returnez null sau o noua exceptie
 
             var employee = await _unitOfWork.EmployeeRepository.GetEmployeeByIdAsync(request.EmployeeId);
             if (employee == null) return null;

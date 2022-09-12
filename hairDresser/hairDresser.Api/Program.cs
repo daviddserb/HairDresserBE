@@ -6,20 +6,49 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 //??? Intrebari:
-//1. EmployeeController (am aceeasi problema si la WorkingIntervalController).
-//2. De ex. cand apelez metoda de GetAllCustomers(), vreau sa vad fiecare customer dar si mai multe informatii despre fiecare... dar cand apelez metoda de GetAllAppointments() de ex.,
-//eu vreau sa vad doar CustomerName de ex., nu vreau sa vad toate proprietatile pe care le vad si cand fac GetAllCustomers(). Astfel, are rost sa fac ceva pt. asta?
-//Stiu ca se va complica treaba pt. ca va trebui sa fac multe Dto-uri (presupun) si mai multe legaturi in Profile.
-//3. GetEmployeeFreeIntervalsForAppointmentByDateQueryHandler -> Dupa ce calculez cate appointment-uri are customer-ul in ultima luna si vad ca nu mai poate sa faca appointment-uri pt.
-//ca a depasit limita impusa de mine, ce ar trebui sa fac? Adica eu verificarea o fac in Handler, astfel trebuie sa returnez ceva si apoi sa tratez exceptia in Controller sau o tratez
-//direct in metoda din Handler dar atunci tot cred ca o sa mi se intre si in Controller, pt. ca nu am un return ceva.
-//4. AppointmentControllerTests -> GetAllAppointments_ShouldReturnOkReponse - imi returneaza empty la appointments pt. ca mi se intra in AppointmentController -> GetAllAppointments
-//si paginationQuery, mai exact Number si Size vor fi ambele 0 si ii normal sa nu imi returneze appointment-uri. Astfel, ce work-around sa fac?
-//5. AppointmentControllerTests -> CreateAppointment_ShouldReturnCreatedAppointment.
-//* HairServiceRepository -> GetAllHairServicesByIdsAsync() - merge dar se poate imbunatati si nu stiu cum sa o fac intr-un singur query.
+//1. Cand apelez metoda GetAllCustomers(), vreau sa vad toate informatiile despre fiecare customer, dar cand apelez metoda de GetAllAppointments(), vreau sa vad doar CustomerName de ex.
+//si nu cu toate proprietatile pe care le vad si la  GetAllCustomers(), asa ar fi normal, nu? Astfel, ce este de facut? Singura mea idee este ca va trebui sa fac mai multe multe Dto-uri,
+//de ex. daca acum am un singur CustomerGetDto, care are toate proprietatile unui Customer, astfel trebuie sa fac inca unul separat in care sa pun doar numele de ex...? Totusi asta duce
+//la multe Dto-uri pt. ca va trebui sa fac asta la mai multe clase si stiu ca s-a spus in lectie sa nu ajungem la foarte multe Dto-uri. Pe langa asta vor fi si mai multe legaturi in
+//Profile. Este o alta posibilitate? Are rost sa fac asta? Sau cumva cand ajung pe partea de front-end, voi putea sa le filtrez cumva?
+/*
+ * 
+ */
+
+//2. GetEmployeeFreeIntervalsForAppointmentByDateQueryHandler -> Dupa ce calculez cate appointment-uri are customer-ul in ultima luna si vad ca nu mai poate sa faca appointment-uri
+//pt. ca a depasit limita impusa de mine, ce ar trebui sa fac? Adica eu verificarea o fac in Handler, astfel trebuie sa returnez aici ceva si apoi sa tratez cazul (exceptia) in
+//Controller sau o tratez direct aici, in Handler, dar atunci tot cred ca o sa mi se intre si in Controller daca nu returnez ceva. Apoi ma gandesc ca trebuie sa fac ceva Custom Error
+//Handling, dar unde sa pun aceasta clasa, in ce layer?
+/*
+ * 
+ */
+
+//3. EmployeeController -> Cand creez un Employee pe API nu se vad si serviciile pe care le poate face, dar cand fac GetAllEmployees() sau GetEmployeeById() le vad. Stiu ca este din
+//cauza ca nu am Include() in metoda de CreateEmployee() din EmployeeRepository, dar este pt. ca nu pot sa pun Include() impreuna cu AddAsync(). Astfel, singura mea idee este ca in
+//metoda din Handler, in loc sa returnez employee-ul creat, sa fac un GetEmployeeById() unde va trebui cumva sa ii trimit ca parametru id-ul employee-ului creat (nu sunt sigur cum o sa
+//fac asta dar cred ca se poate) si apoi sa returnez employee-ul primit din GetEmployeeById() care vine cu Include-uri. Asa ar trebui sa fac sau nu?
+/*
+ * 
+ */
+//! Sa implementez apoi si la WorkingIntervalController, pt. ca ii aceeasi problema.
+
+//4. CreateAppointmentCommandHandler -> Cand fac un GetById la un FK (de ex. CustomerId) si nu exista in DB, in loc sa returnez null si apoi in Controller sa returnez BadRequest(),
+//ar trebui  sa fac ceva Custom Exception Handling? Daca da ok, dar atunci cum fac? Adica ce returnez in Handler, adica unde tratez exceptia si in ce layer o pun?
+/*
+ * 
+ */
+
+//5. AppointmentControllerTests -> GetAllAppointments_ShouldReturnOkReponse -> cand se intra in AppointmentController, GetAllAppointments() imi returneaza empty la allAppointments din
+//cauza lui paginationQuery, pt. ca PageNumber si PageSize vor fi ambele 0 si ii normal sa nu imi returneze appointment-uri. Astfel, ce este de facut?
+/*
+ * 
+ */
+
+//6. AppointmentControllerTests, CreateAppointment_ShouldReturnCreatedAppointment() -> Am explicat acolo.
+
+//*. HairServiceRepository -> GetAllHairServicesByIdsAsync() - merge dar se poate imbunatati dar nu-mi dau seama cum s-o fac intr-un singur query.
 
 //!!! De facut:
-// Custom Data Validations pt. AppointmentPostDto la StartDate sa NU fie in trecut (adica sa fie >= prezent) si EndDate sa fie mai mare decat StartDate.
 // Trebuie sa pun Async la toate metodele din fiecare Controller (boring...).
 
 var builder = WebApplication.CreateBuilder(args);

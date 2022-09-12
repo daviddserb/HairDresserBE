@@ -18,13 +18,10 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
         public List<int>? HairServicesIds { get; set; }
 
         [Required]
-        //???
-        //[DateNotInPast(StartDate)]
         [DateStart]
         public DateTime? StartDate { get; set; }
 
         [Required]
-        //[DateEnd(DateStartProperty="StartDate")]
         [DateGreaterThan("StartDate")]
         public DateTime? EndDate { get; set; }
     }
