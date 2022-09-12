@@ -34,7 +34,6 @@ namespace hairDresser.Presentation.Controllers
 
             var mappedEmployee = _mapper.Map<EmployeeGetDto>(employee);
 
-            // ??? Cum fac sa se vada si numele specilizarilor?
             return CreatedAtAction(nameof(GetEmployeeById), new { employeeId = mappedEmployee.Id }, mappedEmployee);
         }
 

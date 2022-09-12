@@ -51,9 +51,6 @@ namespace hairDresser.IntegrationTests
 
             var client = _factory.CreateClient();
 
-            // ???
-            // Aici nu mi se intra in AppointmentController -> CreateAppointment(), si m-am gandit ca poate ii pt. ca nu am salvat si HairServicesIds in newAppointment, cu toate ca nu
-            //cred ca asta este motivul, dar alta idee nu am...
             var response = await client.PostAsync("api/appointment",
                 new StringContent(JsonConvert.SerializeObject(newAppointment), Encoding.UTF8, "application/json"));
 

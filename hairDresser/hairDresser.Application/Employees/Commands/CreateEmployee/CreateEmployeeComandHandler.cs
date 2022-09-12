@@ -32,10 +32,9 @@ namespace hairDresser.Application.Employees.Commands.CreateEmployee
             await _unitOfWork.EmployeeRepository.CreateEmployeeAsync(employee);
             await _unitOfWork.SaveAsync();
 
-            var employeeIdTest = employee.Id;
-            //
+            var createdEmployee = await _unitOfWork.EmployeeRepository.GetEmployeeByIdAsync(employee.Id);
 
-            return employee;
+            return createdEmployee;
         }
     }
 }

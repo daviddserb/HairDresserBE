@@ -27,9 +27,7 @@ using Microsoft.EntityFrameworkCore;
 //cauza ca nu am Include() in metoda de CreateEmployee() din EmployeeRepository, dar este pt. ca nu pot sa pun Include() impreuna cu AddAsync(). Astfel, singura mea idee este ca in
 //metoda din Handler, in loc sa returnez employee-ul creat, sa fac un GetEmployeeById() unde va trebui cumva sa ii trimit ca parametru id-ul employee-ului creat (nu sunt sigur cum o sa
 //fac asta dar cred ca se poate) si apoi sa returnez employee-ul primit din GetEmployeeById() care vine cu Include-uri. Asa ar trebui sa fac sau nu?
-/*
- * 
- */
+// !!!
 //! Sa implementez apoi si la WorkingIntervalController, pt. ca ii aceeasi problema.
 
 //4. CreateAppointmentCommandHandler -> Cand fac un GetById la un FK (de ex. CustomerId) si nu exista in DB, in loc sa returnez null si apoi in Controller sa returnez BadRequest(),
