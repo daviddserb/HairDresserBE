@@ -38,15 +38,7 @@ using Microsoft.EntityFrameworkCore;
  * 
  */
 
-//5. AppointmentControllerTests -> GetAllAppointments_ShouldReturnOkReponse -> cand se intra in AppointmentController, GetAllAppointments() imi returneaza empty la allAppointments din
-//cauza lui paginationQuery, pt. ca PageNumber si PageSize vor fi ambele 0 si ii normal sa nu imi returneze appointment-uri. Astfel, ce este de facut?
-/*
- * 
- */
-
-//6. AppointmentControllerTests, CreateAppointment_ShouldReturnCreatedAppointment() -> Am explicat acolo.
-
-//*. HairServiceRepository -> GetAllHairServicesByIdsAsync() - merge dar se poate imbunatati dar nu-mi dau seama cum s-o fac intr-un singur query.
+//^ HairServiceRepository -> GetAllHairServicesByIdsAsync() - merge dar se poate imbunatati dar nu-mi dau seama cum s-o fac intr-un singur query.
 
 //!!! De facut:
 // Trebuie sa pun Async la toate metodele din fiecare Controller (boring...).
