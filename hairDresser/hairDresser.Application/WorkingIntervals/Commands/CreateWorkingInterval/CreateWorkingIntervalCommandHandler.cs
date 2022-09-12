@@ -53,7 +53,9 @@ namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterva
                 await _unitOfWork.WorkingIntervalRepository.CreateWorkingIntervalAsync(workingInterval);
                 await _unitOfWork.SaveAsync();
 
-                return workingInterval;
+                var createdWorkingInterval = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalByIdAsync(workingInterval.Id);
+
+                return createdWorkingInterval;
             }
 
             // If the interval is not good, because it does overlap, I send an empty/null object.

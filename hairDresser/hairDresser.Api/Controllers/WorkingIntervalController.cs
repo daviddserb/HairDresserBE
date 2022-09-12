@@ -36,7 +36,6 @@ namespace hairDresser.Presentation.Controllers
 
             var mappedWorkingInterval = _mapper.Map<WorkingIntervalGetDto>(workingInterval);
 
-            // ??? Cum fac sa se vada si workingDay si employee?
             return CreatedAtAction(nameof(GetWorkingIntervalById),
                 new { workingIntervalId = mappedWorkingInterval.Id },
                 mappedWorkingInterval);

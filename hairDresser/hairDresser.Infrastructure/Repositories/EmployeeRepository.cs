@@ -39,7 +39,6 @@ namespace hairDresser.Infrastructure.Repositories
                 .ThenInclude(hairServices => hairServices.HairService)
                 .FirstOrDefaultAsync(employee => employee.Id == employeeId);
 
-            if (employee == null) return null;
             return employee;
         }
 
