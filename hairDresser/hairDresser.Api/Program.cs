@@ -6,33 +6,13 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 //??? Intrebari:
-//1. Cand apelez metoda GetAllCustomers(), vreau sa vad toate informatiile despre fiecare customer, dar cand apelez metoda de GetAllAppointments(), vreau sa vad doar CustomerName de ex.
-//si nu cu toate proprietatile pe care le vad si la  GetAllCustomers(), asa ar fi normal, nu? Astfel, ce este de facut? Singura mea idee este ca va trebui sa fac mai multe multe Dto-uri,
-//de ex. daca acum am un singur CustomerGetDto, care are toate proprietatile unui Customer, astfel trebuie sa fac inca unul separat in care sa pun doar numele de ex...? Totusi asta duce
-//la multe Dto-uri pt. ca va trebui sa fac asta la mai multe clase si stiu ca s-a spus in lectie sa nu ajungem la foarte multe Dto-uri. Pe langa asta vor fi si mai multe legaturi in
-//Profile. Este o alta posibilitate? Are rost sa fac asta? Sau cumva cand ajung pe partea de front-end, voi putea sa le filtrez cumva?
-/*
- * 
- */
+//1. Exceptii -> Ii ok atunci cand se introduc date invalide la createappointment si eu dau throw la o exceptie, sa se opreasca programul? Adica eu trebuie sa dau Continue manual ca sa mearga raspunsul pana la final.
 
-//2. GetEmployeeFreeIntervalsForAppointmentByDateQueryHandler -> Dupa ce calculez cate appointment-uri are customer-ul in ultima luna si vad ca nu mai poate sa faca appointment-uri
-//pt. ca a depasit limita impusa de mine, ce ar trebui sa fac? Adica eu verificarea o fac in Handler, astfel trebuie sa returnez aici ceva si apoi sa tratez cazul (exceptia) in
-//Controller sau o tratez direct aici, in Handler, dar atunci tot cred ca o sa mi se intre si in Controller daca nu returnez ceva. Apoi ma gandesc ca trebuie sa fac ceva Custom Error
-//Handling, dar unde sa pun aceasta clasa, in ce layer?
-/*
- * 
- */
-
-//3. CreateAppointmentCommandHandler -> Cand fac un GetById la un FK (de ex. CustomerId) si nu exista in DB, in loc sa returnez null si apoi in Controller sa returnez BadRequest(),
-//ar trebui  sa fac ceva Custom Exception Handling? Daca da ok, dar atunci cum fac? Adica ce returnez in Handler, adica unde tratez exceptia si in ce layer o pun?
-/*
- * 
- */
-
-//^ HairServiceRepository -> GetAllHairServicesByIdsAsync() - merge dar se poate imbunatati dar nu-mi dau seama cum s-o fac intr-un singur query.
+//^. HairServiceRepository -> GetAllHairServicesByIdsAsync() - merge dar se poate imbunatati dar nu-mi dau seama cum s-o fac intr-un singur query.
 
 //!!! De facut:
-// Trebuie sa pun Async la toate metodele din fiecare Controller (boring...).
+// ar trebui sa mut functionalitatea de verificare a cate apppointment-uri are un customer din GetEmployeeFreeIntervalsForAppointmentByDateQueryHandler in CreateAppointmentCommandHandler.
+// ? acolo cand creezi un appointment, sa fac mai frumos in categoria de servicii, sa se vada mai ok.
 
 var builder = WebApplication.CreateBuilder(args);
 

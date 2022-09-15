@@ -1,4 +1,5 @@
-﻿using hairDresser.Application.Interfaces;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
 using System;
@@ -22,10 +23,9 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForA
         {
             Console.WriteLine("\nGetEmployeeIntervalsByDateQueryHandler:");
 
-            // ???
-            var customerAppointmentsLastMonth = await _unitOfWork.AppointmentRepository.GetHowManyAppointmentsCustomerHasInLastMonth(request.CustomerId);
             var maxAppointmentsCustomerPerMonth = 5;
-            //if (customerAppointmentsLastMonth > maxAppointmentsCustomerPerMonth) {} // daca le-a depasit ce fac, cum ii spun ca nu mai poate? aici sau in controller?
+            var customerAppointmentsLastMonth = await _unitOfWork.AppointmentRepository.GetHowManyAppointmentsCustomerHasInLastMonth(request.CustomerId);
+            if (customerAppointmentsLastMonth > maxAppointmentsCustomerPerMonth) throw new ClientException("You went over the limit of maximum appointments for this month!");
 
             var appointmentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, request.Date);
             Console.WriteLine($"appointment (ignoram Time-ul, am setat doar Date-ul, adica Day, in Anul curent si Luna curenta)= '{appointmentDate}'");

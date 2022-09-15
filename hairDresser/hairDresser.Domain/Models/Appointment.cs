@@ -11,27 +11,15 @@ namespace hairDresser.Domain.Models
     {
         public int Id { get; set; }
 
-        public Customer Customer { get; set; }
         public int CustomerId { get; set; }
+        public Customer Customer { get; set; }
 
-        public Employee Employee { get; set; }
         public int EmployeeId { get; set; }
+        public Employee Employee { get; set; }
 
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
         public ICollection<AppointmentHairService>? AppointmentHairServices { get; set; }
-
-        // Pt. Assignment de la Exception:
-        //public void CheckIfAppointmentValid(Appointment app1)
-        //{
-        //    Console.WriteLine("s-a intrat in CheckIfAppointmentValid()");
-        //    int res = DateTime.Compare(app1.StartDate, app1.EndDate);
-        //    Console.WriteLine("res=" + res);
-        //    if (res > 0)
-        //    {
-        //        throw new InvalidAppointmentException();
-        //    }
-        //}
     }
 }
