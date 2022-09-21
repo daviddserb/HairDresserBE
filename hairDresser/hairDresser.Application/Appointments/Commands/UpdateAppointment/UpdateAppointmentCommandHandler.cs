@@ -24,7 +24,7 @@ namespace hairDresser.Application.Appointments.Commands.UpdateAppointment
             
             if (appointment == null) return null;
 
-            appointment.AppointmentHairServices = request.HairServicesId.Select(hsi => new AppointmentHairService()
+            appointment.AppointmentHairServices = request.HairServicesIds.Select(hsi => new AppointmentHairService()
             {
                 HairServiceId = hsi
             }).ToList();

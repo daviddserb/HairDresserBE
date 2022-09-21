@@ -12,7 +12,7 @@ namespace hairDresser.Application.Appointments.Commands.UpdateAppointment
     {
         public int AppointmentId { get; set; }
         public int EmployeeId { get; set; }
-        public List<int> HairServicesId { get; set; }
+        public List<int> HairServicesIds { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
     }

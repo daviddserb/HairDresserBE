@@ -137,7 +137,7 @@ namespace hairDresser.Presentation.Controllers
             var command = new UpdateAppointmentCommand
             {
                 AppointmentId = appointmentId,
-                HairServicesId = editedAppointment.HairServicesId,
+                HairServicesIds = editedAppointment.HairServicesIds,
                 EmployeeId = editedAppointment.EmployeeId,
                 StartDate = editedAppointment.StartDate,
                 EndDate = editedAppointment.EndDate

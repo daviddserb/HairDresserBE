@@ -6,8 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 //??? Intrebari:
-//1. Exceptii -> Ii ok atunci cand se introduc date invalide la createappointment si eu dau throw la o exceptie, sa se opreasca programul? Adica eu trebuie sa dau Continue manual ca sa mearga raspunsul pana la final.
-
+// 1. Cand creez customer, pot sa creez 2 customeri cu proprietati exact la fel. N-ar trebui sa pun ca username-ul sa fie unic?
 //^. HairServiceRepository -> GetAllHairServicesByIdsAsync() - merge dar se poate imbunatati dar nu-mi dau seama cum s-o fac intr-un singur query.
 
 //!!! De facut:
@@ -41,8 +40,18 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Cu toate ca noi avem mai multe .AddScoped(), adaugam doar unul dintre ele la typeof() si MediatR le scaneaza pe toate din layer-ul de unde typeof() face parte, adica IHairServiceRepository face parte din Application.
 builder.Services.AddMediatR(typeof(IHairServiceRepository));
 
- // maparea
+ // Am adaugat AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
+
+// Am adaugat AddCors ca sa pot face call la API de pe front-end (din Angular).
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        builder =>
+        {
+            builder.WithOrigins(new string[] { "http://localhost:4200", "http://yourdomain.com" }).AllowAnyMethod().AllowAnyHeader();
+        });
+});
 // What I added (STOP).
 
 var app = builder.Build();
@@ -55,6 +64,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("CorsPolicy"); // What I Added (are legatura cu: builder.Services.AddCors(options => etc...).
 
 app.UseAuthorization();
 
