@@ -108,7 +108,12 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task DeleteAppointmentAsync(int appointmentId)
         {
             var appointment = await context.Appointments.FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
-            context.Appointments.Remove(appointment);
+
+            //context.Appointments.Remove(appointment); //before
+
+            //after: (We don't want to delete it, but instead soft deleted.
+            appointment.isDeleted = DateTime.Now;
+            context.Appointments.Update(appointment);
         }
     }
 }

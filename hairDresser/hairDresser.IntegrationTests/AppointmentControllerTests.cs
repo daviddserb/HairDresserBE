@@ -57,8 +57,6 @@ namespace hairDresser.IntegrationTests
             var result = await response.Content.ReadAsStringAsync();
             var appointment = JsonConvert.DeserializeObject<AppointmentGetDto>(result);
 
-            Assert.Equal(newAppointment.CustomerId, appointment.CustomerId);
-            Assert.Equal(newAppointment.EmployeeId, appointment.EmployeeId);
             Assert.Equal(newAppointment.StartDate, appointment.StartDate);
         }
 

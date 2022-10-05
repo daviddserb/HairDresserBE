@@ -1,4 +1,5 @@
 ﻿using hairDresser.Domain.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Proxies;
 using System;
@@ -9,14 +10,8 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Infrastructure
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<User>
     {
-        //public DataContext() 
-        //{
-        //    this.ChangeTracker.LazyLoadingEnabled = false;
-        //}
-
-        // !!! S-ar putea cand lucrez pe consola, sa trebuiasca sa comentez acest constructor.
         public DataContext(DbContextOptions options) : base(options)
         {
 
@@ -33,12 +28,21 @@ namespace hairDresser.Infrastructure
         public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();
         public DbSet<AppointmentHairService> AppointmentsHairServices => Set<AppointmentHairService>();
 
-        //!!! Ca sa ruleze aplicatia din Consola, trebuie sa decomentez metoda OnConfiguring().
+        // !!! Daca rulez aplicatia in Console, trebuie sa decomentez metoda OnConfiguring().
+        // !!! Daca rulez aplicatia in Presentation (API), trebuie sa comentez metoda OnConfiguring() pt. ca altfel am erori de tipul "Multiple database connections".
         //protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         //{
         //    optionBuilder
         //        .UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDb;Trusted_Connection=True;MultipleActiveResultSets=True;");
-        //    //optionBuilder.UseLazyLoadingProxies(true);
         //}
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder); // ??? Nu stiu ce ii, a aparut in timp ce scriam metoda...
+
+            builder.Entity<Customer>()
+                .HasIndex(customer => customer.Username)
+                    .IsUnique();
+        }
     }
 }

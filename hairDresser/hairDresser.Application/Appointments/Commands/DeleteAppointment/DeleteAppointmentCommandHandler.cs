@@ -24,6 +24,9 @@ namespace hairDresser.Application.Appointments.Commands.DeleteAppointment
 
             if (appointment == null) return null;
 
+            // ??? aici aia cu verificare startdate > current date + 1 date
+            //if (appointment.)
+
             await _unitOfWork.AppointmentRepository.DeleteAppointmentAsync(request.AppointmentId);
             await _unitOfWork.SaveAsync();
 

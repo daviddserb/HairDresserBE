@@ -4,7 +4,9 @@ using hairDresser.Application.HairServices.Commands.DeleteHairService;
 using hairDresser.Application.HairServices.Commands.UpdateHairService;
 using hairDresser.Application.HairServices.Queries;
 using hairDresser.Application.HairServices.Queries.GetAllHairServicesByIds;
+using hairDresser.Application.HairServices.Queries.GetDurationByHairServicesIds;
 using hairDresser.Application.HairServices.Queries.GetHairServiceById;
+using hairDresser.Application.HairServices.Queries.GetPriceByHairServicesIds;
 using hairDresser.Presentation.Dto.HairServiceDtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -83,9 +85,31 @@ namespace hairDresser.Presentation.Controllers
             return Ok(mappedhairServices);
         }
 
+        [HttpGet]
+        [Route("duration/by-ids")]
+        public async Task<IActionResult> GetDurationByHairServicesIds([FromQuery] List<int> hairServicesIds)
+        {
+            var query = new GetDurationByHairServicesIdsQuery { HairServicesIds = hairServicesIds };
+
+            var durationHairServices = await _mediator.Send(query);
+
+            return Ok(durationHairServices);
+        }
+
+        [HttpGet]
+        [Route("price/by-ids")]
+        public async Task<IActionResult> GetPriceByHairServicesIds([FromQuery] List<int> hairServicesIds)
+        {
+            var query = new GetPriceByHairServicesIdsQuery { HairServicesIds = hairServicesIds };
+
+            var priceHairServices = await _mediator.Send(query);
+
+            return Ok(priceHairServices);
+        }
+
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> UpdateHairService(int id, [FromBody] HairServicePostPutDto? editedHairService)
+        public async Task<IActionResult> UpdateHairService(int id, [FromBody] HairServicePostPutDto editedHairService)
         {
             var command = new UpdateHairServiceCommand
             {
@@ -94,6 +118,7 @@ namespace hairDresser.Presentation.Controllers
                 DurationInMinutes = editedHairService.DurationInMinutes,
                 Price = (float)editedHairService.Price
             };
+
 
             var result = await _mediator.Send(command);
 

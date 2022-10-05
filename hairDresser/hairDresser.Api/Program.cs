@@ -3,15 +3,17 @@ using hairDresser.Infrastructure;
 using hairDresser.Infrastructure.Repositories;
 using hairDresser.Presentation.Middleware;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 //??? Intrebari:
-// 1. Cand creez customer, pot sa creez 2 customeri cu proprietati exact la fel. N-ar trebui sa pun ca username-ul sa fie unic?
-//^. HairServiceRepository -> GetAllHairServicesByIdsAsync() - merge dar se poate imbunatati dar nu-mi dau seama cum s-o fac intr-un singur query.
+// *. HairServiceRepository -> GetAllHairServicesByIdsAsync() - merge dar se poate imbunatati dar nu-mi dau seama cum s-o fac intr-un singur query.
 
 //!!! De facut:
-// ar trebui sa mut functionalitatea de verificare a cate apppointment-uri are un customer din GetEmployeeFreeIntervalsForAppointmentByDateQueryHandler in CreateAppointmentCommandHandler.
-// ? acolo cand creezi un appointment, sa fac mai frumos in categoria de servicii, sa se vada mai ok.
+// Ar trebui sa mut functionalitatea de verificare a cate apppointment-uri are un customer din GetEmployeeFreeIntervalsForAppointmentByDateQueryHandler in CreateAppointmentCommandHandler.
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,9 +34,33 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IWorkingIntervalRepository, WorkingIntervalRepository>();
 builder.Services.AddScoped<IWorkingDayRepository, WorkingDayRepository>();
 
-//Facem legatura cu server-ul nostru din DB.
+// // For Entity Framework (legatura cu server-ul nostru din DB).
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+// For Identity
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<DataContext>();
+
+// Adding Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+// Adding Jwt Bearer
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = "audience",
+        ValidIssuer = "https://localhost:7192",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdee-312423d-dsa213321")) // Random key.
+    };
+});
 
 // Adaugam MediatR, care scaneaza toate mesajele (Queries/Commands) si toate handle-urile, de tipul typeof().
 // Cu toate ca noi avem mai multe .AddScoped(), adaugam doar unul dintre ele la typeof() si MediatR le scaneaza pe toate din layer-ul de unde typeof() face parte, adica IHairServiceRepository face parte din Application.
@@ -70,6 +96,9 @@ app.UseCors("CorsPolicy"); // What I Added (are legatura cu: builder.Services.Ad
 app.UseAuthorization();
 
 app.UseMyMiddleware(); // What I added.
+
+app.UseAuthentication(); // What I added.
+app.UseAuthorization(); // What I added.
 
 app.MapControllers();
 

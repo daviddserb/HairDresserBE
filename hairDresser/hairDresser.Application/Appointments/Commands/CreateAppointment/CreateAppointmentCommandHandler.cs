@@ -38,6 +38,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             appointment.EmployeeId = employee.Id;
             appointment.StartDate = request.StartDate;
             appointment.EndDate = request.EndDate;
+            appointment.Price = request.Price;
             appointment.AppointmentHairServices = hairServices
                 .Select(hairService => new AppointmentHairService()
                 {

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hairDresser.Infrastructure;
 
@@ -11,9 +12,10 @@ using hairDresser.Infrastructure;
 namespace hairDresser.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class AppointmentsContextModelSnapshot : ModelSnapshot
+    [Migration("20220925070817_MakeUsernameUniqueFromCustomer")]
+    partial class MakeUsernameUniqueFromCustomer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,13 +41,7 @@ namespace hairDresser.Infrastructure.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
-
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("isDeleted")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");

@@ -10,10 +10,13 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
         // When somebody wants to get an appointment, the properties defines the information that we select for the user to see.
 
         public int Id { get; set; }
+        public int? CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string EmployeeName { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public float Price { get; set; }
+        public DateTime? isDeleted { get; set; }
 
         public ICollection<AppointmentHairServiceDto>? AppointmentHairServices { get; set; }
     }

@@ -13,6 +13,8 @@ namespace hairDresser.Application.Interfaces
         Task<IQueryable<HairService>> ReadHairServicesAsync();
         Task<HairService> GetHairServiceByIdAsync(int hairServiceId);
         Task<IQueryable<HairService>> GetAllHairServicesByIdsAsync(List<int> hairServicesId);
+        Task<TimeSpan> GetDurationByHairServicesIds(List<int> hairServicesIds);
+        Task<float> GetPriceByHairServicesIds(List<int> hairServicesIds);
         Task<HairService> UpdateHairServiceAsync(HairService hairService);
         Task DeleteHairServiceAsync(int hairServiceId);
     }

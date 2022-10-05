@@ -24,5 +24,8 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
         [Required]
         [DateGreaterThan("StartDate")]
         public DateTime? EndDate { get; set; }
+
+        [Required]
+        public float Price { get; set; }
     }
 }

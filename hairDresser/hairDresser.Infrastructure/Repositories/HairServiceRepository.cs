@@ -74,6 +74,42 @@ namespace hairDresser.Infrastructure.Repositories
             bool contained = !subset.Except(superset).Any();
         }
 
+        public async Task<TimeSpan> GetDurationByHairServicesIds(List<int> hairServicesIds)
+        {
+            // ??? Nu este foarte rapid, cred ca se poate sa fac count dupa ce filtrez.
+
+            var selectedHairServices = context.HairServices
+                .Where(hairService => hairServicesIds.Contains(hairService.Id));
+              //.Count(hairServices => hairServices.Duration); //???
+
+            var durationHairServices = new TimeSpan();
+
+            foreach (var hairService in selectedHairServices)
+            {
+                durationHairServices += hairService.Duration;
+            }
+
+            return durationHairServices;
+        }
+
+        public async Task<float> GetPriceByHairServicesIds(List<int> hairServicesIds)
+        {
+            // ??? Nu este foarte rapid, cred ca se poate sa fac count dupa ce filtrez.
+
+            var selectedHairServices = context.HairServices
+                .Where(hairService => hairServicesIds.Contains(hairService.Id));
+            //.Count(hairServices => hairServices.Price); //???
+
+            float priceHairServices = 0;
+
+            foreach (var hairService in selectedHairServices)
+            {
+                priceHairServices += hairService.Price;
+            }
+
+            return priceHairServices;
+        }
+
         public async Task<HairService> UpdateHairServiceAsync(HairService hairService)
         {
             context.HairServices.Update(hairService);

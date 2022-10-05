@@ -37,7 +37,7 @@ namespace hairDresser.Presentation.Middleware
             try
             {
                 _logger.LogInformation("Log in.");
-                _logger.LogInformation($"###########Request path: {httpContext.Request.Path}\n");
+                _logger.LogInformation($"Request path: {httpContext.Request.Path}\n");
 
                 await _next.Invoke(httpContext);
 

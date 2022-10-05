@@ -146,11 +146,12 @@ namespace hairDresser.UnitTests
             //Arrange:
             var appointmentPostDto = new AppointmentPostDto
             {
+                // Nu-i obligatoriu sa pun toate campurile: HairServicesIds = new List<int> { 1, 2 },
                 CustomerId = 1,
                 EmployeeId = 1,
-                //HairServicesIds = { 1, 2 }, // ??? De ce am eroare.
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now
+                HairServicesIds = new List<int> { 1, 2 },
+                StartDate = DateTime.Now.AddHours(1),
+                EndDate = DateTime.Now.AddHours(2)
             };
 
             _mockMapper
@@ -159,18 +160,16 @@ namespace hairDresser.UnitTests
                 {
                     CustomerId = 1,
                     EmployeeId = 2,
-                    //HairServicesIds = { 1, 3 }, // ??? De ce am eroare.
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now
+                    StartDate = DateTime.Now.AddHours(1),
+                    EndDate = DateTime.Now.AddHours(4)
                 });
 
             var appointment = new Appointment
             {
                 CustomerId = 2,
                 EmployeeId = 2,
-                //HairServicesIds = { 1, 4 }, // ??? De ce am eroare.
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now
+                StartDate = DateTime.Now.AddHours(1),
+                EndDate = DateTime.Now.AddHours(6)
             };
 
             _mockMediator
@@ -181,11 +180,11 @@ namespace hairDresser.UnitTests
                 .Setup(mapper => mapper.Map<AppointmentGetDto>(It.Is<Appointment>(app => app == appointment)))
                 .Returns(new AppointmentGetDto
                 {
+                    CustomerName = "Gigel",
                     CustomerId = 1,
-                    EmployeeId = 2,
-                    //HairServicesIds = { 1, 5 }, // ??? De ce am eroare.
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now
+                    EmployeeName = "Ana",
+                    StartDate = DateTime.Now.AddHours(1),
+                    EndDate = DateTime.Now.AddHours(7)
                 });
 
             var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
