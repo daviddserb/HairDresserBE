@@ -26,7 +26,8 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<HairService>> ReadHairServicesAsync()
         {
-            return context.HairServices;
+            var allHairServices = context.HairServices;
+            return allHairServices;
         }
 
         public async Task<HairService> GetHairServiceByIdAsync(int hairServiceId)
@@ -34,6 +35,44 @@ namespace hairDresser.Infrastructure.Repositories
             var hairService = await context.HairServices.FirstOrDefaultAsync(HairService => HairService.Id == hairServiceId);
             if (hairService == null) return null;
             return hairService;
+        }
+
+        // ???
+        public async Task<IQueryable<EmployeeHairService>> GetHairServicesByEmployeeId(int employeeId) {
+            var employeeHairServices = context.EmployeesHairServices
+                .Where(employeeHairService => employeeHairService.EmployeeId == employeeId)
+                .Include(employeeHairService => employeeHairService.HairService);
+
+            return employeeHairServices;
+        }
+
+        //???
+        public async Task<List<HairService>> GetMissingHairServicesByEmployeeId(int employeeId)
+        {
+            var allHairServices = context.HairServices;
+
+            var allEmployeeHairServices = context.EmployeesHairServices
+                .Where(employeeHairService => employeeHairService.EmployeeId == employeeId)
+                .Include(employeeHairService => employeeHairService.HairService);
+
+            var missingHairServices = new List<HairService>();
+            foreach (var hairService in allHairServices)
+            {
+                var cnt = 0;
+                foreach (var employeeHairService in allEmployeeHairServices)
+                {
+                    if(hairService.Id == employeeHairService.HairServiceId)
+                    {
+                        cnt = 1;
+                    }
+                }
+                if (cnt == 0)
+                {
+                    missingHairServices.Add(hairService);
+                }
+            }
+
+            return missingHairServices;
         }
 
         public async Task<IQueryable<HairService>> GetAllHairServicesByIdsAsync(List<int> hairServicesIds)

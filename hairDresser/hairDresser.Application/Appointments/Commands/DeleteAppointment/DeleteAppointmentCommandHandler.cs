@@ -1,4 +1,5 @@
-﻿using hairDresser.Application.Interfaces;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
 using System;
@@ -24,11 +25,16 @@ namespace hairDresser.Application.Appointments.Commands.DeleteAppointment
 
             if (appointment == null) return null;
 
-            // ??? aici aia cu verificare startdate > current date + 1 date
-            //if (appointment.)
-
-            await _unitOfWork.AppointmentRepository.DeleteAppointmentAsync(request.AppointmentId);
-            await _unitOfWork.SaveAsync();
+            var currentDate = DateTime.Now;
+            currentDate.AddDays(1);
+            if (appointment.StartDate > currentDate)
+            {
+                await _unitOfWork.AppointmentRepository.DeleteAppointmentAsync(request.AppointmentId);
+                await _unitOfWork.SaveAsync();
+            } else
+            {
+                throw new ClientException($"Can't cancel the appointment because it's too late!");
+            }
 
             return appointment;
         }

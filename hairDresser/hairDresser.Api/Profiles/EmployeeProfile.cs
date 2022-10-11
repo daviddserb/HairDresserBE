@@ -5,6 +5,7 @@ using hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForAppoi
 using hairDresser.Domain.Models;
 using hairDresser.Presentation.Dto.EmployeeDtos;
 using hairDresser.Presentation.Dto.EmployeeHairServiceDtos;
+using hairDresser.Presentation.Dto.EmployeeWorkingIntervalDtos;
 
 namespace hairDresser.Presentation.Profiles
 {
@@ -16,6 +17,7 @@ namespace hairDresser.Presentation.Profiles
 
             CreateMap<Employee, EmployeeGetDto>().ReverseMap();
             CreateMap<EmployeeHairService, EmployeeHairServiceDto>().ReverseMap();
+            CreateMap<WorkingInterval, EmployeeWorkingIntervalDto>().ReverseMap();
 
             CreateMap<EmployeeFreeInterval, EmployeeFreeIntervalsGetDto>().ReverseMap();
 

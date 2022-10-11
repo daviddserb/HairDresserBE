@@ -13,6 +13,10 @@ namespace hairDresser.Presentation.Profiles
             CreateMap<HairServicePostPutDto, CreateHairServiceCommand>().ReverseMap();
 
             CreateMap<HairService, HairServiceGetDto>().ReverseMap();
+            CreateMap<EmployeeHairService, HairServiceGetDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.HairService.Name))
+                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.HairService.Duration))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.HairService.Price));
 
             CreateMap<HairServicePostPutDto, UpdateHairServiceCommand>().ReverseMap();
         }

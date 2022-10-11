@@ -3,9 +3,11 @@ using hairDresser.Application.HairServices.Commands.CreateHairService;
 using hairDresser.Application.HairServices.Commands.DeleteHairService;
 using hairDresser.Application.HairServices.Commands.UpdateHairService;
 using hairDresser.Application.HairServices.Queries;
+using hairDresser.Application.HairServices.Queries.GetAllHairServicesByEmployeeId;
 using hairDresser.Application.HairServices.Queries.GetAllHairServicesByIds;
 using hairDresser.Application.HairServices.Queries.GetDurationByHairServicesIds;
 using hairDresser.Application.HairServices.Queries.GetHairServiceById;
+using hairDresser.Application.HairServices.Queries.GetMissingHairServicesByEmployeeId;
 using hairDresser.Application.HairServices.Queries.GetPriceByHairServicesIds;
 using hairDresser.Presentation.Dto.HairServiceDtos;
 using MediatR;
@@ -68,6 +70,33 @@ namespace hairDresser.Presentation.Controllers
             var mappedhairService = _mapper.Map<HairServiceGetDto>(hairService);
 
             return Ok(mappedhairService);
+        }
+
+        [HttpGet]
+        [Route("all/employee/{employeeId}")]
+        public async Task<IActionResult> GetHairServicesByEmployeeId(int employeeId)
+        {
+            var query = new GetAllHairServicesByEmployeeIdQuery { EmployeeId = employeeId };
+
+            var employeeHairServices = await _mediator.Send(query);
+
+            var mappedEmployeeHairServices = _mapper.Map<List<HairServiceGetDto>>(employeeHairServices);
+
+            return Ok(mappedEmployeeHairServices);
+        }
+
+        //???
+        [HttpGet]
+        [Route("missing/employee/{employeeId}")]
+        public async Task<IActionResult> GetMissingHairServicesByEmployeeId(int employeeId)
+        {
+            var query = new GetMissingHairServicesByEmployeeIdQuery { EmployeeId = employeeId };
+
+            var employeeMissingHairServices = await _mediator.Send(query);
+
+            var mappedEmployeeMissingHairServices = _mapper.Map<List<HairServiceGetDto>>(employeeMissingHairServices);
+
+            return Ok(mappedEmployeeMissingHairServices);
         }
 
         [HttpGet]

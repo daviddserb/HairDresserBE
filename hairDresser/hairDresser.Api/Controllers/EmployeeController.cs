@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
+using hairDresser.Application.Employees.Commands.AddEmployeeHairServices;
 using hairDresser.Application.Employees.Commands.CreateEmployee;
 using hairDresser.Application.Employees.Commands.DeleteEmployee;
+using hairDresser.Application.Employees.Commands.DeleteEmployeeHairService;
 using hairDresser.Application.Employees.Commands.UpdateEmployee;
 using hairDresser.Application.Employees.Queries.GetAllEmployees;
 using hairDresser.Application.Employees.Queries.GetEmployeeById;
 using hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForAppointmentByDate;
 using hairDresser.Application.Employees.Queries.GetEmployeesByServices;
 using hairDresser.Presentation.Dto.EmployeeDtos;
+using hairDresser.Presentation.Dto.EmployeeFreeIntervalsDtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -84,14 +87,16 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("free-intervals")]
-        public async Task<IActionResult> GetEmployeeFreeIntervalsByDate(int employeeId, int date, int durationInMinutes, int customerId)
+        public async Task<IActionResult> GetEmployeeFreeIntervalsByDate([FromQuery] EmployeeFreeIntervalDto employeeFreeInterval)
         {
             var query = new GetEmployeeFreeIntervalsForAppointmentByDateQuery
             {
-                EmployeeId = employeeId,
-                Date = date,
-                DurationInMinutes = durationInMinutes,
-                CustomerId = customerId
+                EmployeeId = employeeFreeInterval.EmployeeId,
+                Year = employeeFreeInterval.Year,
+                Month = employeeFreeInterval.Month,
+                Date = employeeFreeInterval.Date,
+                DurationInMinutes = employeeFreeInterval.DurationInMinutes,
+                CustomerId = employeeFreeInterval.CustomerId
             };
 
             var freeIntervals = await _mediator.Send(query);
@@ -130,6 +135,32 @@ namespace hairDresser.Presentation.Controllers
             var handlerResult = await _mediator.Send(command);
 
             if (handlerResult == null) return NotFound();
+
+            return NoContent();
+        }
+
+        //EmployeesHairServices:
+        
+        [HttpPut]
+        [Route("hair-service")]
+        public async Task<IActionResult> AddHairServicesToEmployee(int employeeId, [FromBody] List<int> hairServicesIds)
+        {
+            var command = new AddEmployeeHairServicesCommand { EmployeeId = employeeId, HairServicesIds = hairServicesIds };
+
+            var result = await _mediator.Send(command);
+
+            if (result == null) return NotFound();
+
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [Route("hair-service/{employeeHairServiceId}")]
+        public async Task<IActionResult> DeleteHairServiceFromEmployee(int employeeHairServiceId)
+        {
+            var command = new DeleteEmployeeHairServiceCommand { EmployeeHairServiceId = employeeHairServiceId };
+
+            var handlerResult = await _mediator.Send(command);
 
             return NoContent();
         }

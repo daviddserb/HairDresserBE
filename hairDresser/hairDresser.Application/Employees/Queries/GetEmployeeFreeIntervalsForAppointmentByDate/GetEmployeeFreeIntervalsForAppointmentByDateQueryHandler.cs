@@ -27,8 +27,8 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForA
             var customerAppointmentsLastMonth = await _unitOfWork.AppointmentRepository.GetHowManyAppointmentsCustomerHasInLastMonth(request.CustomerId);
             if (customerAppointmentsLastMonth > maxAppointmentsCustomerPerMonth) throw new ClientException("You went over the limit of maximum appointments for this month!");
 
-            var appointmentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, request.Date);
-            Console.WriteLine($"appointment (ignoram Time-ul, am setat doar Date-ul, adica Day, in Anul curent si Luna curenta)= '{appointmentDate}'");
+            var appointmentDate = new DateTime(request.Year, request.Month, request.Date);
+            Console.WriteLine($"appointment (am setat doar Date, ignoram Time)= '{appointmentDate}'");
 
             var duration = TimeSpan.FromMinutes(request.DurationInMinutes);
             Console.WriteLine($"\nduration, from minutes to TimeSpan,= '{duration}'");
@@ -54,6 +54,9 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForA
             var workingDay = await _unitOfWork.WorkingDayRepository.GetWorkingDayByNameAsync(nameOfDay);
 
             var employeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, workingDay.Id);
+
+            if (!employeeWorkingIntervals.Any()) return await Task.FromResult(new List<EmployeeFreeInterval>());
+
             var possibleIntervals = new List<DateTime>();
             foreach (var intervals in employeeWorkingIntervals)
             {

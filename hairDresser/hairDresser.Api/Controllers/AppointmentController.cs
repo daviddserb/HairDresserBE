@@ -41,11 +41,11 @@ namespace hairDresser.Presentation.Controllers
             var appointment = await _mediator.Send(command);
 
             // ??? Nu cred ca mai am nevoie de asta
-            if (appointment == null)
-            {
-                _logger.LogError("Can't create appointment because invalid data input.");
-                return BadRequest();
-            }
+            //if (appointment == null)
+            //{
+            //    _logger.LogError("Can't create appointment because invalid data input.");
+            //    return BadRequest();
+            //}
 
             var mappedAppointment = _mapper.Map<AppointmentGetDto>(appointment);
 
