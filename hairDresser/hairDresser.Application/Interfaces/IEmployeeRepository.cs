@@ -18,7 +18,7 @@ namespace hairDresser.Application.Interfaces
 
         // EmployeeHairService:
         Task<EmployeeHairService> CheckIfEmployeeHairServiceIdExists(int employeeHairServiceId);
-        Task UpdateEmployeeHairServicesAsync(Employee employee);
+        Task AddEmployeeHairServicesAsync(List<EmployeeHairService> employee);
         Task DeleteEmployeeHairServiceAsync(int employeeHairServiceId);
     }
 }

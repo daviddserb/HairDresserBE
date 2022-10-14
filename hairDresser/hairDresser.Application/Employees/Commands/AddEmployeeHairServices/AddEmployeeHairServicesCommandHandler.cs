@@ -20,23 +20,15 @@ namespace hairDresser.Application.Employees.Commands.AddEmployeeHairServices
         public async Task<Employee> Handle(AddEmployeeHairServicesCommand request, CancellationToken cancellationToken)
         {
             var employee = await _unitOfWork.EmployeeRepository.GetEmployeeByIdAsync(request.EmployeeId);
-
             if (employee == null) return null;
 
-            // 1
-            employee.EmployeeHairServices = request.HairServicesIds.Select(hsi => new EmployeeHairService()
+            var employeeHairServices = request.HairServicesIds.Select(x => new EmployeeHairService
             {
-                EmployeeId = request.EmployeeId, // ??? Nu cred ca mai trebuie...
-                HairServiceId = hsi
+                EmployeeId = request.EmployeeId,
+                HairServiceId = x
             }).ToList();
 
-            // 2
-            //foreach (int hairServiceId in request.HairServicesIds)
-            //{
-            //    //employee.EmployeeHairServices.Add(hairServiceId);
-            //}
-
-            await _unitOfWork.EmployeeRepository.UpdateEmployeeHairServicesAsync(employee);
+            await _unitOfWork.EmployeeRepository.AddEmployeeHairServicesAsync(employeeHairServices);
             await _unitOfWork.SaveAsync();
 
             return employee;

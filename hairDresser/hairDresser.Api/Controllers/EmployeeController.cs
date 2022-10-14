@@ -140,8 +140,7 @@ namespace hairDresser.Presentation.Controllers
         }
 
         //EmployeesHairServices:
-        
-        [HttpPut]
+        [HttpPost]
         [Route("hair-service")]
         public async Task<IActionResult> AddHairServicesToEmployee(int employeeId, [FromBody] List<int> hairServicesIds)
         {

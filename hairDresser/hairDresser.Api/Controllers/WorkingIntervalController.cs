@@ -32,7 +32,8 @@ namespace hairDresser.Presentation.Controllers
 
             var workingInterval = await _mediator.Send(command);
 
-            if (workingInterval == null) return BadRequest(); //interval overlapping
+            // Any property that is null or default means interval overlapping.
+            if (workingInterval.WorkingDay == null) return BadRequest(); //interval overlapping
 
             var mappedWorkingInterval = _mapper.Map<WorkingIntervalGetDto>(workingInterval);
 

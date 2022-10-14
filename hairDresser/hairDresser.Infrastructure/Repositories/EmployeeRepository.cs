@@ -65,7 +65,6 @@ namespace hairDresser.Infrastructure.Repositories
         }
 
         //EmployeeHairService:
-
         public async Task<EmployeeHairService> CheckIfEmployeeHairServiceIdExists(int employeeHairServiceId)
         {
             var employeeHairService = await context.EmployeesHairServices
@@ -73,12 +72,9 @@ namespace hairDresser.Infrastructure.Repositories
             return employeeHairService;
         }
 
-        public async Task UpdateEmployeeHairServicesAsync(Employee employee)
+        public async Task AddEmployeeHairServicesAsync(List<EmployeeHairService> employee)
         {
-            // Cu Update merge doar ca daca am serviciile 1 si 2 si vreau sa adaug 5 si 6, imi adauga 5 si 6 dar nu voi mai avea 1 si 2. Eu vreau sa adaug 5 si 6 pe langa 1 si 2.
-            //context.Employees.Update(employee);
-
-            context.Employees.AddAsync(employee);
+            await context.EmployeesHairServices.AddRangeAsync(employee);
         }
 
         public async Task DeleteEmployeeHairServiceAsync(int employeeHairServiceId)
