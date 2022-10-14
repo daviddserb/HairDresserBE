@@ -10,6 +10,7 @@ using hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForAppoi
 using hairDresser.Application.Employees.Queries.GetEmployeesByServices;
 using hairDresser.Presentation.Dto.EmployeeDtos;
 using hairDresser.Presentation.Dto.EmployeeFreeIntervalsDtos;
+using hairDresser.Presentation.Dto.EmployeeHairServiceDtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -142,9 +143,9 @@ namespace hairDresser.Presentation.Controllers
         //EmployeesHairServices:
         [HttpPost]
         [Route("hair-service")]
-        public async Task<IActionResult> AddHairServicesToEmployee(int employeeId, [FromBody] List<int> hairServicesIds)
+        public async Task<IActionResult> AddHairServicesToEmployee([FromBody] EmployeeHairServicePostDto employeeHairService)
         {
-            var command = new AddEmployeeHairServicesCommand { EmployeeId = employeeId, HairServicesIds = hairServicesIds };
+            var command = new AddEmployeeHairServicesCommand { EmployeeId = employeeHairService.EmployeeId, HairServicesIds = employeeHairService.HairServicesIds };
 
             var result = await _mediator.Send(command);
 
