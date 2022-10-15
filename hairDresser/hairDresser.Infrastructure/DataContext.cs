@@ -12,10 +12,7 @@ namespace hairDresser.Infrastructure
 {
     public class DataContext : IdentityDbContext<User>
     {
-        public DataContext(DbContextOptions options) : base(options)
-        {
-
-        }
+        public DataContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Appointment> Appointments => Set<Appointment>();
         public DbSet<Customer> Customers => Set<Customer>();
@@ -40,9 +37,9 @@ namespace hairDresser.Infrastructure
         {
             base.OnModelCreating(builder); // ??? Nu stiu ce ii, a aparut in timp ce scriam metoda...
 
-            builder.Entity<Customer>()
-                .HasIndex(customer => customer.Username)
-                    .IsUnique();
+            builder.Entity<Customer>().HasIndex(customer => customer.Username).IsUnique();
+
+            builder.Entity<HairService>().HasIndex(hairService => hairService.Name).IsUnique();
         }
     }
 }
