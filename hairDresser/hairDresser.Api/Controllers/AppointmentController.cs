@@ -91,7 +91,7 @@ namespace hairDresser.Presentation.Controllers
 
             var allCustomerAppointments = await _mediator.Send(query);
 
-            if (!allCustomerAppointments.Any()) return NotFound();
+            if (!allCustomerAppointments.Any()) return NotFound("This customer has no appointments!");
 
             var mappedCustomerAppointments = _mapper.Map<List<AppointmentGetDto>>(allCustomerAppointments);
 
@@ -122,7 +122,7 @@ namespace hairDresser.Presentation.Controllers
 
             var allEmployeeAppointments = await _mediator.Send(query);
 
-            if (!allEmployeeAppointments.Any()) return NotFound();
+            if (!allEmployeeAppointments.Any()) return NotFound("This employee has no appointments!");
 
             var mappedEmployeeAppointments = _mapper.Map<List<AppointmentGetDto>>(allEmployeeAppointments);
 
