@@ -83,7 +83,7 @@ namespace hairDresser.Presentation.Controllers
 
             var allWorkingIntervalsByEmployeeId = await _mediator.Send(query);
 
-            if (!allWorkingIntervalsByEmployeeId.Any()) return NotFound();
+            if (!allWorkingIntervalsByEmployeeId.Any()) return NotFound("The employee has no working intervals!");
 
             var mappedWorkingIntervalsByEmployeeId = _mapper.Map<List<WorkingIntervalGetDto>>(allWorkingIntervalsByEmployeeId);
 

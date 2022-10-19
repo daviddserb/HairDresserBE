@@ -1,4 +1,5 @@
-﻿using hairDresser.Application.HairServices.Queries.GetAllHairServicesByEmployeeId;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.HairServices.Queries.GetAllHairServicesByEmployeeId;
 using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
@@ -21,6 +22,9 @@ namespace hairDresser.Application.HairServices.Queries.GetMissingHairServicesByE
 
         public async Task<List<HairService>> Handle(GetMissingHairServicesByEmployeeIdQuery request, CancellationToken cancellationToken)
         {
+            var employee = await _unitOfWork.EmployeeRepository.GetEmployeeByIdAsync(request.EmployeeId);
+            if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
+
             return await _unitOfWork.HairServiceRepository.GetMissingHairServicesByEmployeeId(request.EmployeeId);
         }
     }
