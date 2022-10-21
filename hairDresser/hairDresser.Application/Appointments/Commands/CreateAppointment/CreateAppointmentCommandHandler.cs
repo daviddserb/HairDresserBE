@@ -32,7 +32,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
 
             var hairServices = await _unitOfWork.HairServiceRepository.GetAllHairServicesByIdsAsync(request.HairServicesIds);
-            if (hairServices == null) throw new NotFoundException($"There is a problem with the hair services ids: '{String.Join(", ", request.HairServicesIds)}'. All or just some of them does not exist!");
+            if (hairServices == null) throw new NotFoundException($"There is a problem with the hair services ids: '{String.Join(", ", request.HairServicesIds)}'!");
 
             appointment.CustomerId = customer.Id;
             appointment.EmployeeId = employee.Id;

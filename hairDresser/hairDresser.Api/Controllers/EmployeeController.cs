@@ -13,6 +13,7 @@ using hairDresser.Presentation.Dto.EmployeeFreeIntervalsDtos;
 using hairDresser.Presentation.Dto.EmployeeHairServiceDtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace hairDresser.Presentation.Controllers
 {

@@ -15,33 +15,26 @@ namespace hairDresser.Presentation.Middleware
             _next = next;
             _logger = logger;
 
-            _logger.LogInformation("Middleware started.");
-            _logger.LogWarning("Something went wrong (testing).");
-            _logger.LogError("Application error (testing).");
-            _logger.LogCritical("Critical error (testing)");
-            _logger.LogDebug("Debug (testing).");
-            _logger.LogTrace("Trace (testing).");
-
-            /* Order from low (Trace) to High (Critical):
-             * Critical
-             * Error
-             * Warning
-             * Information
-             * Debug
-             * Trace
-             */
+            /* Order from low (Trace) to high (Critical):
+            Critical
+            Error
+            Warning
+            Information
+            Debug
+            Trace
+            */
         }
 
         public async Task Invoke(HttpContext httpContext)
         {
             try
             {
-                _logger.LogInformation("Log in.");
+                _logger.LogInformation("Invoke in.");
                 _logger.LogInformation($"Request path: {httpContext.Request.Path}\n");
 
                 await _next.Invoke(httpContext);
 
-                _logger.LogInformation("Log out.");
+                _logger.LogInformation("Invoke out.");
             }
             catch (NotFoundException exception)
             {
