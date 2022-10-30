@@ -57,16 +57,15 @@ namespace hairDresser.Presentation.Controllers
 
             if (user != null && await _userManager.CheckPasswordAsync(user, userInfo.Password))
             {
-                // If the user exists, after the login, we need to return a token, and to do that we need to add some Claims.
+                // If the user exists, after the log in, we need to return a token, and to do that we need to add some Claims.
 
                 var userRoles = await _userManager.GetRolesAsync(user);
 
-                // Will be visible in the token.
+                // Will be visible in the token (https://jwt.io/).
                 var authClaims = new List<Claim>
                 {
-                    //new Claim(ClaimTypes.Name, userInfo.Name), // ??? am scos Name-ul din auth
                     new Claim("username", userInfo.Username),
-                    new Claim("password", userInfo.Password)
+                    new Claim("password", userInfo.Password),
                 };
 
                 // Add the roles, from the DB, from the specific user, to the claims.
@@ -75,7 +74,7 @@ namespace hairDresser.Presentation.Controllers
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
 
-                //G enerate the key (which is the same as the key from the Program.cs).
+                // Generate the key (which is the same as the key from the Program.cs).
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdee-312423d-dsa213321"));
 
                 var token = new JwtSecurityToken(
@@ -85,9 +84,11 @@ namespace hairDresser.Presentation.Controllers
                     expires: DateTime.Now.AddHours(10),
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
 
+                // Return data to the API log in call.
                 return Ok(new
                 {
                     username = userInfo.Username,
+                    password = userInfo.Password,
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     expiration = token.ValidTo
                 });
