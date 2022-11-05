@@ -158,16 +158,16 @@ namespace hairDresser.UnitTests
                 .Setup(mapper => mapper.Map<CreateAppointmentCommand>(It.Is<AppointmentPostDto>(app => app == appointmentPostDto)))
                 .Returns(new CreateAppointmentCommand
                 {
-                    CustomerId = 1,
-                    EmployeeId = 2,
+                    CustomerId = new Guid("c59b1665-49b8-4d43-a1df-f10fc280ca17"),
+                    EmployeeId = new Guid("c59b1665-49b8-4d44-a1df-f10fc280ca17"),
                     StartDate = DateTime.Now.AddHours(1),
                     EndDate = DateTime.Now.AddHours(4)
                 });
 
             var appointment = new Appointment
             {
-                CustomerId = 2,
-                EmployeeId = 2,
+                CustomerId = new Guid("c59b1665-49b8-4d44-a2df-f10fc280ca17"),
+                EmployeeId = new Guid("c59b1665-49b8-4d44-a1df-f10fc280ca17"),
                 StartDate = DateTime.Now.AddHours(1),
                 EndDate = DateTime.Now.AddHours(6)
             };

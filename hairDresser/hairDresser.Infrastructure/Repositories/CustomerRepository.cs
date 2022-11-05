@@ -31,7 +31,7 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<Customer> GetCustomerByIdAsync(int customerId)
         {
-            return await context.Customers.FirstOrDefaultAsync(customer => customer.Id == customerId);
+            return await context.Customers.FirstOrDefaultAsync(customer => customer.Id.Equals(customerId));
         }
 
         public async Task<Customer> UpdateCustomerAsync(Customer customer)
@@ -42,7 +42,7 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task DeleteCustomerAsync(int customerId)
         {
-            var customer = await context.Customers.FirstOrDefaultAsync(customer => customer.Id == customerId);
+            var customer = await context.Customers.FirstOrDefaultAsync(customer => customer.Id.Equals(customerId));
             context.Customers.Remove(customer);
         }
     }

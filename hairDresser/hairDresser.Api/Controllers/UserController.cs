@@ -1,7 +1,11 @@
-﻿using hairDresser.Infrastructure;
+﻿using AutoMapper;
+using hairDresser.Application.Users.Queries.GetAllUsers;
+using hairDresser.Domain.Models;
 using hairDresser.Presentation.Dto.UserDtos;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,21 +15,25 @@ namespace hairDresser.Presentation.Controllers
 {
     [ApiController]
     [Route("api/user")]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        public readonly IMediator _mediator;
+        public readonly IMapper _mapper;
 
-        public UsersController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public UserController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IMediator mediator, IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpPost]
         [Route("register")]
-        // ! Sa vad prin ce trimit userInfo, FromQuery, FromBody, fara nimic si sa vad diferentele.
-        public async Task<IActionResult> Register(UserLoginDto userInfo)
+        //??? Sa vad prin ce trimit userInfo, FromQuery, FromBody, fara nimic si sa vad diferentele.
+        public async Task<IActionResult> Register(UserRegisterDto userInfo)
         {
             var userExists = await _userManager.FindByNameAsync(userInfo.Username);
 
@@ -36,7 +44,6 @@ namespace hairDresser.Presentation.Controllers
                 UserName = userInfo.Username,
             };
 
-            // ???
             var result = await _userManager.CreateAsync(user, userInfo.Password);
 
             if (!result.Succeeded)
@@ -124,5 +131,51 @@ namespace hairDresser.Presentation.Controllers
 
             return Ok($"The role '{userInfo.Role}' is now assigned to the user with the username '{userInfo.Username}'");
         }
+
+        [HttpGet]
+        [Route("all")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var query = new GetAllUsersQuery();
+
+            var allUsers = await _mediator.Send(query);
+
+            if (!allUsers.Any()) return NotFound();
+
+            var mappedAllUsers = _mapper.Map<List<UserGetDto>>(allUsers);
+
+            return Ok(mappedAllUsers);
+        }
+
+        [HttpGet]
+        [Route("all/customer")]
+        public async Task<IActionResult> GetAllCustomers()
+        {
+            // !!! NO:
+            //var allCustomers = await _roleManager.FindByNameAsync("customer");
+            //var allEmployees = await _roleManager.FindByNameAsync("Employee");
+            //var allAdmins = await _roleManager.FindByNameAsync("admin");
+
+            // ???
+            //var x = _userManager.Users.Include(u => u.Roles);
+
+            // ???
+            //var list = new List<User>();
+            //foreach (var user in _userManager.Users.ToList())
+            //{
+            //    list.Add(new User()
+            //    {
+            //        Roles = await _userManager.GetRolesAsync(user)
+            //    });
+            //}
+
+
+            return Ok();
+        }
+
+        // !!! to do:
+        // get user by id
+        // get all customers by role
+        // get all employees by role
     }
 }

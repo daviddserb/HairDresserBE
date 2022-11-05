@@ -2,7 +2,7 @@
 {
     public class EmployeeFreeIntervalDto
     {
-        public int EmployeeId { get; set; }
+        public Guid EmployeeId { get; set; }
 
         public int Year { get; set; }
         public int Month { get; set; }
@@ -11,6 +11,6 @@
 
         public int DurationInMinutes { get; set; }
 
-        public int CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
     }
 }

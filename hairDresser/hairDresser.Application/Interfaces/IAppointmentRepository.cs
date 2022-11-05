@@ -15,15 +15,15 @@ namespace hairDresser.Application.Interfaces
         Task<Appointment> GetAppointmentByIdAsync(int appointmentId);
 
         // This helps to check, when the customer is making an appointment, if the selected interval, by the customer, it's not overlaping with other in work appointments.
-        Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdByDateAsync(int customerId, DateTime appointmentDate);
-        Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdAsync(int customerId);
-        Task<IQueryable<Appointment>> GetInWorkAppointmentsByCustomerIdAsync(int customerId);
+        Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdByDateAsync(Guid customerId, DateTime appointmentDate);
+        Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdAsync(Guid customerId);
+        Task<IQueryable<Appointment>> GetInWorkAppointmentsByCustomerIdAsync(Guid customerId);
         // Check how many appointments the customer made in the last month (30 days exactly) to see if he went over the limit or not.
-        Task<int> GetHowManyAppointmentsCustomerHasInLastMonth(int customerId);
+        Task<int> GetHowManyAppointmentsCustomerHasInLastMonth(Guid customerId);
 
         // This helps to get the free intervals from the employee to make an appointment.
-        Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdByDateAsync(int employeeId, DateTime appointmentDate);
-        Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdAsync(int employeeId);
+        Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdByDateAsync(Guid employeeId, DateTime appointmentDate);
+        Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdAsync(Guid employeeId);
 
         Task<Appointment> UpdateAppointmentAsync(Appointment appointment);
 

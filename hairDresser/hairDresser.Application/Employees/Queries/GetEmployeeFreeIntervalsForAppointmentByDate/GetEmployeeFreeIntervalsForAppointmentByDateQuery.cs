@@ -10,7 +10,7 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForA
 {
     public class GetEmployeeFreeIntervalsForAppointmentByDateQuery : IRequest<List<EmployeeFreeInterval>>
     {
-        public int EmployeeId { get; set; }
+        public Guid EmployeeId { get; set; }
 
         public int Year { get; set; }
         public int Month { get; set; }
@@ -19,6 +19,6 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForA
 
         public int DurationInMinutes { get; set; }
 
-        public int CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace hairDresser.Application.HairServices.Queries.GetMissingHairServicesByE
 {
     public class GetMissingHairServicesByEmployeeIdQuery : IRequest<List<HairService>>
     {
-        public int EmployeeId { get; set; }
+        public Guid EmployeeId { get; set; }
     }
 }

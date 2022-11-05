@@ -1,4 +1,5 @@
 using hairDresser.Application.Interfaces;
+using hairDresser.Domain.Models;
 using hairDresser.Infrastructure;
 using hairDresser.Infrastructure.Repositories;
 using hairDresser.Presentation.Middleware;
@@ -24,7 +25,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// What I added (START):
 // De fiecare data cand vei vedea ca cineva depinde de IHairServiceRepository, creezi o instanta de HairServiceRepository (la fel si pt. restul).
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
@@ -33,8 +33,9 @@ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IWorkingIntervalRepository, WorkingIntervalRepository>();
 builder.Services.AddScoped<IWorkingDayRepository, WorkingDayRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-// // For Entity Framework (legatura cu server-ul nostru din DB).
+// For Entity Framework (legatura cu server-ul nostru din DB).
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
@@ -42,14 +43,14 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>();
 
-// Adding Authentication
+// Add Authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-// Adding Jwt Bearer
+// Add Jwt Bearer
 .AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -66,10 +67,10 @@ builder.Services.AddAuthentication(options =>
 // Cu toate ca noi avem mai multe .AddScoped(), adaugam doar unul dintre ele la typeof() si MediatR le scaneaza pe toate din layer-ul de unde typeof() face parte, adica IHairServiceRepository face parte din Application.
 builder.Services.AddMediatR(typeof(IHairServiceRepository));
 
- // Am adaugat AutoMapper
+// Adaugam AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
 
-// Am adaugat AddCors ca sa pot face call la API de pe front-end (din Angular).
+// Adaugam AddCors ca sa pot face call la API de pe front-end (din Angular).
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
@@ -78,7 +79,6 @@ builder.Services.AddCors(options =>
             builder.WithOrigins(new string[] { "http://localhost:4200", "http://yourdomain.com" }).AllowAnyMethod().AllowAnyHeader();
         });
 });
-// What I added (STOP).
 
 var app = builder.Build();
 
@@ -91,17 +91,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("CorsPolicy"); // What I Added (are legatura cu: builder.Services.AddCors(options => etc...).
+app.UseCors("CorsPolicy"); // (are legatura cu: builder.Services.AddCors(options => etc...).
 
 app.UseAuthorization();
 
-app.UseMyMiddleware(); // What I added.
+app.UseMyMiddleware(); //
 
-app.UseAuthentication(); // What I added.
-app.UseAuthorization(); // What I added.
+app.UseAuthentication(); //
+app.UseAuthorization(); //
 
 app.MapControllers();
 
 app.Run();
 
-public partial class Program{ } // What I added.
+public partial class Program{ } //

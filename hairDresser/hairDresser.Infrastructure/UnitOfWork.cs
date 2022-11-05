@@ -12,13 +12,16 @@ namespace hairDresser.Infrastructure
     {
         private readonly DataContext _dataContext;
 
-        public UnitOfWork(DataContext dataContext,
+        public UnitOfWork(
+            DataContext dataContext,
             IAppointmentRepository appointmentRepository,
             ICustomerRepository customerRepository,
             IEmployeeRepository employeeRepository,
             IHairServiceRepository hairServiceRepository,
             IWorkingDayRepository workingDayRepository,
-            IWorkingIntervalRepository workingIntervalRepository)
+            IWorkingIntervalRepository workingIntervalRepository,
+            IUserRepository userRepository
+            )
         {
             _dataContext = dataContext;
             AppointmentRepository = appointmentRepository;
@@ -27,6 +30,7 @@ namespace hairDresser.Infrastructure
             HairServiceRepository = hairServiceRepository;
             WorkingDayRepository = workingDayRepository;
             WorkingIntervalRepository = workingIntervalRepository;
+            UserRepository = userRepository;
         }
 
         public IAppointmentRepository AppointmentRepository { get; private set; }
@@ -35,6 +39,7 @@ namespace hairDresser.Infrastructure
         public IHairServiceRepository HairServiceRepository { get; private set; }
         public IWorkingDayRepository WorkingDayRepository { get; private set; }
         public IWorkingIntervalRepository WorkingIntervalRepository { get; private set; }
+        public IUserRepository UserRepository { get; private set; }
 
         public async Task SaveAsync()
         {

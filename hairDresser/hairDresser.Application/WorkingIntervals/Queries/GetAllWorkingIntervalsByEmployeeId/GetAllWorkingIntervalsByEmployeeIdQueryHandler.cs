@@ -21,7 +21,7 @@ namespace hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingInterval
 
         public async Task<IQueryable<WorkingInterval>> Handle(GetAllWorkingIntervalsByEmployeeIdQuery request, CancellationToken cancellationToken)
         {
-            var employee = await _unitOfWork.EmployeeRepository.GetEmployeeByIdAsync(request.EmployeeId);
+            var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
 
             return await _unitOfWork.WorkingIntervalRepository.GetAllWorkingIntervalsByEmployeeIdAsync(request.EmployeeId);

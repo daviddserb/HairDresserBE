@@ -38,7 +38,7 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForA
             foreach (var appointment in await _unitOfWork.AppointmentRepository.GetAllAppointmentsByEmployeeIdByDateAsync(request.EmployeeId, appointmentDate))
             {
                 employeeAppointmentsDates.Add((appointment.StartDate, appointment.EndDate));
-                Console.WriteLine($"{appointment.Id} - customer= '{appointment.Customer.Name}', employee='{appointment.Employee.Name}', start= '{appointment.StartDate}', end= '{appointment.EndDate}'");
+                Console.WriteLine($"{appointment.Id} - customer= '{appointment.User.UserName}', employee='{appointment.User.UserName}', start= '{appointment.StartDate}', end= '{appointment.EndDate}'");
             }
 
             Console.WriteLine("\nSorted appointments:");

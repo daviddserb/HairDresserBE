@@ -85,7 +85,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("all/customer/{customerId}")]
-        public async Task<IActionResult> GetAppointmentsByCustomerId(int customerId)
+        public async Task<IActionResult> GetAppointmentsByCustomerId(Guid customerId)
         {
             var query = new GetAllAppointmentsByCustomerIdQuery { CustomerId = customerId };
 
@@ -101,7 +101,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("in-work/customer/{customerId}")]
-        public async Task<IActionResult> GetInWorkAppointmentsByCustomerId(int customerId)
+        public async Task<IActionResult> GetInWorkAppointmentsByCustomerId(Guid customerId)
         {
             var query = new GetInWorkAppointmentsByCustomerIdQuery { CustomerId = customerId };
 
@@ -116,7 +116,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("all/employee/{employeeId}")]
-        public async Task<IActionResult> GetAppointmentsByEmployeeId(int employeeId)
+        public async Task<IActionResult> GetAppointmentsByEmployeeId(Guid employeeId)
         {
             var query = new GetAllAppointmentsByEmployeeIdQuery { EmployeeId = employeeId };
 
@@ -130,25 +130,26 @@ namespace hairDresser.Presentation.Controllers
 
         }
 
-        [HttpPut]
-        [Route("{appointmentId}")]
-        public async Task<IActionResult> UpdateAppointment(int appointmentId, [FromBody] AppointmentPutDto editedAppointment)
-        {
-            var command = new UpdateAppointmentCommand
-            {
-                AppointmentId = appointmentId,
-                HairServicesIds = editedAppointment.HairServicesIds,
-                EmployeeId = editedAppointment.EmployeeId,
-                StartDate = editedAppointment.StartDate,
-                EndDate = editedAppointment.EndDate
-            };
+        // !!!??? Nu mai folosesc cea de update appointment
+        //[HttpPut]
+        //[Route("{appointmentId}")]
+        //public async Task<IActionResult> UpdateAppointment(int appointmentId, [FromBody] AppointmentPutDto editedAppointment)
+        //{
+        //    var command = new UpdateAppointmentCommand
+        //    {
+        //        AppointmentId = appointmentId,
+        //        HairServicesIds = editedAppointment.HairServicesIds,
+        //        EmployeeId = editedAppointment.EmployeeId,
+        //        StartDate = editedAppointment.StartDate,
+        //        EndDate = editedAppointment.EndDate
+        //    };
 
-            var result = await _mediator.Send(command);
+        //    var result = await _mediator.Send(command);
 
-            if (result == null) return NotFound();
+        //    if (result == null) return NotFound();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         [HttpDelete]
         [Route("{appointmentId}")]

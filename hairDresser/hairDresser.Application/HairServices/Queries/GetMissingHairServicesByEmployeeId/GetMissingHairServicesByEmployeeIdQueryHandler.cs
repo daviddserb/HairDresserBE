@@ -22,7 +22,7 @@ namespace hairDresser.Application.HairServices.Queries.GetMissingHairServicesByE
 
         public async Task<List<HairService>> Handle(GetMissingHairServicesByEmployeeIdQuery request, CancellationToken cancellationToken)
         {
-            var employee = await _unitOfWork.EmployeeRepository.GetEmployeeByIdAsync(request.EmployeeId);
+            var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
 
             return await _unitOfWork.HairServiceRepository.GetMissingHairServicesByEmployeeId(request.EmployeeId);

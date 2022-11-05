@@ -21,7 +21,7 @@ namespace hairDresser.Application.Appointments.Queries.GetAllAppointmentsByEmplo
 
         public async Task<IQueryable<Appointment>> Handle(GetAllAppointmentsByEmployeeIdQuery request, CancellationToken cancellationToken)
         {
-            var employee = await _unitOfWork.EmployeeRepository.GetEmployeeByIdAsync(request.EmployeeId);
+            var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
 
             return await _unitOfWork.AppointmentRepository.GetAllAppointmentsByEmployeeIdAsync(request.EmployeeId);

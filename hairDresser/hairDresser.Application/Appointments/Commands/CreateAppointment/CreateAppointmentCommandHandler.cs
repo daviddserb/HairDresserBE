@@ -25,17 +25,18 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             Console.WriteLine("CreateAppointmentCommandHandler");
             var appointment = new Appointment();
 
-            var customer = await _unitOfWork.CustomerRepository.GetCustomerByIdAsync(request.CustomerId);
+            var customer = await _unitOfWork.UserRepository.GetUserByIdAsync(request.CustomerId);
             if (customer == null) throw new NotFoundException($"The customer with the id '{request.CustomerId}' does not exist!");
 
-            var employee = await _unitOfWork.EmployeeRepository.GetEmployeeByIdAsync(request.EmployeeId);
+            var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
 
             var hairServices = await _unitOfWork.HairServiceRepository.GetAllHairServicesByIdsAsync(request.HairServicesIds);
-            if (hairServices == null) throw new NotFoundException($"There is a problem with the hair services ids: '{String.Join(", ", request.HairServicesIds)}'!");
+            if (hairServices == null) throw new NotFoundException($"Some of the hair services with the ids '{String.Join(", ", request.HairServicesIds)}' does not exist!");
 
-            appointment.CustomerId = customer.Id;
-            appointment.EmployeeId = employee.Id;
+            // ??? new Guid(). Zice ca customer.Id este de tipul string, dar nu inteleg de ce.
+            appointment.CustomerId = new Guid(customer.Id);
+            appointment.EmployeeId = new Guid(employee.Id);
             appointment.StartDate = request.StartDate;
             appointment.EndDate = request.EndDate;
             appointment.Price = request.Price;

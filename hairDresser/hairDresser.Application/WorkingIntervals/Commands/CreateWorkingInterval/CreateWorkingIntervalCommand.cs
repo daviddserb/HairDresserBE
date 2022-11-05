@@ -11,7 +11,7 @@ namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterva
     public class CreateWorkingIntervalCommand : IRequest<WorkingInterval>
     {
         public int WorkingDayId { get; set; }
-        public int EmployeeId { get; set; }
+        public Guid EmployeeId { get; set; }
         public string StartTime { get; set; }
         public string EndTime { get; set; }
     }
