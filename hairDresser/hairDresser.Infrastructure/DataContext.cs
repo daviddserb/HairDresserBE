@@ -21,12 +21,12 @@ namespace hairDresser.Infrastructure
         public DbSet<WorkingInterval> WorkingIntervals => Set<WorkingInterval>();
         public DbSet<WorkingDay> WorkingDays => Set<WorkingDay>();
 
-        // Chiar daca tabelul de legatura (many-to-many) este creat automat in DB, daca ii faci si DbSet te ajuta, adica il poti accesa.
+        // Chiar daca tabelul de legatura (many-to-many) iti este creat automat in DB, daca ii faci si DbSet te ajuta, adica il poti accesa.
         public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();
         public DbSet<AppointmentHairService> AppointmentsHairServices => Set<AppointmentHairService>();
 
-        // ! Daca rulez aplicatia in Console, trebuie sa decomentez metoda OnConfiguring().
-        // ! Daca rulez aplicatia in Presentation (API), trebuie sa comentez metoda OnConfiguring(). Daca nu, am eroare de tipul "Multiple database connections".
+        // !!! Daca rulez aplicatia in Console, trebuie sa decomentez metoda OnConfiguring().
+        // !!! Daca rulez aplicatia in Presentation (API), trebuie sa comentez metoda OnConfiguring() pt. ca altfel am erori de tipul "Multiple database connections".
         //protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         //{
         //    optionBuilder
