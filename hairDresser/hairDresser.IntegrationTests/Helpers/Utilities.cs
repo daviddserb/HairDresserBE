@@ -86,40 +86,42 @@ namespace hairDresser.IntegrationTests.Helpers
             {
                 Id = 1,
                 Name = "Matei",
-                EmployeeHairServices = new List<EmployeeHairService>()
-                {
-                    new EmployeeHairService { EmployeeId = new Guid("00cd0b2f-d2d5-4e06-89af-915719a63c11"), HairServiceId = 1 },
-                    new EmployeeHairService { EmployeeId = new Guid("00cd0b2f-d2d5-4e06-89af-915719a63c11"), HairServiceId = 2 }
-                }
+                // BEFORE:
+                //EmployeeHairServices = new List<EmployeeHairService>()
+                //{
+                //    new EmployeeHairService { EmployeeId = "11223344-5566-7788-99AA-BBCCDDEEFF00", HairServiceId = 1 },
+                //    new EmployeeHairService { EmployeeId = "11223344-5566-7788-99AA-BBCCDDEEFF00", HairServiceId = 2 }
+                //}
             };
             var employee2 = new Employee
             {
                 Id = 2,
                 Name = "Onofras",
-                EmployeeHairServices = new List<EmployeeHairService>()
-                {
-                    new EmployeeHairService { EmployeeId = new Guid("07a26f5a-8d82-4e19-9d89-75b22aa2c7e9"), HairServiceId = 2 },
-                    new EmployeeHairService { EmployeeId = new Guid("07a26f5a-8d82-4e19-9d89-75b22aa2c7e9"), HairServiceId = 3 }
-                }
+                // BEFORE:
+                //EmployeeHairServices = new List<EmployeeHairService>()
+                //{
+                //    new EmployeeHairService { EmployeeId = "11223344-5566-7788-99AB-BBCCDDEEFF00", HairServiceId = 2 },
+                //    new EmployeeHairService { EmployeeId = "11223344-5566-7788-99AB-BBCCDDEEFF00", HairServiceId = 3 }
+                //}
             };
             var employee3 = new Employee
             {
                 Id = 3,
                 Name = "Andreea",
-                EmployeeHairServices = new List<EmployeeHairService>()
-                {
-                    new EmployeeHairService { EmployeeId = new Guid("07a26f5a-8d82-4e19-9d89-75b22aa2c7e9"), HairServiceId = 4 },
-                    new EmployeeHairService { EmployeeId = new Guid("07a26f5a-8d82-4e19-9d89-75b22aa2c7e9"), HairServiceId = 5 }
-                }
+                // BEFORE:
+                //EmployeeHairServices = new List<EmployeeHairService>()
+                //{
+                //    new EmployeeHairService { EmployeeId = "11223344-5566-7788-99AB-BBCCDDEEFF00", HairServiceId = 4 },
+                //    new EmployeeHairService { EmployeeId = "11223344-5566-7788-99AB-BBCCDDEEFF00", HairServiceId = 5 }
+                //}
             };
             db.Employees.AddRange(employee1, employee2, employee3);
 
-            // ??? Am incercat si cu Id in new Appointment si cu AppointmentId in new AppointmentHairService si tot nu merge.
             var appointment1 = new Appointment
             {
                 Id = 1,
-                CustomerId = new Guid("c59b1665-49b8-4d43-a1df-f10fc280ca17"),
-                EmployeeId = new Guid("00cd0b2f-d2d5-4e06-89af-915719a63c11"),
+                CustomerId = "21223344-5566-7788-99AB-BBCCDDEEFF00",
+                EmployeeId = "11223344-5566-7788-99AA-BBCCDDEEFF00",
                 AppointmentHairServices = new List<AppointmentHairService>()
                 {
                     new AppointmentHairService { AppointmentId = 1, HairServiceId = 1 },
@@ -131,8 +133,8 @@ namespace hairDresser.IntegrationTests.Helpers
             var appointment2 = new Appointment
             {
                 Id = 2,
-                CustomerId = new Guid("c59b1665-48b8-4d43-a1df-f10fc280ca17"),
-                EmployeeId = new Guid("07a26f5a-8d82-4e19-9d89-75b22aa2c7e9"),
+                CustomerId = "31223344-5566-7788-99AB-BBCCDDEEFF00",
+                EmployeeId = "11223344-5566-7788-99AB-BBCCDDEEFF00",
                 AppointmentHairServices = new List<AppointmentHairService>()
                 {
                     new AppointmentHairService { AppointmentId = 2, HairServiceId = 2 },
@@ -144,8 +146,8 @@ namespace hairDresser.IntegrationTests.Helpers
             var appointment3 = new Appointment
             {
                 Id = 3,
-                CustomerId = new Guid("c69b1665-48b8-4d43-a1df-f10fc280ca17"),
-                EmployeeId = new Guid("07a26f5a-8d82-4e19-9d89-75b22aa2c7e9"),
+                CustomerId = "41223344-5566-7788-99AB-BBCCDDEEFF00",
+                EmployeeId = "11223344-5566-7788-99AB-BBCCDDEEFF00",
                 AppointmentHairServices = new List<AppointmentHairService>()
                 {
                     new AppointmentHairService { AppointmentId = 3, HairServiceId = 4 },

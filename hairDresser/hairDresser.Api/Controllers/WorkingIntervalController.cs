@@ -74,7 +74,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("all/{employeeId}")]
-        public async Task<IActionResult> GetAllWorkingIntervalsByEmployeeId(Guid employeeId)
+        public async Task<IActionResult> GetAllWorkingIntervalsByEmployeeId(string employeeId)
         {
             var query = new GetAllWorkingIntervalsByEmployeeIdQuery
             {
@@ -92,7 +92,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("all/{employeeId}/{workingDayId}")]
-        public async Task<IActionResult> GetAllWorkingIntervalsByEmployeeIdByDate(Guid employeeId, int workingDayId)
+        public async Task<IActionResult> GetAllWorkingIntervalsByEmployeeIdByDate(string employeeId, int workingDayId)
         {
             var query = new GetAllWorkingIntervalsByEmployeeIdByDateQuery
             {

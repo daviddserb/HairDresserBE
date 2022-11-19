@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +12,20 @@ namespace hairDresser.Domain.Models
     {
         public int Id { get; set; }
 
-        // Customer Customer it's a navigational property. Gives the possibility to comunicate between 2 tables and to make JOIN operations.
-        public User User { get; set; }
+        // BEFORE:
         //public Customer Customer { get; set; }
-        public Guid CustomerId { get; set; }
+        //public int CustomerId { get; set; }
         //public Employee Employee { get; set; }
-        public Guid EmployeeId { get; set; }
+        //public int EmployeeId { get; set; }
+
+        // AFTER:
+        public string CustomerId { get; set; } //scalar property
+        [ForeignKey("CustomerId")]
+        public User Customer { get; set; } //navigation property
+
+        public string EmployeeId { get; set; }
+        [ForeignKey("EmployeeId")]
+        public User Employee { get; set; }
 
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

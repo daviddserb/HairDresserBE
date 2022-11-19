@@ -74,7 +74,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("all/employee/{employeeId}")]
-        public async Task<IActionResult> GetHairServicesByEmployeeId(Guid employeeId)
+        public async Task<IActionResult> GetHairServicesByEmployeeId(string employeeId)
         {
             var query = new GetAllHairServicesByEmployeeIdQuery { EmployeeId = employeeId };
 
@@ -87,7 +87,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("missing/employee/{employeeId}")]
-        public async Task<IActionResult> GetMissingHairServicesByEmployeeId(Guid employeeId)
+        public async Task<IActionResult> GetMissingHairServicesByEmployeeId(string employeeId)
         {
             var query = new GetMissingHairServicesByEmployeeIdQuery { EmployeeId = employeeId };
 

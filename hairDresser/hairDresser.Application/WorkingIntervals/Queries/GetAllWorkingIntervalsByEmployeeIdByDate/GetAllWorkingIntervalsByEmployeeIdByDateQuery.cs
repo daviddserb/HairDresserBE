@@ -10,7 +10,7 @@ namespace hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingInterval
 {
     public class GetAllWorkingIntervalsByEmployeeIdByDateQuery : IRequest<IQueryable<WorkingInterval>>
     {
-        public Guid EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
         public int WorkingDayId { get; set; }
     }
 }

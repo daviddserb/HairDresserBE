@@ -38,7 +38,7 @@ namespace hairDresser.Infrastructure.Repositories
         }
 
         // ???
-        public async Task<IQueryable<EmployeeHairService>> GetHairServicesByEmployeeId(Guid employeeId) {
+        public async Task<IQueryable<EmployeeHairService>> GetHairServicesByEmployeeId(string employeeId) {
             var employeeHairServices = context.EmployeesHairServices
                 .Where(employeeHairService => employeeHairService.EmployeeId == employeeId)
                 .Include(employeeHairService => employeeHairService.HairService);
@@ -46,7 +46,7 @@ namespace hairDresser.Infrastructure.Repositories
             return employeeHairServices;
         }
 
-        public async Task<List<HairService>> GetMissingHairServicesByEmployeeId(Guid employeeId)
+        public async Task<List<HairService>> GetMissingHairServicesByEmployeeId(string employeeId)
         {
             var allHairServices = context.HairServices;
 

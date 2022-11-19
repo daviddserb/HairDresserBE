@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Infrastructure
 {
+    // BEFORE:
+    // public class DataContext : DbContext
+    // AFTER:
     public class DataContext : IdentityDbContext<User>
     {
         public DataContext(DbContextOptions options) : base(options) { }
@@ -20,26 +23,43 @@ namespace hairDresser.Infrastructure
         public DbSet<HairService> HairServices => Set<HairService>();
         public DbSet<WorkingInterval> WorkingIntervals => Set<WorkingInterval>();
         public DbSet<WorkingDay> WorkingDays => Set<WorkingDay>();
+        //public DbSet<User> Users { get; set; } // ???
 
-        // Chiar daca tabelul de legatura (many-to-many) iti este creat automat in DB, daca ii faci si DbSet te ajuta, adica il poti accesa.
+        // Even if the many-to-many connection table is automatically created in the DB, if you set it here it will help you to access it.
         public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();
         public DbSet<AppointmentHairService> AppointmentsHairServices => Set<AppointmentHairService>();
 
-        // !!! Daca rulez aplicatia in Console, trebuie sa decomentez metoda OnConfiguring().
-        // !!! Daca rulez aplicatia in Presentation (API), trebuie sa comentez metoda OnConfiguring() pt. ca altfel am erori de tipul "Multiple database connections".
+        // !!! Daca rulez aplicatia in:
+        // - Console => trebuie sa decomentez metoda OnConfiguring().
+        // - Presentation (API) => trebuie sa comentez metoda OnConfiguring() pt. ca altfel am erori de tipul "Multiple database connections".
         //protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         //{
         //    optionBuilder
-        //        .UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDb;Trusted_Connection=True;MultipleActiveResultSets=True;");
+        //        .UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDB;Trusted_Connection=True;MultipleActiveResultSets=True;");
         //}
 
+        // Before:
+        //protected override void OnModelCreating(ModelBuilder builder)
+        //After:
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder); // ??? Nu stiu ce ii, a aparut in timp ce scriam metoda...
+            base.OnModelCreating(builder);
 
-            builder.Entity<Customer>().HasIndex(customer => customer.Username).IsUnique();
+            //builder.Entity<Customer>().HasIndex(customer => customer.Username).IsUnique();
 
             builder.Entity<HairService>().HasIndex(hairService => hairService.Name).IsUnique();
+
+            // Configuring Foreign Keys With Fluent API (Method 1 = with Collections in the User class).
+            builder.Entity<Appointment>()
+                .HasOne(u => u.Customer)
+                .WithMany(app => app.AppointmentCustomers)
+                .HasForeignKey(u => u.CustomerId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Appointment>()
+                .HasOne(u => u.Employee)
+                .WithMany(app => app.AppointmentEmployees)
+                .HasForeignKey(u => u.EmployeeId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

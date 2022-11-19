@@ -25,7 +25,7 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForA
 
             var maxAppointmentsCustomerPerMonth = 5;
             var customerAppointmentsLastMonth = await _unitOfWork.AppointmentRepository.GetHowManyAppointmentsCustomerHasInLastMonth(request.CustomerId);
-            if (customerAppointmentsLastMonth > maxAppointmentsCustomerPerMonth) throw new ClientException("You went over the limit of maximum appointments for this month!");
+            if (customerAppointmentsLastMonth > maxAppointmentsCustomerPerMonth) throw new ClientException("Went over the limit of maximum appointments for this month!");
 
             var appointmentDate = new DateTime(request.Year, request.Month, request.Date);
             Console.WriteLine($"appointment (am setat doar Date, ignoram Time)= '{appointmentDate}'");
@@ -38,7 +38,12 @@ namespace hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForA
             foreach (var appointment in await _unitOfWork.AppointmentRepository.GetAllAppointmentsByEmployeeIdByDateAsync(request.EmployeeId, appointmentDate))
             {
                 employeeAppointmentsDates.Add((appointment.StartDate, appointment.EndDate));
-                Console.WriteLine($"{appointment.Id} - customer= '{appointment.User.UserName}', employee='{appointment.User.UserName}', start= '{appointment.StartDate}', end= '{appointment.EndDate}'");
+                // BEFORE:
+                //Console.WriteLine($"{appointment.Id} - customer= '{appointment.Customer.Name}', employee='{appointment.Employee.Name}', start= '{appointment.StartDate}', end= '{appointment.EndDate}'");
+                // AFTER v1:
+                Console.WriteLine($"{appointment.Id} - customer= '{appointment.Customer.UserName}', employee='{appointment.Employee.UserName}', start= '{appointment.StartDate}', end= '{appointment.EndDate}'");
+                // AFTER v2:
+                //Console.WriteLine($"{appointment.Id} - customer= '{appointment.User.UserName}', employee='{appointment.User.UserName}', start= '{appointment.StartDate}', end= '{appointment.EndDate}'");
             }
 
             Console.WriteLine("\nSorted appointments:");

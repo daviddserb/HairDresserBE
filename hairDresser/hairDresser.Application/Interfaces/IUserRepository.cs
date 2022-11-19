@@ -12,10 +12,10 @@ namespace hairDresser.Application.Interfaces
         Task CreateUserAsync(User user);
 
         Task<IQueryable<User>> GetAllUsersAsync();
-        Task<User> GetUserByIdAsync(Guid userId);
+        Task<User> GetUserByIdAsync(string userId);
         //Task<IQueryable> GetAllCustomersByRoleAsync();
         //Task<IQueryable> GetAllEmployeesByRoleAsync();
         Task<User> UpdateUserAsync(User user);
-        Task DeleteUserAsync(Guid userId);
+        Task DeleteUserAsync(string userId);
     }
 }

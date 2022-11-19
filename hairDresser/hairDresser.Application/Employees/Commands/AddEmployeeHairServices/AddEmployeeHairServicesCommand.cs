@@ -10,7 +10,7 @@ namespace hairDresser.Application.Employees.Commands.AddEmployeeHairServices
 {
     public class AddEmployeeHairServicesCommand : IRequest<User>
     {
-        public Guid EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
         public List<int> HairServicesIds { get; set; }
     }
 }

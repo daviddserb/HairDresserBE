@@ -10,6 +10,6 @@ namespace hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingInterval
 {
     public class GetAllWorkingIntervalsByEmployeeIdQuery : IRequest<IQueryable<WorkingInterval>>
     {
-        public Guid EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
     }
 }

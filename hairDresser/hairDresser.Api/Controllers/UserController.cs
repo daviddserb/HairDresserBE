@@ -41,19 +41,21 @@ namespace hairDresser.Presentation.Controllers
 
             var user = new User
             {
-                UserName = userInfo.Username,
+                UserName = userInfo.Username, // We need the UserName.
+                Address = userInfo.Address, // We need the Address because I added this column in the User table.
             };
 
             var result = await _userManager.CreateAsync(user, userInfo.Password);
 
             if (!result.Succeeded)
             {
-                // OAuth has some validations on the password, it needs to be a strong one, that means to have at least one: uppercase letter and alphanumeric character (symbols: #, @, %, ...).
-                return BadRequest("Failed to create user because the password is not strong enough.");
+                // OAuth has some validations on its own columns.
+                // For example the password must have at least one: uppercase letter (A, ...), digit (1, ...) and alphanumeric character (symbols: #, @, %, ...).
+                return BadRequest("Failed to create user.");
             }
 
-            //return Ok("User created successfully."); //before
-            return Ok(); //after
+            // ??? Can't send message inside the Ok() method. I need to find a new method like Ok where I can send a message. 
+            return Ok();
         }
 
         [HttpPost]

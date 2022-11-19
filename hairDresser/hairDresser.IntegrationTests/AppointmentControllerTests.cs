@@ -40,8 +40,8 @@ namespace hairDresser.IntegrationTests
         {
             var newAppointment = new AppointmentPostDto
             {
-                CustomerId = 1,
-                EmployeeId = 2,
+                CustomerId = "11223344-5566-7788-99AA-BBCCDDEEFF00",
+                EmployeeId = "21223344-5566-7788-99AA-BBCCDDEEFF00",
                 StartDate = DateTime.Now.AddHours(4),
                 EndDate = DateTime.Now.AddHours(6),
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// I don't use the Employee class anymore.
 namespace hairDresser.Domain.Models
 {
     public class Employee
@@ -11,8 +12,8 @@ namespace hairDresser.Domain.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public ICollection<EmployeeHairService> EmployeeHairServices { get; set; }
-        public ICollection<WorkingInterval> EmployeeWorkingIntervals { get; set; }
-        public ICollection<Appointment> Appointments { get; set; }
+        //public ICollection<EmployeeHairService> EmployeeHairServices { get; set; }
+        //public ICollection<WorkingInterval> EmployeeWorkingIntervals { get; set; }
+        //public ICollection<Appointment> Appointments { get; set; }
     }
 }

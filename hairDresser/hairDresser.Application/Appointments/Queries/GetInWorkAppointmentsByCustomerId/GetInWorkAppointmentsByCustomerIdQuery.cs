@@ -10,6 +10,6 @@ namespace hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByCu
 {
     public class GetInWorkAppointmentsByCustomerIdQuery : IRequest<IQueryable<Appointment>>
     {
-        public Guid CustomerId { get; set; }
+        public string CustomerId { get; set; }
     }
 }

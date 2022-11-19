@@ -10,6 +10,6 @@ namespace hairDresser.Application.Users.Queries.GetUserById
 {
     public class GetUserByIdQuery : IRequest<User>
     {
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<Appointment>> ReadAppointmentsAsync(int pageNumber, int PageSize)
         {
-            //before:
+            // BEFORE:
             //return context.Appointments
             //    .Include(customers => customers.Customer)
             //    .Include(employees => employees.Employee)
@@ -34,9 +34,13 @@ namespace hairDresser.Infrastructure.Repositories
             //    .ThenInclude(hairServices => hairServices.HairService)
             //    .Skip((pageNumber - 1) * PageSize)
             //    .Take(PageSize);
-            //after:
+            // AFTER:
             return context.Appointments
-                .Include(users => users.User)
+                // BEFORE:
+                //.Include(users => users.User)
+                // AFTER:
+                .Include(customers => customers.Customer)
+                .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
                 .ThenInclude(hairServices => hairServices.HairService)
                 .Skip((pageNumber - 1) * PageSize)
@@ -45,22 +49,26 @@ namespace hairDresser.Infrastructure.Repositories
         }
         public async Task<Appointment> GetAppointmentByIdAsync(int appointmentId)
         {
-            //before:
+            // BEFORE:
             //return await context.Appointments
             //    .Include(customers => customers.Customer)
             //    .Include(employees => employees.Employee)
             //    .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
             //    .ThenInclude(hairServices => hairServices.HairService)
             //    .FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
-            //after:
-             return await context.Appointments
-                .Include(users => users.User)
-                .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
-                .ThenInclude(hairServices => hairServices.HairService)
-                .FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
+            // AFTER:
+            return await context.Appointments
+                // BEFORE:
+                //.Include(users => users.User)
+                // AFTER:
+                .Include(customers => customers.Customer)
+                .Include(employees => employees.Employee)
+               .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
+               .ThenInclude(hairServices => hairServices.HairService)
+               .FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
         }
 
-        public async Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdByDateAsync(Guid customerId, DateTime appointmentDate)
+        public async Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdByDateAsync(string customerId, DateTime appointmentDate)
         {
             return context.Appointments
                 .Where(date => date.StartDate.Date == appointmentDate.Date)
@@ -69,26 +77,31 @@ namespace hairDresser.Infrastructure.Repositories
         }
 
         // Pt. istoricul de appointment-uri ale unui customer (toate).
-        public async Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdAsync(Guid customerId)
+        public async Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdAsync(string customerId)
         {
-            //before:
+            // BEFORE:
             //return context.Appointments
             //    .Where(appointment => appointment.CustomerId == customerId)
             //    .Include(customers => customers.Customer)
             //    .Include(employees => employees.Employee)
             //    .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
             //    .ThenInclude(hairServices => hairServices.HairService);
-            //after:
+            // AFTER:
             return context.Appointments
                 .Where(appointment => appointment.CustomerId == customerId)
-                .Include(users => users.User)
+                // BEFORE:
+                //.Include(users => users.User)
+                // AFTER:
+                .Include(customers => customers.Customer)
+                .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
                 .ThenInclude(hairServices => hairServices.HairService);
         }
+
         // Pt. appointment-urile din viitor (neterminate) ale unui customer.
-        public async Task<IQueryable<Appointment>> GetInWorkAppointmentsByCustomerIdAsync(Guid customerId)
+        public async Task<IQueryable<Appointment>> GetInWorkAppointmentsByCustomerIdAsync(string customerId)
         {
-            //before:
+            // BEFORE:
             //return context.Appointments
             //    .Where(appointment => appointment.CustomerId == customerId)
             //    .Where(date => date.StartDate >= DateTime.Now.Date)
@@ -96,15 +109,19 @@ namespace hairDresser.Infrastructure.Repositories
             //    .Include(employees => employees.Employee)
             //    .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
             //    .ThenInclude(hairServices => hairServices.HairService);
-            //after:
+            // AFTER:
             return context.Appointments
                 .Where(appointment => appointment.CustomerId == customerId)
                 .Where(date => date.StartDate >= DateTime.Now.Date)
-                .Include(users => users.User)
+                // BEFORE:
+                //.Include(users => users.User)
+                // AFTER:
+                .Include(customers => customers.Customer)
+                .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
                 .ThenInclude(hairServices => hairServices.HairService);
         }
-        public async Task<int> GetHowManyAppointmentsCustomerHasInLastMonth(Guid customerId)
+        public async Task<int> GetHowManyAppointmentsCustomerHasInLastMonth(string customerId)
         {
             return context.Appointments
                 .Where(appointment => appointment.CustomerId == customerId)
@@ -112,31 +129,39 @@ namespace hairDresser.Infrastructure.Repositories
                 .Count();
         }
 
-        // Asta ajuta cand Customer vrea sa faca un Appointment, si trebuie sa aleaga un Employee si un Date.
-        public async Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdByDateAsync(Guid employeeId, DateTime appointmentDate)
+        public async Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdByDateAsync(string employeeId, DateTime appointmentDate)
         {
             return context.Appointments
                 .Where(date => date.StartDate.Date == appointmentDate.Date)
                 .Where(id => id.EmployeeId == employeeId)
-                //before:
+                // BEFORE:
                 //.Include(customers => customers.Customer)
                 //.Include(employees => employees.Employee);
-                //after:
-                .Include(users => users.User);
+
+                // AFTER:
+                // BEFORE:
+                //.Include(users => users.User);
+                // AFTER:
+                .Include(customers => customers.Customer)
+                .Include(employees => employees.Employee);
         }
-        public async Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdAsync(Guid employeeId)
+        public async Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdAsync(string employeeId)
         {
-            //before:
+            // BEFORE:
             //return context.Appointments
             //    .Where(appointment => appointment.EmployeeId == employeeId)
             //    .Include(customers => customers.Customer)
             //    .Include(employees => employees.Employee)
             //    .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
             //    .ThenInclude(hairServices => hairServices.HairService);
-            //after:
+            // AFTER:
             return context.Appointments
                 .Where(appointment => appointment.EmployeeId == employeeId)
-                .Include(users => users.User)
+                // BEFORE:
+                //.Include(users => users.User)
+                // AFTER:
+                .Include(customers => customers.Customer)
+                .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
                 .ThenInclude(hairServices => hairServices.HairService);
         }

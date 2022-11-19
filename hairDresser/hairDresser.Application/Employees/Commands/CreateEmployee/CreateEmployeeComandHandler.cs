@@ -20,21 +20,22 @@ namespace hairDresser.Application.Employees.Commands.CreateEmployee
 
         public async Task<Employee> Handle(CreateEmployeeComand request, CancellationToken cancellationToken)
         {
+            // BEFORE:
             var employee = new Employee
             {
                 Name = request.Name,
-                EmployeeHairServices = request.HairServicesIds.Select(hsi => new EmployeeHairService()
-                {
-                    HairServiceId = hsi
-                }).ToList()
+                //EmployeeHairServices = request.HairServicesIds.Select(hsi => new EmployeeHairService()
+                //{
+                //    HairServiceId = hsi
+                //}).ToList()
             };
-
             await _unitOfWork.EmployeeRepository.CreateEmployeeAsync(employee);
             await _unitOfWork.SaveAsync();
-
             var createdEmployee = await _unitOfWork.EmployeeRepository.GetEmployeeByIdAsync(employee.Id);
-
             return createdEmployee;
+
+            // AFTER:
+            // ???
         }
     }
 }

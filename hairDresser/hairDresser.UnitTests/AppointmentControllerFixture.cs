@@ -146,9 +146,9 @@ namespace hairDresser.UnitTests
             //Arrange:
             var appointmentPostDto = new AppointmentPostDto
             {
-                // Nu-i obligatoriu sa pun toate campurile: HairServicesIds = new List<int> { 1, 2 },
-                CustomerId = 1,
-                EmployeeId = 1,
+                // Nu-i obligatoriu sa pun toate campurile.
+                CustomerId = "11223344-5566-7788-99AA-BBCCDDEEFF00",
+                EmployeeId = "11223344-5566-7788-99AA-BBCCDDEEFF01",
                 HairServicesIds = new List<int> { 1, 2 },
                 StartDate = DateTime.Now.AddHours(1),
                 EndDate = DateTime.Now.AddHours(2)
@@ -158,16 +158,16 @@ namespace hairDresser.UnitTests
                 .Setup(mapper => mapper.Map<CreateAppointmentCommand>(It.Is<AppointmentPostDto>(app => app == appointmentPostDto)))
                 .Returns(new CreateAppointmentCommand
                 {
-                    CustomerId = new Guid("c59b1665-49b8-4d43-a1df-f10fc280ca17"),
-                    EmployeeId = new Guid("c59b1665-49b8-4d44-a1df-f10fc280ca17"),
+                    CustomerId = "11223344-5566-7788-99AA-BBCCDDEEFF00",
+                    EmployeeId = "11223344-5566-7788-89AA-BBCCDDEEFF00",
                     StartDate = DateTime.Now.AddHours(1),
                     EndDate = DateTime.Now.AddHours(4)
                 });
 
             var appointment = new Appointment
             {
-                CustomerId = new Guid("c59b1665-49b8-4d44-a2df-f10fc280ca17"),
-                EmployeeId = new Guid("c59b1665-49b8-4d44-a1df-f10fc280ca17"),
+                CustomerId = "11223345-5566-7788-99AA-BBCCDDEEFF00",
+                EmployeeId = "11223344-5566-7788-89AA-BBCCDDEEFF00",
                 StartDate = DateTime.Now.AddHours(1),
                 EndDate = DateTime.Now.AddHours(6)
             };
@@ -181,7 +181,7 @@ namespace hairDresser.UnitTests
                 .Returns(new AppointmentGetDto
                 {
                     CustomerName = "Gigel",
-                    CustomerId = 1,
+                    CustomerId = "11223344-5566-7788-99AA-BBCCDDEEFF00",
                     EmployeeName = "Ana",
                     StartDate = DateTime.Now.AddHours(1),
                     EndDate = DateTime.Now.AddHours(7)

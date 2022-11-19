@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 {
-    // Trebuie sa implementam interfata IRequestHandler, care poate sa primeasca 2 parametrii: request-ul (mesajul = command/query) care este obligatoriu si raspunsul mesajului (ce returneaza el).
+    // Trebuie sa implementam interfata IRequestHandler, care poate sa primeasca 2 parametrii: request-ul (command/query) care este obligatoriu si raspunsul request-ului (ce returneaza el).
     public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointmentCommand, Appointment>
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -22,7 +22,6 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 
         public async Task<Appointment> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
         {
-            Console.WriteLine("CreateAppointmentCommandHandler");
             var appointment = new Appointment();
 
             var customer = await _unitOfWork.UserRepository.GetUserByIdAsync(request.CustomerId);
@@ -32,19 +31,17 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
 
             var hairServices = await _unitOfWork.HairServiceRepository.GetAllHairServicesByIdsAsync(request.HairServicesIds);
-            if (hairServices == null) throw new NotFoundException($"Some of the hair services with the ids '{String.Join(", ", request.HairServicesIds)}' does not exist!");
+            if (hairServices == null) throw new NotFoundException($"Some or all of the hair services with the ids '{String.Join(", ", request.HairServicesIds)}' do not exist!");
 
-            // ??? new Guid(). Zice ca customer.Id este de tipul string, dar nu inteleg de ce.
-            appointment.CustomerId = new Guid(customer.Id);
-            appointment.EmployeeId = new Guid(employee.Id);
+            appointment.CustomerId = customer.Id;
+            appointment.EmployeeId = employee.Id;
             appointment.StartDate = request.StartDate;
             appointment.EndDate = request.EndDate;
             appointment.Price = request.Price;
             appointment.AppointmentHairServices = hairServices
                 .Select(hairService => new AppointmentHairService()
                 {
-                    // Save only the HairServiceId, because AppointmentId still doesn't exist, it will exist only after the row is inserted in the Appointments table, and after that,
-                    // EF Core will know how to make the link between the Id from the Appointment table and the AppointmentId from the AppointmentsHairService table.
+                    // Save only HairServiceId because AppointmentId still doesn't exist. It will exist only after the row is inserted in the Appointments table, but EF Core will know how to make the link between the Id from the Appointment table and the AppointmentId from the AppointmentsHairService table.
                     HairServiceId = hairService.Id
                 })
                 .ToList();

@@ -8,19 +8,19 @@ namespace hairDresser.Infrastructure.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "HairServicesId",
-                table: "Appointments");
+            //migrationBuilder.DropColumn(
+            //    name: "HairServicesId",
+            //    table: "Appointments");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "HairServicesId",
-                table: "Appointments",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+            //migrationBuilder.AddColumn<string>(
+            //    name: "HairServicesId",
+            //    table: "Appointments",
+            //    type: "nvarchar(max)",
+            //    nullable: false,
+            //    defaultValue: "");
         }
     }
 }

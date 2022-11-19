@@ -7,14 +7,14 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
 {
     public class AppointmentGetDto
     {
-        // When somebody wants to get an appointment, the properties defines the information that we select for the user to see.
+        // When somebody wants to get an appointment, these properties define the informations that we select for the user to see.
 
         public int Id { get; set; }
 
-        public int? CustomerId { get; set; }
+        public string? CustomerId { get; set; }
         public string CustomerName { get; set; }
 
-        public int? EmployeeId { get; set; }
+        public string? EmployeeId { get; set; }
         public string EmployeeName { get; set; }
 
         public DateTime StartDate { get; set; }

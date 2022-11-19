@@ -12,8 +12,8 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
     public class CreateAppointmentCommand : IRequest<Appointment>
     {
         // Acestea sunt proprietatile fara de care nu pot sa fac un appointment, adica am nevoie de user input in toate si le voi putea folosi in Handler.
-        public Guid CustomerId { get; set; }
-        public Guid EmployeeId { get; set; }
+        public string CustomerId { get; set; }
+        public string EmployeeId { get; set; }
         public List<int> HairServicesIds { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

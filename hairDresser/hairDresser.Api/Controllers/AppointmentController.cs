@@ -85,7 +85,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("all/customer/{customerId}")]
-        public async Task<IActionResult> GetAppointmentsByCustomerId(Guid customerId)
+        public async Task<IActionResult> GetAppointmentsByCustomerId(string customerId)
         {
             var query = new GetAllAppointmentsByCustomerIdQuery { CustomerId = customerId };
 
@@ -101,7 +101,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("in-work/customer/{customerId}")]
-        public async Task<IActionResult> GetInWorkAppointmentsByCustomerId(Guid customerId)
+        public async Task<IActionResult> GetInWorkAppointmentsByCustomerId(string customerId)
         {
             var query = new GetInWorkAppointmentsByCustomerIdQuery { CustomerId = customerId };
 
@@ -116,7 +116,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("all/employee/{employeeId}")]
-        public async Task<IActionResult> GetAppointmentsByEmployeeId(Guid employeeId)
+        public async Task<IActionResult> GetAppointmentsByEmployeeId(string employeeId)
         {
             var query = new GetAllAppointmentsByEmployeeIdQuery { EmployeeId = employeeId };
 

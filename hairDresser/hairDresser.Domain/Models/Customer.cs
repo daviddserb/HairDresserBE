@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// I don't use the Customer class anymore.
 namespace hairDresser.Domain.Models
 {
     public class Customer
@@ -16,6 +17,6 @@ namespace hairDresser.Domain.Models
         public string Phone { get; set; }
         public string Address { get; set; }
 
-        public ICollection<Appointment> Appointments { get; set; }
+        //public ICollection<Appointment> Appointments { get; set; }
     }
 }

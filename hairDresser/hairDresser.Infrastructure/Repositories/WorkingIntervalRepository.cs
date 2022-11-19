@@ -28,34 +28,37 @@ namespace hairDresser.Infrastructure.Repositories
             //Include spune ca faci JOIN intre WorkingIntervals si WorkingDay, care este posibil pt. ca ai ai un navigational property de Day in WorkingInterval si atunci poti face .WorkingDay pe variabila care salveaza acest return.
             return context.WorkingIntervals
                 .Include(obj => obj.WorkingDay)
-                .Include(obj => obj.User);
+                // BEFORE:
+                //.Include(obj => obj.Employee);
+                // AFTER:
+                .Include(obj => obj.Employee);
         }
 
         public async Task<WorkingInterval> GetWorkingIntervalByIdAsync(int workingIntervalId)
         {
             var workingInterval = await context.WorkingIntervals
                 .Include(obj => obj.WorkingDay)
-                .Include(obj => obj.User)
+                .Include(obj => obj.Employee)
                 .FirstOrDefaultAsync(workingInterval => workingInterval.Id == workingIntervalId);
 
             return workingInterval;
         }
 
-        public async Task<IQueryable<WorkingInterval>> GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(Guid employeeId, int workingDayId)
+        public async Task<IQueryable<WorkingInterval>> GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(string employeeId, int workingDayId)
         {
             return context.WorkingIntervals
-                .Where(employee => employee.User.Id.Equals(employeeId))
+                .Where(employee => employee.Employee.Id.Equals(employeeId))
                 .Where(workingDay => workingDay.WorkingDay.Id == workingDayId)
                 .Include(obj => obj.WorkingDay)
-                .Include(obj => obj.User);
+                .Include(obj => obj.Employee);
         }
 
-        public async Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsByEmployeeIdAsync(Guid employeeId)
+        public async Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsByEmployeeIdAsync(string employeeId)
         {
             return context.WorkingIntervals
-                .Where(employee => employee.User.Id.Equals(employeeId))
+                .Where(employee => employee.Employee.Id.Equals(employeeId))
                 .Include(obj => obj.WorkingDay)
-                .Include(obj => obj.User);
+                .Include(obj => obj.Employee);
         }
 
         public async Task<WorkingInterval> UpdateWorkingIntervalAsync(WorkingInterval workingInterval)

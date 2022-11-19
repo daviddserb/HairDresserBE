@@ -8,11 +8,11 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
     {
         [Required(ErrorMessage = "Customer id required.")]
         [Range(1, int.MaxValue)]
-        public int? CustomerId { get; set; }
+        public string? CustomerId { get; set; }
 
         [Required(ErrorMessage = "Employee id required.")]
         [Range(1, int.MaxValue)]
-        public int? EmployeeId { get; set; }
+        public string? EmployeeId { get; set; }
 
         [Required]
         public List<int>? HairServicesIds { get; set; }

@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hairDresser.Infrastructure;
 
@@ -12,10 +11,9 @@ using hairDresser.Infrastructure;
 namespace hairDresser.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221104093441_replaceCustomerAndEmployeeWithUserAuth3")]
-    partial class replaceCustomerAndEmployeeWithUserAuth3
+    partial class DatabaseContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,17 +30,13 @@ namespace hairDresser.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("CustomerId1")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("EmployeeId1")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -53,22 +47,14 @@ namespace hairDresser.Infrastructure.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime?>("isDeleted")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId1");
+                    b.HasIndex("CustomerId");
 
-                    b.HasIndex("EmployeeId1");
-
-                    b.HasIndex("UserId1");
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Appointments");
                 });
@@ -161,25 +147,18 @@ namespace hairDresser.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("EmployeeId1")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("HairServiceId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId1");
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("HairServiceId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("EmployeesHairServices");
                 });
@@ -304,11 +283,9 @@ namespace hairDresser.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("EmployeeId1")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<TimeSpan>("EndTime")
                         .HasColumnType("time");
@@ -316,18 +293,12 @@ namespace hairDresser.Infrastructure.Migrations
                     b.Property<TimeSpan>("StartTime")
                         .HasColumnType("time");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("WorkingDayId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId1");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("WorkingDayId");
 
@@ -469,19 +440,21 @@ namespace hairDresser.Infrastructure.Migrations
 
             modelBuilder.Entity("hairDresser.Domain.Models.Appointment", b =>
                 {
-                    b.HasOne("hairDresser.Domain.Models.Customer", null)
-                        .WithMany("Appointments")
-                        .HasForeignKey("CustomerId1");
+                    b.HasOne("hairDresser.Domain.Models.User", "Customer")
+                        .WithMany("AppointmentCustomers")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.HasOne("hairDresser.Domain.Models.Employee", null)
-                        .WithMany("Appointments")
-                        .HasForeignKey("EmployeeId1");
+                    b.HasOne("hairDresser.Domain.Models.User", "Employee")
+                        .WithMany("AppointmentEmployees")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.HasOne("hairDresser.Domain.Models.User", "User")
-                        .WithMany("Appointments")
-                        .HasForeignKey("UserId1");
+                    b.Navigation("Customer");
 
-                    b.Navigation("User");
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("hairDresser.Domain.Models.AppointmentHairService", b =>
@@ -505,9 +478,11 @@ namespace hairDresser.Infrastructure.Migrations
 
             modelBuilder.Entity("hairDresser.Domain.Models.EmployeeHairService", b =>
                 {
-                    b.HasOne("hairDresser.Domain.Models.Employee", null)
+                    b.HasOne("hairDresser.Domain.Models.User", "Employee")
                         .WithMany("EmployeeHairServices")
-                        .HasForeignKey("EmployeeId1");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("hairDresser.Domain.Models.HairService", "HairService")
                         .WithMany("EmployeeHairServices")
@@ -515,24 +490,16 @@ namespace hairDresser.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("hairDresser.Domain.Models.User", "User")
-                        .WithMany("EmployeeHairServices")
-                        .HasForeignKey("UserId");
+                    b.Navigation("Employee");
 
                     b.Navigation("HairService");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("hairDresser.Domain.Models.WorkingInterval", b =>
                 {
-                    b.HasOne("hairDresser.Domain.Models.Employee", null)
+                    b.HasOne("hairDresser.Domain.Models.User", "Employee")
                         .WithMany("EmployeeWorkingIntervals")
-                        .HasForeignKey("EmployeeId1");
-
-                    b.HasOne("hairDresser.Domain.Models.User", "User")
-                        .WithMany("EmployeeWorkingIntervals")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -542,7 +509,7 @@ namespace hairDresser.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Employee");
 
                     b.Navigation("WorkingDay");
                 });
@@ -603,20 +570,6 @@ namespace hairDresser.Infrastructure.Migrations
                     b.Navigation("AppointmentHairServices");
                 });
 
-            modelBuilder.Entity("hairDresser.Domain.Models.Customer", b =>
-                {
-                    b.Navigation("Appointments");
-                });
-
-            modelBuilder.Entity("hairDresser.Domain.Models.Employee", b =>
-                {
-                    b.Navigation("Appointments");
-
-                    b.Navigation("EmployeeHairServices");
-
-                    b.Navigation("EmployeeWorkingIntervals");
-                });
-
             modelBuilder.Entity("hairDresser.Domain.Models.HairService", b =>
                 {
                     b.Navigation("AppointmentHairServices");
@@ -626,7 +579,9 @@ namespace hairDresser.Infrastructure.Migrations
 
             modelBuilder.Entity("hairDresser.Domain.Models.User", b =>
                 {
-                    b.Navigation("Appointments");
+                    b.Navigation("AppointmentCustomers");
+
+                    b.Navigation("AppointmentEmployees");
 
                     b.Navigation("EmployeeHairServices");
 

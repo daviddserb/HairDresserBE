@@ -2,7 +2,7 @@
 {
     public class EmployeeHairServicePostDto
     {
-        public Guid EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
         public List<int> HairServicesIds { get; set; }
     }
 }

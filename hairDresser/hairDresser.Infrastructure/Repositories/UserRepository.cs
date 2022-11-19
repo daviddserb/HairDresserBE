@@ -23,7 +23,7 @@ namespace hairDresser.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task DeleteUserAsync(Guid userId)
+        public async Task DeleteUserAsync(string userId)
         {
             throw new NotImplementedException();
         }
@@ -42,7 +42,7 @@ namespace hairDresser.Infrastructure.Repositories
             return allUsers;
         }
 
-        public async Task<User> GetUserByIdAsync(Guid userId)
+        public async Task<User> GetUserByIdAsync(string userId)
         {
             return await context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
         }

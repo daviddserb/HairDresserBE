@@ -26,29 +26,32 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<Employee>> ReadEmployeesAsync()
         {
-            var employees = context.Employees
-                .Include(employeeWorkingIntervals => employeeWorkingIntervals.EmployeeWorkingIntervals)
-                .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
-                .ThenInclude(hairServices => hairServices.HairService);
+            var employees = context.Employees;
+                // BEFORE:
+                //.Include(employeeWorkingIntervals => employeeWorkingIntervals.EmployeeWorkingIntervals)
+                //.Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
+                //.ThenInclude(hairServices => hairServices.HairService);
             return employees;
         }
 
         public async Task<Employee> GetEmployeeByIdAsync(int employeeId)
         {
             var employee = await context.Employees
-                .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
-                .ThenInclude(hairServices => hairServices.HairService)
+                // BEFORE:
+                //.Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
+                //.ThenInclude(hairServices => hairServices.HairService)
                 .FirstOrDefaultAsync(employee => employee.Id == employeeId);
             return employee;
         }
 
         public async Task<IQueryable<Employee>> GetAllEmployeesByServicesAsync(List<int> servicesIds)
         {
-            var validEmployees = context.Employees
-                .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
-                .ThenInclude(hairServices => hairServices.HairService)
-                .ToList()
-                .Where(employee => servicesIds.All(serviceId => employee.EmployeeHairServices.Any(hairservice => hairservice.HairServiceId == serviceId)));
+            var validEmployees = context.Employees;
+                // BEFORE:
+                //.Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
+                //.ThenInclude(hairServices => hairServices.HairService)
+                //.ToList()
+                //.Where(employee => servicesIds.All(serviceId => employee.EmployeeHairServices.Any(hairservice => hairservice.HairServiceId == serviceId)));
             return validEmployees.AsQueryable();
         }
 
@@ -64,7 +67,7 @@ namespace hairDresser.Infrastructure.Repositories
             context.Employees.Remove(employee);
         }
 
-        //EmployeeHairService:
+        // EmployeeHairService:
         public async Task<EmployeeHairService> CheckIfEmployeeHairServiceIdExists(int employeeHairServiceId)
         {
             var employeeHairService = await context.EmployeesHairServices
