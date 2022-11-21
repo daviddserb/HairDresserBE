@@ -11,10 +11,10 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
 
         public int Id { get; set; }
 
-        public string? CustomerId { get; set; }
+        public string CustomerId { get; set; }
         public string CustomerName { get; set; }
 
-        public string? EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
         public string EmployeeName { get; set; }
 
         public DateTime StartDate { get; set; }
@@ -24,6 +24,6 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
 
         public DateTime? isDeleted { get; set; }
 
-        public ICollection<AppointmentHairServiceDto>? AppointmentHairServices { get; set; }
+        public ICollection<AppointmentHairServiceDto> AppointmentHairServices { get; set; }
     }
 }

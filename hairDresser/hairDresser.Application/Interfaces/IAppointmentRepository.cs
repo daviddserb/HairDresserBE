@@ -11,7 +11,7 @@ namespace hairDresser.Application.Interfaces
     {
         Task CreateAppointmentAsync(Appointment appointment);
 
-        Task<IQueryable<Appointment>> ReadAppointmentsAsync(int pageNumber, int pageSize);
+        Task<IQueryable<Appointment>> GetAllAppointmentsAsync(int pageNumber, int pageSize);
         Task<Appointment> GetAppointmentByIdAsync(int appointmentId);
         Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdByDateAsync(string customerId, DateTime appointmentDate);
         Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdAsync(string customerId);

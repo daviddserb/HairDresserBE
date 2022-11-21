@@ -8,30 +8,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForAppointmentByDate
+namespace hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate
 {
-    public class GetEmployeeFreeIntervalsForAppointmentByDateQueryHandler : IRequestHandler<GetEmployeeFreeIntervalsForAppointmentByDateQuery, List<EmployeeFreeInterval>>
+    public class GetEmployeeFreeIntervalsByDateQueryHandler : IRequestHandler<GetEmployeeFreeIntervalsByDateQuery, List<EmployeeFreeInterval>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public GetEmployeeFreeIntervalsForAppointmentByDateQueryHandler(IUnitOfWork unitOfWork)
+        public GetEmployeeFreeIntervalsByDateQueryHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<EmployeeFreeInterval>> Handle(GetEmployeeFreeIntervalsForAppointmentByDateQuery request, CancellationToken cancellationToken)
+        public async Task<List<EmployeeFreeInterval>> Handle(GetEmployeeFreeIntervalsByDateQuery request, CancellationToken cancellationToken)
         {
-            Console.WriteLine("\nGetEmployeeIntervalsByDateQueryHandler:");
-
-            var maxAppointmentsCustomerPerMonth = 5;
+            // Set a maximum number of appointments per month for the customer.
+            var maximumCustomerAppointmentsPerMonth = 5;
             var customerAppointmentsLastMonth = await _unitOfWork.AppointmentRepository.GetHowManyAppointmentsCustomerHasInLastMonth(request.CustomerId);
-            if (customerAppointmentsLastMonth > maxAppointmentsCustomerPerMonth) throw new ClientException("Went over the limit of maximum appointments for this month!");
+            if (customerAppointmentsLastMonth > maximumCustomerAppointmentsPerMonth) throw new ClientException("Can't create more appointments for this month because you have reached the appointments limit!");
 
             var appointmentDate = new DateTime(request.Year, request.Month, request.Date);
-            Console.WriteLine($"appointment (am setat doar Date, ignoram Time)= '{appointmentDate}'");
+            Console.WriteLine($"appointment (with the selected Date, ignore Time)= '{appointmentDate}'");
 
             var duration = TimeSpan.FromMinutes(request.DurationInMinutes);
-            Console.WriteLine($"\nduration, from minutes to TimeSpan,= '{duration}'");
+            Console.WriteLine($"\nduration (converted from minutes to TimeSpan)= '{duration}'");
 
             var employeeAppointmentsDates = new List<(DateTime startDate, DateTime endDate)>();
             Console.WriteLine("\nAll the appointments from the selected employee and the selected date:");

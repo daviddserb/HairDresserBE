@@ -31,25 +31,18 @@ namespace hairDresser.Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAppointmentAsync([FromBody] AppointmentPostDto appointmentInput)
         {
-            _logger.LogInformation("Start process: Create appointment...");
-            Console.WriteLine("CreateAppointmentAsync");
+            //_logger.LogInformation("Start process: Create appointment...");
+            //Console.WriteLine("CreateAppointmentAsync");
 
             // Map the object type, which means change the type from AppointmentPostDto to CreateAppointmentCommand and match (map) as well the properties (by type and name).
             var command = _mapper.Map<CreateAppointmentCommand>(appointmentInput);
 
-            // Send() method calls the Handler, so we will have the result from the Handle method.
+            // Send() method calls the Handler => will have the result (return) from the Handle method.
             var appointment = await _mediator.Send(command);
-
-            // ??? Nu cred ca mai am nevoie de asta
-            //if (appointment == null)
-            //{
-            //    _logger.LogError("Can't create appointment because invalid data input.");
-            //    return BadRequest();
-            //}
 
             var mappedAppointment = _mapper.Map<AppointmentGetDto>(appointment);
 
-            _logger.LogInformation("Appointment created successfully.");
+            //_logger.LogInformation("Appointment created successfully.");
 
             return CreatedAtAction(nameof(GetAppointmentById), new { appointmentId = mappedAppointment.Id }, mappedAppointment);
         }

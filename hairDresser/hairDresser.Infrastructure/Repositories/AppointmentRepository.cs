@@ -24,7 +24,7 @@ namespace hairDresser.Infrastructure.Repositories
             await context.Appointments.AddAsync(appointment);
         }
 
-        public async Task<IQueryable<Appointment>> ReadAppointmentsAsync(int pageNumber, int PageSize)
+        public async Task<IQueryable<Appointment>> GetAllAppointmentsAsync(int pageNumber, int PageSize)
         {
             // BEFORE:
             //return context.Appointments
@@ -58,14 +58,15 @@ namespace hairDresser.Infrastructure.Repositories
             //    .FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
             // AFTER:
             return await context.Appointments
+
                 // BEFORE:
                 //.Include(users => users.User)
                 // AFTER:
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee)
-               .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
-               .ThenInclude(hairServices => hairServices.HairService)
-               .FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
+                .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
+                .ThenInclude(hairServices => hairServices.HairService)
+                .FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
         }
 
         public async Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdByDateAsync(string customerId, DateTime appointmentDate)
@@ -76,7 +77,6 @@ namespace hairDresser.Infrastructure.Repositories
                 .OrderBy(date => date.StartDate);
         }
 
-        // Pt. istoricul de appointment-uri ale unui customer (toate).
         public async Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdAsync(string customerId)
         {
             // BEFORE:

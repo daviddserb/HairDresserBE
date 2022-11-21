@@ -31,7 +31,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
 
             var hairServices = await _unitOfWork.HairServiceRepository.GetAllHairServicesByIdsAsync(request.HairServicesIds);
-            if (hairServices == null) throw new NotFoundException($"Some or all of the hair services with the ids '{String.Join(", ", request.HairServicesIds)}' do not exist!");
+            if (hairServices == null) throw new NotFoundException($"All or some of the hair services with the ids '{String.Join(", ", request.HairServicesIds)}' do not exist!");
 
             appointment.CustomerId = customer.Id;
             appointment.EmployeeId = employee.Id;
@@ -41,7 +41,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             appointment.AppointmentHairServices = hairServices
                 .Select(hairService => new AppointmentHairService()
                 {
-                    // Save only HairServiceId because AppointmentId still doesn't exist. It will exist only after the row is inserted in the Appointments table, but EF Core will know how to make the link between the Id from the Appointment table and the AppointmentId from the AppointmentsHairService table.
+                    // Save only HairServiceId because AppointmentId still doesn't exist. It will exist only after the row is inserted in the Appointments table, but EFC will know how to make the link between the Appointment table (Id column) to the AppointmentsHairService table (AppointmentId column).
                     HairServiceId = hairService.Id
                 })
                 .ToList();

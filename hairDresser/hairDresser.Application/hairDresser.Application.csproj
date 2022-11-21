@@ -16,9 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Users\Commands\CreateUser\" />
-    <Folder Include="Users\Commands\DeleteUser\" />
-    <Folder Include="Users\Commands\UpdateUser\" />
+    <Folder Include="Users\Commands\RegisterUser\" />
+    <Folder Include="Users\Commands\AssignRoleToUser\" />
+    <Folder Include="Users\Commands\LoginUser\" />
     <Folder Include="Users\Queries\GetAllCustomersByRole\" />
     <Folder Include="Users\Queries\GetAllEmployeesByRole\" />
   </ItemGroup>

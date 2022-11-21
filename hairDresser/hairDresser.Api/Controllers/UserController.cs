@@ -1,11 +1,20 @@
 ﻿using AutoMapper;
+using hairDresser.Application.Users.Commands.AddHairServicesToEmployee;
+using hairDresser.Application.Users.Commands.DeleteEmployeeHairService;
+using hairDresser.Application.Users.Commands.DeleteUser;
+using hairDresser.Application.Users.Commands.UpdateUser;
 using hairDresser.Application.Users.Queries.GetAllUsers;
+using hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate;
+using hairDresser.Application.Users.Queries.GetEmployeesByHairServices;
+using hairDresser.Application.Users.Queries.GetUserById;
 using hairDresser.Domain.Models;
+using hairDresser.Presentation.Dto.EmployeeDtos;
+using hairDresser.Presentation.Dto.EmployeeFreeIntervalsDtos;
+using hairDresser.Presentation.Dto.EmployeeHairServiceDtos;
 using hairDresser.Presentation.Dto.UserDtos;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -32,7 +41,6 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpPost]
         [Route("register")]
-        //??? Sa vad prin ce trimit userInfo, FromQuery, FromBody, fara nimic si sa vad diferentele.
         public async Task<IActionResult> Register(UserRegisterDto userInfo)
         {
             var userExists = await _userManager.FindByNameAsync(userInfo.Username);
@@ -41,8 +49,10 @@ namespace hairDresser.Presentation.Controllers
 
             var user = new User
             {
-                UserName = userInfo.Username, // We need the UserName.
-                Address = userInfo.Address, // We need the Address because I added this column in the User table.
+                UserName = userInfo.Username,
+                Email = userInfo.Email,
+                PhoneNumber = userInfo.Phone,
+                Address = userInfo.Address,
             };
 
             var result = await _userManager.CreateAsync(user, userInfo.Password);
@@ -84,7 +94,7 @@ namespace hairDresser.Presentation.Controllers
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
 
-                //G enerate the key (which is the same as the key from the Program.cs).
+                // Generate the key (which is the same as the key from the Program.cs).
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdee-312423d-dsa213321"));
 
                 var token = new JwtSecurityToken(
@@ -133,6 +143,21 @@ namespace hairDresser.Presentation.Controllers
             return Ok($"The role '{userInfo.Role}' is now assigned to the user with the username '{userInfo.Username}'");
         }
 
+        [HttpPost]
+        [Route("employee/hair-service")]
+        public async Task<IActionResult> AddHairServicesToEmployee([FromBody] EmployeeHairServicePostDto employeeHairService)
+        {
+            var command = new AddHairServicesToEmployeeCommand
+            {
+                EmployeeId = employeeHairService.EmployeeId,
+                HairServicesIds = employeeHairService.HairServicesIds
+            };
+
+            var result = await _mediator.Send(command);
+
+            return NoContent();
+        }
+
         [HttpGet]
         [Route("all")]
         public async Task<IActionResult> GetAllUsers()
@@ -149,34 +174,114 @@ namespace hairDresser.Presentation.Controllers
         }
 
         [HttpGet]
-        [Route("all/customer")]
-        public async Task<IActionResult> GetAllCustomers()
+        [Route("id")]
+        public async Task<IActionResult> GetUserById(string id)
         {
-            // !!! NO:
-            //var allCustomers = await _roleManager.FindByNameAsync("customer");
-            //var allEmployees = await _roleManager.FindByNameAsync("Employee");
-            //var allAdmins = await _roleManager.FindByNameAsync("admin");
+            var query = new GetUserByIdQuery { UserId = id};
 
+            var user = await _mediator.Send(query);
+
+            if (user == null) return NotFound();
+
+            var mappedUser = _mapper.Map<UserGetDto>(user);
+
+            return Ok(mappedUser);
+        }
+
+        [HttpGet]
+        [Route("customer/all")]
+        public async Task<IActionResult> GetAllUsersWithCustomerRole()
+        {
             // ???
-            //var x = _userManager.Users.Include(u => u.Roles);
-
-            // ???
-            //var list = new List<User>();
-            //foreach (var user in _userManager.Users.ToList())
-            //{
-            //    list.Add(new User()
-            //    {
-            //        Roles = await _userManager.GetRolesAsync(user)
-            //    });
-            //}
-
-
             return Ok();
         }
 
-        // !!! to do:
-        // get user by id
-        // get all customers by role
-        // get all employees by role
+        [HttpGet]
+        [Route("employee/all")]
+        public async Task<IActionResult> GetAllUsersWithEmployeeRole()
+        {
+            // ???
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("employee/all/by-hair-services")]
+        public async Task<IActionResult> GetEmployeesByHairServices([FromQuery] List<int> hairServicesIds)
+        {
+            var query = new GetEmployeesByHairServicesQuery(hairServicesIds);
+
+            var validEmployees = await _mediator.Send(query);
+
+            if (!validEmployees.Any()) return NotFound();
+
+            var mappedValidEmployees = _mapper.Map<List<EmployeeGetDto>>(validEmployees);
+
+            return Ok(mappedValidEmployees);
+        }
+
+        [HttpGet]
+        [Route("employee/free-intervals")]
+        public async Task<IActionResult> GetEmployeeFreeIntervalsByDate([FromQuery] EmployeeFreeIntervalDto employeeFreeInterval)
+        {
+            var query = new GetEmployeeFreeIntervalsByDateQuery
+            {
+                EmployeeId = employeeFreeInterval.EmployeeId,
+                Year = employeeFreeInterval.Year,
+                Month = employeeFreeInterval.Month,
+                Date = employeeFreeInterval.Date,
+                DurationInMinutes = employeeFreeInterval.DurationInMinutes,
+                CustomerId = employeeFreeInterval.CustomerId
+            };
+
+            var freeIntervals = await _mediator.Send(query);
+
+            if (!freeIntervals.Any()) return NotFound();
+
+            var mappedFreeIntervals = _mapper.Map<List<EmployeeFreeIntervalsGetDto>>(freeIntervals);
+
+            return Ok(mappedFreeIntervals);
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UserPutDto editedUser)
+        {
+            var command = new UpdateUserCommand
+            {
+                Id = id,
+                Username = editedUser.Username,
+                Email = editedUser.Email,
+                Phone = editedUser.Phone,
+                Address = editedUser.Address
+            };
+
+            var result = await _mediator.Send(command);
+
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var command = new DeleteUserCommand { UserId = id };
+
+            var handlerResult = await _mediator.Send(command);
+
+            if (handlerResult == null) return NotFound();
+
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [Route("employee/hair-service/{hairServiceId}")]
+        public async Task<IActionResult> DeleteHairServiceFromEmployee(int hairServiceId)
+        {
+            var command = new DeleteEmployeeHairServiceCommand { EmployeeHairServiceId = hairServiceId };
+
+            var handlerResult = await _mediator.Send(command);
+
+            return NoContent();
+        }
     }
 }

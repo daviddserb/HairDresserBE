@@ -25,17 +25,17 @@ namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterva
 
             // Validation for the selected interval (startTime -> endTime) to don't overlap other intervals and to be at least 1 hour between all working intervals.
             Console.WriteLine("Check if the Interval (startTime -> endTime) is not overlapping with other intervals:");
-            var allEmployeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, request.WorkingDayId);
+            var employeeAllWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, request.WorkingDayId);
             var isIntervalGood = true;
-            foreach (var intervals in allEmployeeWorkingIntervals)
+            foreach (var workingInterval in employeeAllWorkingIntervals)
             {
-                Console.WriteLine("Existing interval -> " + intervals.StartTime + " - " + intervals.EndTime);
-                bool overlap = startTime < intervals.EndTime + new TimeSpan(01, 00, 00) && intervals.StartTime - new TimeSpan(01, 00, 00) < endTime;
+                Console.WriteLine("Existing interval -> " + workingInterval.StartTime + " - " + workingInterval.EndTime);
+                bool overlap = startTime < workingInterval.EndTime + new TimeSpan(01, 00, 00) && workingInterval.StartTime - new TimeSpan(01, 00, 00) < endTime;
                 Console.WriteLine("overlap= " + overlap);
                 if (overlap)
                 {
                     isIntervalGood = false;
-                    Console.WriteLine("Interval overlapping");
+                    Console.WriteLine("INTERVAL OVERLAPPING");
                     break;
                 }
             }
@@ -58,7 +58,7 @@ namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterva
                 return createdWorkingInterval;
             }
 
-            // If the interval is not good, because it does overlap, I send an empty/null object.
+            // Else (if the interval is not good, because it does overlap) => return null object.
             return new WorkingInterval();
         }
     }

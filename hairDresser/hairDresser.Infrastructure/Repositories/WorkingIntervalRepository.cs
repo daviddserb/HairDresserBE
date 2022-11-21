@@ -23,14 +23,12 @@ namespace hairDresser.Infrastructure.Repositories
         {
             await context.WorkingIntervals.AddAsync(workingInterval);
         }
+
         public async Task<IQueryable<WorkingInterval>> ReadWorkingIntervalsAsync()
         {
-            //Include spune ca faci JOIN intre WorkingIntervals si WorkingDay, care este posibil pt. ca ai ai un navigational property de Day in WorkingInterval si atunci poti face .WorkingDay pe variabila care salveaza acest return.
+            // Include = Join.
             return context.WorkingIntervals
                 .Include(obj => obj.WorkingDay)
-                // BEFORE:
-                //.Include(obj => obj.Employee);
-                // AFTER:
                 .Include(obj => obj.Employee);
         }
 

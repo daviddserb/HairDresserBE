@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using hairDresser.Domain.Models;
+using hairDresser.Presentation.Dto.EmployeeDtos;
 using hairDresser.Presentation.Dto.UserDtos;
 
 namespace hairDresser.Presentation.Profiles
@@ -8,6 +9,8 @@ namespace hairDresser.Presentation.Profiles
     {
         public UserProfile() {
             CreateMap<User, UserGetDto>();
+
+            CreateMap<User, EmployeeGetDto>();
         }
     }
 }

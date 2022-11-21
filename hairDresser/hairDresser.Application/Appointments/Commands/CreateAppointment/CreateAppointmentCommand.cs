@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 {
-    // Ca sa folosim libraria de MediatR, trebuie sa implementam interfata IRequest, care poate primi un parametru sau nu, care reprezinta tipul de date returnat.
+    // To use the MediatR library, we need to implemenet IRequest interface, which can receive a parameter or not which represents the returned data type.
     public class CreateAppointmentCommand : IRequest<Appointment>
     {
-        // Acestea sunt proprietatile fara de care nu pot sa fac un appointment, adica am nevoie de user input in toate si le voi putea folosi in Handler.
+        // These are all the properties without  I can't make an appointment, that means I need user input in all of them and I will be able to use them in the Handler.
         public string CustomerId { get; set; }
         public string EmployeeId { get; set; }
         public List<int> HairServicesIds { get; set; }

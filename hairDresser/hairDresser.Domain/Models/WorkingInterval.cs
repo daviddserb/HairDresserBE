@@ -17,7 +17,6 @@ namespace hairDresser.Domain.Models
         // BEFORE:
         //public Employee Employee { get; set; }
         //public int EmployeeId { get; set; }
-
         // AFTER:
         public string EmployeeId { get; set; }
         public User Employee { get; set; }

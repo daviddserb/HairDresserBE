@@ -17,12 +17,10 @@ namespace hairDresser.Domain.Models
         //public int CustomerId { get; set; }
         //public Employee Employee { get; set; }
         //public int EmployeeId { get; set; }
-
         // AFTER:
         public string CustomerId { get; set; } //scalar property
         [ForeignKey("CustomerId")]
         public User Customer { get; set; } //navigation property
-
         public string EmployeeId { get; set; }
         [ForeignKey("EmployeeId")]
         public User Employee { get; set; }

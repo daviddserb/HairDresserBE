@@ -23,13 +23,12 @@ namespace hairDresser.Infrastructure
         public DbSet<HairService> HairServices => Set<HairService>();
         public DbSet<WorkingInterval> WorkingIntervals => Set<WorkingInterval>();
         public DbSet<WorkingDay> WorkingDays => Set<WorkingDay>();
-        //public DbSet<User> Users { get; set; } // ???
 
         // Even if the many-to-many connection table is automatically created in the DB, if you set it here it will help you to access it.
         public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();
         public DbSet<AppointmentHairService> AppointmentsHairServices => Set<AppointmentHairService>();
 
-        // !!! Daca rulez aplicatia in:
+        // !!! If I run the application in the:
         // - Console => trebuie sa decomentez metoda OnConfiguring().
         // - Presentation (API) => trebuie sa comentez metoda OnConfiguring() pt. ca altfel am erori de tipul "Multiple database connections".
         //protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
@@ -38,14 +37,9 @@ namespace hairDresser.Infrastructure
         //        .UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDB;Trusted_Connection=True;MultipleActiveResultSets=True;");
         //}
 
-        // Before:
-        //protected override void OnModelCreating(ModelBuilder builder)
-        //After:
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            //builder.Entity<Customer>().HasIndex(customer => customer.Username).IsUnique();
 
             builder.Entity<HairService>().HasIndex(hairService => hairService.Name).IsUnique();
 

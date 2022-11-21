@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace hairDresser.Presentation.Controllers
 {
     [ApiController]
-    [Route("api/workinginterval")]
+    [Route("api/working-interval")]
     public class WorkingIntervalController : ControllerBase
     {
         public readonly IMapper _mapper;
@@ -32,8 +32,8 @@ namespace hairDresser.Presentation.Controllers
 
             var workingInterval = await _mediator.Send(command);
 
-            // Any property that is null or default means interval overlapping.
-            if (workingInterval.WorkingDay == null) return BadRequest(); //interval overlapping
+            // Working interval overlapping or not minimum 1 hour pause between them.
+            if (workingInterval.WorkingDay == null) return BadRequest();
 
             var mappedWorkingInterval = _mapper.Map<WorkingIntervalGetDto>(workingInterval);
 
@@ -76,10 +76,7 @@ namespace hairDresser.Presentation.Controllers
         [Route("all/{employeeId}")]
         public async Task<IActionResult> GetAllWorkingIntervalsByEmployeeId(string employeeId)
         {
-            var query = new GetAllWorkingIntervalsByEmployeeIdQuery
-            {
-                EmployeeId = employeeId
-            };
+            var query = new GetAllWorkingIntervalsByEmployeeIdQuery{ EmployeeId = employeeId };
 
             var allWorkingIntervalsByEmployeeId = await _mediator.Send(query);
 
@@ -111,7 +108,6 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpPut]
         [Route("{workingIntervalId}")]
-        // ??? Ar trebui sa fac un DTO diferit pt. Put? Intreb pt. ca practic nu as vrea sa ii ofer la customer sa isi poata schimba customerId, nu?
         public async Task<IActionResult> UpdateWorkingInterval(int workingIntervalId, [FromBody] WorkingIntervalPutDto editedWorkingInterval)
         {
             var command = new UpdateWorkingIntervalCommand

@@ -136,7 +136,7 @@ namespace hairDresser.Infrastructure.Repositories
 
             var selectedHairServices = context.HairServices
                 .Where(hairService => hairServicesIds.Contains(hairService.Id));
-            //.Count(hairServices => hairServices.Price); //???
+                //.Count(hairServices => hairServices.Price); //???
 
             float priceHairServices = 0;
 

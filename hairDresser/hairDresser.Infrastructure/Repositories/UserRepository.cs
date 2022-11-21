@@ -23,33 +23,68 @@ namespace hairDresser.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task DeleteUserAsync(string userId)
+        public async Task<User> GetUserByIdAsync(string userId)
         {
-            throw new NotImplementedException();
+            return await context.Users
+                .FirstOrDefaultAsync(user => user.Id.Equals(userId));
         }
 
         public async Task<IQueryable<User>> GetAllUsersAsync()
         {
-            // exemplu:
-            //.Include(customers => customers.Customer)
-            //.Include(employees => employees.Employee)
-            //.Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
-            //.ThenInclude(hairServices => hairServices.HairService)
-
-            var allUsers = context.Users;
-            //.Include(roles => roles.Role)
-
-            return allUsers;
+            return context.Users;
         }
 
-        public async Task<User> GetUserByIdAsync(string userId)
+        // ???
+        public async Task<IQueryable> GetAllCustomersByRoleAsync()
         {
-            return await context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
+            throw new NotImplementedException();
+        }
+
+        // ???
+        public async Task<IQueryable> GetAllEmployeesByRoleAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IQueryable<User>> GetAllEmployeesByHairServicesAsync(List<int> hairServicesIds)
+        {
+            var validEmployees = context.Users
+                .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
+                .ThenInclude(hairServices => hairServices.HairService)
+                .ToList()
+                .Where(employee => hairServicesIds.All(serviceId => employee.EmployeeHairServices.Any(hairservice => hairservice.HairServiceId == serviceId)));
+            return validEmployees.AsQueryable();
         }
 
         public async Task<User> UpdateUserAsync(User user)
         {
-            throw new NotImplementedException();
+            context.Users.Update(user);
+            return user;
+        }
+
+        public async Task DeleteUserAsync(string userId)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
+            context.Users.Remove(user);
+        }
+
+        // EmployeeHairService:
+        public async Task<EmployeeHairService> CheckIfEmployeeHairServiceIdExistsAsync(int employeeHairServiceId)
+        {
+            return await context.EmployeesHairServices
+                .FirstOrDefaultAsync(employeeHairService => employeeHairService.Id == employeeHairServiceId);
+        }
+
+        public async Task AddHairServiceToEmployeeAsync(List<EmployeeHairService> employee)
+        {
+            await context.EmployeesHairServices.AddRangeAsync(employee);
+        }
+
+        public async Task DeleteHairServiceFromEmployeeAsync(int employeeHairServiceId)
+        {
+            var employeeHairService = await context.EmployeesHairServices
+                .FirstOrDefaultAsync(employeeHairService => employeeHairService.Id == employeeHairServiceId);
+            context.EmployeesHairServices.Remove(employeeHairService);
         }
     }
 }

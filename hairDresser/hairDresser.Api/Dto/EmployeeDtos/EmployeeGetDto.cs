@@ -5,8 +5,12 @@ namespace hairDresser.Presentation.Dto.EmployeeDtos
 {
     public class EmployeeGetDto
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        // BEFORE:
+        //public int Id { get; set; }
+        //public string Name { get; set; }
+        // AFTER:
+        public string Id { get; set; }
+        public string Username { get; set; }
 
         public ICollection<EmployeeHairServiceDto> EmployeeHairServices { get; set; }
         public ICollection<EmployeeWorkingIntervalDto> EmployeeWorkingIntervals { get; set; }

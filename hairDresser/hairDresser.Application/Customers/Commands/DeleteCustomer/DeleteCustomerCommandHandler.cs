@@ -1,4 +1,5 @@
-﻿using hairDresser.Application.Interfaces;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
 using System;
@@ -21,7 +22,7 @@ namespace hairDresser.Application.Customers.Commands.DeleteCustomer
         public async Task<Customer> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
             var customer = await _unitOfWork.CustomerRepository.GetCustomerByIdAsync(request.Id);
-            if (customer == null) return null;
+            if (customer == null) throw new NotFoundException($"The user with the id '{request.Id}' does not exist!");
 
             await _unitOfWork.CustomerRepository.DeleteCustomerAsync(request.Id);
             await _unitOfWork.SaveAsync();
