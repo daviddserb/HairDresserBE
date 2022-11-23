@@ -26,17 +26,23 @@ namespace hairDresser.Presentation.Controllers
     [Route("api/user")]
     public class UserController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         public readonly IMediator _mediator;
         public readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IMediator mediator, IMapper mapper)
+        public UserController
+            (
+            IMediator mediator,
+            IMapper mapper,
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager
+            )
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
             _mediator = mediator;
             _mapper = mapper;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         [HttpPost]
@@ -162,46 +168,71 @@ namespace hairDresser.Presentation.Controllers
         [Route("all")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var query = new GetAllUsersQuery();
+            // BEFORE:
+            //var query = new GetAllUsersQuery();
+            //var allUsers = await _mediator.Send(query);
+            //if (!allUsers.Any()) return NotFound();
+            //var mappedAllUsers = _mapper.Map<List<UserGetDto>>(allUsers);
+            //return Ok(mappedAllUsers);
 
-            var allUsers = await _mediator.Send(query);
+            // AFTER:
+            var users = _userManager.Users.Select(user => new UserGetDto()
+            {
+                Id = user.Id,
+                Username = user.UserName,
+                Email = user.Email,
+                Address = user.Address,
+                Phone = user.PhoneNumber,
+                Role = string.Join(",", _userManager.GetRolesAsync(user).Result.ToArray())
+            }).ToList();
 
-            if (!allUsers.Any()) return NotFound();
-
-            var mappedAllUsers = _mapper.Map<List<UserGetDto>>(allUsers);
-
-            return Ok(mappedAllUsers);
+            return Ok(users);
         }
 
         [HttpGet]
         [Route("id")]
         public async Task<IActionResult> GetUserById(string id)
         {
-            var query = new GetUserByIdQuery { UserId = id};
+            // BEFORE:
+            //var query = new GetUserByIdQuery { UserId = id};
+            //var user = await _mediator.Send(query);
+            //if (user == null) return NotFound();
+            //var mappedUser = _mapper.Map<UserGetDto>(user);
+            //return Ok(mappedUser);
 
-            var user = await _mediator.Send(query);
+            // ??? AFTER V2:
+            var user = await _userManager.FindByIdAsync(id);
+            var roles = await _userManager.GetRolesAsync(user);
 
-            if (user == null) return NotFound();
+            var userGetDto = new UserGetDto()
+            {
+                Id = user.Id,
+                Username = user.UserName,
+                Email = user.Email,
+                Address = user.Address,
+                Phone = user.PhoneNumber,
+                Role = string.Join(",", roles)
+            };
 
-            var mappedUser = _mapper.Map<UserGetDto>(user);
-
-            return Ok(mappedUser);
+            return Ok(userGetDto);
         }
 
         [HttpGet]
         [Route("customer/all")]
         public async Task<IActionResult> GetAllUsersWithCustomerRole()
         {
-            // ???
-            return Ok();
+            var usersWithCustomerRole = await _userManager.GetUsersInRoleAsync("customer");
+            // ??? sa pun un DTO
+            return Ok(usersWithCustomerRole);
         }
 
         [HttpGet]
         [Route("employee/all")]
         public async Task<IActionResult> GetAllUsersWithEmployeeRole()
         {
-            // ???
-            return Ok();
+            var usersWithEmployeeRole = await _userManager.GetUsersInRoleAsync("employee");
+            // ??? sa pun un DTO
+            return Ok(usersWithEmployeeRole);
         }
 
         [HttpGet]

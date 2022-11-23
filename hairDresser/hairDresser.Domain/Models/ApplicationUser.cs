@@ -11,12 +11,8 @@ namespace hairDresser.Domain.Models
     {
         public string Address { get; set; }
 
-        // BEFORE:
-        //public ICollection<Appointment> Appointments { get; set; }
-        // AFTER:
         public ICollection<Appointment> AppointmentCustomers { get; set; }
         public ICollection<Appointment> AppointmentEmployees { get; set; }
-
         public ICollection<EmployeeHairService> EmployeeHairServices { get; set; }
         public ICollection<WorkingInterval> EmployeeWorkingIntervals { get; set; }
     }
