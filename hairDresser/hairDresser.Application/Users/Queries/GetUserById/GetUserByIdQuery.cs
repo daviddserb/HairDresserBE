@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Queries.GetUserById
 {
-    public class GetUserByIdQuery : IRequest<User>
+    public class GetUserByIdQuery : IRequest<ApplicationUser>
     {
         public string UserId { get; set; }
     }

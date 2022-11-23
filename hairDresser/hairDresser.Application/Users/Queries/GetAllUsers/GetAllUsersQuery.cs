@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Queries.GetAllUsers
 {
-    public class GetAllUsersQuery : IRequest<IQueryable<User>>
+    public class GetAllUsersQuery : IRequest<IQueryable<ApplicationUser>>
     {
     }
 }

@@ -26,12 +26,12 @@ namespace hairDresser.Presentation.Controllers
     [Route("api/user")]
     public class UserController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         public readonly IMediator _mediator;
         public readonly IMapper _mapper;
 
-        public UserController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IMediator mediator, IMapper mapper)
+        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IMediator mediator, IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -47,7 +47,7 @@ namespace hairDresser.Presentation.Controllers
 
             if (userExists != null) return BadRequest("User already exists.");
 
-            var user = new User
+            var user = new ApplicationUser
             {
                 UserName = userInfo.Username,
                 Email = userInfo.Email,
@@ -83,7 +83,6 @@ namespace hairDresser.Presentation.Controllers
                 // Will be visible in the token.
                 var authClaims = new List<Claim>
                 {
-                    //new Claim(ClaimTypes.Name, userInfo.Name), // ??? am scos Name-ul din auth
                     new Claim("username", userInfo.Username),
                     new Claim("password", userInfo.Password)
                 };
@@ -106,8 +105,9 @@ namespace hairDresser.Presentation.Controllers
 
                 return Ok(new
                 {
-                    username = userInfo.Username,
                     token = new JwtSecurityTokenHandler().WriteToken(token),
+                    username = userInfo.Username,
+                    id = user.Id,
                     expiration = token.ValidTo
                 });
             }

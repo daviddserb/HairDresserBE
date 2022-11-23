@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Commands.DeleteUser
 {
-    public class DeleteUserCommand : IRequest<User>
+    public class DeleteUserCommand : IRequest<ApplicationUser>
     {
         public string UserId { get; set; }
     }

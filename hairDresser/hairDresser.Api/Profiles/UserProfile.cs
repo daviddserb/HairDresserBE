@@ -8,9 +8,9 @@ namespace hairDresser.Presentation.Profiles
     public class UserProfile : Profile
     {
         public UserProfile() {
-            CreateMap<User, UserGetDto>();
+            CreateMap<ApplicationUser, UserGetDto>();
 
-            CreateMap<User, EmployeeGetDto>();
+            CreateMap<ApplicationUser, EmployeeGetDto>();
         }
     }
 }

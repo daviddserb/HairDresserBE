@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Queries.GetAllUsers
 {
-    public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, IQueryable<User>>
+    public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, IQueryable<ApplicationUser>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -18,7 +18,7 @@ namespace hairDresser.Application.Users.Queries.GetAllUsers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IQueryable<User>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
+        public async Task<IQueryable<ApplicationUser>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
             return await _unitOfWork.UserRepository.GetAllUsersAsync();
         }

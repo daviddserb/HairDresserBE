@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Employees.Commands.AddEmployeeHairServices
 {
-    public class AddEmployeeHairServicesCommandHandler : IRequestHandler<AddEmployeeHairServicesCommand, User>
+    public class AddEmployeeHairServicesCommandHandler : IRequestHandler<AddEmployeeHairServicesCommand, ApplicationUser>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -17,7 +17,7 @@ namespace hairDresser.Application.Employees.Commands.AddEmployeeHairServices
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<User> Handle(AddEmployeeHairServicesCommand request, CancellationToken cancellationToken)
+        public async Task<ApplicationUser> Handle(AddEmployeeHairServicesCommand request, CancellationToken cancellationToken)
         {
             var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
             if (employee == null) return null;

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Queries.GetEmployeesByHairServices
 {
-    public class GetEmployeesByHairServicesQueryHandler : IRequestHandler<GetEmployeesByHairServicesQuery, IQueryable<User>>
+    public class GetEmployeesByHairServicesQueryHandler : IRequestHandler<GetEmployeesByHairServicesQuery, IQueryable<ApplicationUser>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -18,7 +18,7 @@ namespace hairDresser.Application.Users.Queries.GetEmployeesByHairServices
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IQueryable<User>> Handle(GetEmployeesByHairServicesQuery request, CancellationToken cancellationToken)
+        public async Task<IQueryable<ApplicationUser>> Handle(GetEmployeesByHairServicesQuery request, CancellationToken cancellationToken)
         {
             var validEmployees = await _unitOfWork.UserRepository.GetAllEmployeesByHairServicesAsync(request.HairServicesId);
             return await Task.FromResult(validEmployees);

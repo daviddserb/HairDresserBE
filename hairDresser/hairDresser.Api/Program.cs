@@ -10,12 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-//??? Intrebari:
-// *. HairServiceRepository -> GetAllHairServicesByIdsAsync() - merge dar se poate imbunatati dar nu-mi dau seama cum s-o fac intr-un singur query.
-
-//!!! De facut:
-// Ar trebui sa mut functionalitatea de verificare a cate apppointment-uri are un customer din GetEmployeeFreeIntervalsForAppointmentByDateQueryHandler in CreateAppointmentCommandHandler.
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -25,7 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// De fiecare data cand vei vedea ca cineva depinde de IHairServiceRepository, creezi o instanta de HairServiceRepository (la fel si pt. restul).
+// De fiecare data cand vei vedea ca cineva depinde de IAppointmentRepository, creezi o instanta de AppointmentRepository (la fel si pt. restul).
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IHairServiceRepository, HairServiceRepository>();
@@ -39,8 +33,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-// For Identity
-builder.Services.AddIdentity<User, IdentityRole>()
+// For User Identity
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>();
 
 // Add Authentication

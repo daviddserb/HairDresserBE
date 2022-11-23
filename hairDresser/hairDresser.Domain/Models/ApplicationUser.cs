@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Domain.Models
 {
-    public class User : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         public string Address { get; set; }
 

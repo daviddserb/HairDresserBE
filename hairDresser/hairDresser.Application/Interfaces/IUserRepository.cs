@@ -9,13 +9,13 @@ namespace hairDresser.Application.Interfaces
 {
     public interface IUserRepository
     {
-        Task CreateUserAsync(User user);
-        Task<User> GetUserByIdAsync(string userId);
-        Task<IQueryable<User>> GetAllUsersAsync();
+        Task CreateUserAsync(ApplicationUser user);
+        Task<ApplicationUser> GetUserByIdAsync(string userId);
+        Task<IQueryable<ApplicationUser>> GetAllUsersAsync();
         Task<IQueryable> GetAllCustomersByRoleAsync();
         Task<IQueryable> GetAllEmployeesByRoleAsync();
-        Task<IQueryable<User>> GetAllEmployeesByHairServicesAsync(List<int> hairServicesIds);
-        Task<User> UpdateUserAsync(User user);
+        Task<IQueryable<ApplicationUser>> GetAllEmployeesByHairServicesAsync(List<int> hairServicesIds);
+        Task<ApplicationUser> UpdateUserAsync(ApplicationUser user);
         Task DeleteUserAsync(string userId);
 
         // EmployeeHairService:

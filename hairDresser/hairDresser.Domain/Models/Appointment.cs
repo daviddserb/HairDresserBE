@@ -19,11 +19,11 @@ namespace hairDresser.Domain.Models
         //public int EmployeeId { get; set; }
         // AFTER:
         public string CustomerId { get; set; } //scalar property
-        [ForeignKey("CustomerId")]
-        public User Customer { get; set; } //navigation property
+        [ForeignKey("CustomerId")] // ??? Nu cred ca mai am nevoie pt. ca le-am pus in Fluent API
+        public ApplicationUser Customer { get; set; } //navigation property
         public string EmployeeId { get; set; }
-        [ForeignKey("EmployeeId")]
-        public User Employee { get; set; }
+        [ForeignKey("EmployeeId")] // ??? Nu cred ca mai am nevoie pt. ca le-am pus in Fluent API
+        public ApplicationUser Employee { get; set; }
 
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

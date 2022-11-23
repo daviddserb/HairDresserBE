@@ -18,18 +18,18 @@ namespace hairDresser.Infrastructure.Repositories
             this.context = context;
         }
 
-        public async Task CreateUserAsync(User user)
+        public async Task CreateUserAsync(ApplicationUser user)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<User> GetUserByIdAsync(string userId)
+        public async Task<ApplicationUser> GetUserByIdAsync(string userId)
         {
             return await context.Users
                 .FirstOrDefaultAsync(user => user.Id.Equals(userId));
         }
 
-        public async Task<IQueryable<User>> GetAllUsersAsync()
+        public async Task<IQueryable<ApplicationUser>> GetAllUsersAsync()
         {
             return context.Users;
         }
@@ -46,7 +46,7 @@ namespace hairDresser.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<IQueryable<User>> GetAllEmployeesByHairServicesAsync(List<int> hairServicesIds)
+        public async Task<IQueryable<ApplicationUser>> GetAllEmployeesByHairServicesAsync(List<int> hairServicesIds)
         {
             var validEmployees = context.Users
                 .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
@@ -56,7 +56,7 @@ namespace hairDresser.Infrastructure.Repositories
             return validEmployees.AsQueryable();
         }
 
-        public async Task<User> UpdateUserAsync(User user)
+        public async Task<ApplicationUser> UpdateUserAsync(ApplicationUser user)
         {
             context.Users.Update(user);
             return user;

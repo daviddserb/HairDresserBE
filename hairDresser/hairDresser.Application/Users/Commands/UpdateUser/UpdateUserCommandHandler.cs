@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Commands.UpdateUser
 {
-    public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, User>
+    public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, ApplicationUser>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -19,7 +19,7 @@ namespace hairDresser.Application.Users.Commands.UpdateUser
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<User> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async Task<ApplicationUser> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _unitOfWork.UserRepository.GetUserByIdAsync(request.Id);
 

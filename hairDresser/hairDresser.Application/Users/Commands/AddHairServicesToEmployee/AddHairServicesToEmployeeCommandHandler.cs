@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Commands.AddHairServicesToEmployee
 {
-    public class AddHairServicesToEmployeeCommandHandler : IRequestHandler<AddHairServicesToEmployeeCommand, User>
+    public class AddHairServicesToEmployeeCommandHandler : IRequestHandler<AddHairServicesToEmployeeCommand, ApplicationUser>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -18,7 +18,7 @@ namespace hairDresser.Application.Users.Commands.AddHairServicesToEmployee
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<User> Handle(AddHairServicesToEmployeeCommand request, CancellationToken cancellationToken)
+        public async Task<ApplicationUser> Handle(AddHairServicesToEmployeeCommand request, CancellationToken cancellationToken)
         {
             var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
