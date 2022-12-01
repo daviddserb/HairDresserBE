@@ -13,7 +13,7 @@ namespace hairDresser.Infrastructure
     // BEFORE:
     // public class DataContext : DbContext
     // AFTER:
-    public class DataContext : IdentityDbContext<ApplicationUser>
+    public class DataContext : IdentityDbContext<User>
     {
         public DataContext(DbContextOptions options) : base(options) { }
 

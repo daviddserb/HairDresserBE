@@ -1,5 +1,5 @@
 ﻿using hairDresser.Presentation.Dto.EmployeeHairServiceDtos;
-using hairDresser.Presentation.Dto.EmployeeWorkingIntervalDtos;
+using hairDresser.Presentation.Dto.WorkingIntervalDtos;
 
 namespace hairDresser.Presentation.Dto.EmployeeDtos
 {
@@ -13,6 +13,10 @@ namespace hairDresser.Presentation.Dto.EmployeeDtos
         public string Username { get; set; }
 
         public ICollection<EmployeeHairServiceDto> EmployeeHairServices { get; set; }
-        public ICollection<EmployeeWorkingIntervalDto> EmployeeWorkingIntervals { get; set; }
+
+        //before:
+        //public ICollection<EmployeeWorkingIntervalDto> EmployeeWorkingIntervals { get; set; }
+        //after:
+        public ICollection<WorkingIntervalGetDto> EmployeeWorkingIntervals { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,45 +19,40 @@ namespace hairDresser.Infrastructure.Repositories
             this.context = context;
         }
 
-        public async Task CreateUserAsync(ApplicationUser user)
+        public async Task CreateUserAsync(User user)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ApplicationUser> GetUserByIdAsync(string userId)
+        public async Task<User> GetUserByIdAsync(string userId)
         {
             return await context.Users
                 .FirstOrDefaultAsync(user => user.Id.Equals(userId));
         }
 
-        public async Task<IQueryable<ApplicationUser>> GetAllUsersAsync()
+        public async Task<IQueryable<User>> GetAllUsersAsync()
         {
             return context.Users;
         }
 
-        // ???
-        public async Task<IQueryable> GetAllCustomersByRoleAsync()
+        public async Task<IQueryable<User>> GetAllUsersWithCustomerRoleAsync()
         {
             throw new NotImplementedException();
         }
 
-        // ???
-        public async Task<IQueryable> GetAllEmployeesByRoleAsync()
+        public async Task<IQueryable<User>> GetAllUsersWithEmployeeRoleAsync(List<string> employeeIds)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IQueryable<ApplicationUser>> GetAllEmployeesByHairServicesAsync(List<int> hairServicesIds)
-        {
-            var validEmployees = context.Users
+            var allEmployees = context.Users
+                .Where(user => employeeIds.Contains(user.Id))
                 .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
                 .ThenInclude(hairServices => hairServices.HairService)
-                .ToList()
-                .Where(employee => hairServicesIds.All(serviceId => employee.EmployeeHairServices.Any(hairservice => hairservice.HairServiceId == serviceId)));
-            return validEmployees.AsQueryable();
+                .Include(workingInterval => workingInterval.EmployeeWorkingIntervals)
+                .ThenInclude(workingDay => workingDay.WorkingDay);
+
+            return allEmployees;
         }
 
-        public async Task<ApplicationUser> UpdateUserAsync(ApplicationUser user)
+        public async Task<User> UpdateUserAsync(User user)
         {
             context.Users.Update(user);
             return user;
@@ -69,6 +65,16 @@ namespace hairDresser.Infrastructure.Repositories
         }
 
         // EmployeeHairService:
+        public async Task<IQueryable<User>> GetAllEmployeesByHairServicesIdsAsync(List<int> hairServicesIds)
+        {
+            var validEmployees = context.Users
+                .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
+                .ThenInclude(hairServices => hairServices.HairService)
+                .ToList()
+                .Where(employee => hairServicesIds.All(serviceId => employee.EmployeeHairServices.Any(hairservice => hairservice.HairServiceId == serviceId)));
+            return validEmployees.AsQueryable();
+        }
+
         public async Task<EmployeeHairService> CheckIfEmployeeHairServiceIdExistsAsync(int employeeHairServiceId)
         {
             return await context.EmployeesHairServices

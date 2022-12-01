@@ -19,7 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// De fiecare data cand vei vedea ca cineva depinde de IAppointmentRepository, creezi o instanta de AppointmentRepository (la fel si pt. restul).
+//Everytime when somebody depends on a interface (creates an object from an interface, which is impossible), we create an object of the class type that represents that interface (IAppointmentRepository -> AppointmentRepository).
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IHairServiceRepository, HairServiceRepository>();
@@ -29,22 +29,23 @@ builder.Services.AddScoped<IWorkingIntervalRepository, WorkingIntervalRepository
 builder.Services.AddScoped<IWorkingDayRepository, WorkingDayRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-// For Entity Framework (legatura cu server-ul nostru din DB).
+//For Entity Framework (the link with the DB server).
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-// For User Identity
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+//For User Identity
+builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>();
 
-// Add Authentication
+//Add Authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-// Add Jwt Bearer
+
+//Add Jwt Bearer
 .AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -57,14 +58,14 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Adaugam MediatR, care scaneaza toate mesajele (Queries/Commands) si toate handle-urile, de tipul typeof().
-// Cu toate ca noi avem mai multe .AddScoped(), adaugam doar unul dintre ele la typeof() si MediatR le scaneaza pe toate din layer-ul de unde typeof() face parte, adica IHairServiceRepository face parte din Application.
+//Add MediatR which scans all the messages (Queries and Commands) and all the handlers from inside.
+//In order to tell the MediatR where to go to scan, we can give a single interface/class (example IHairServiceRepository) from the layer that we want MediatR to operate and he will scan all of files from that layer (Application).
 builder.Services.AddMediatR(typeof(IHairServiceRepository));
 
-// Adaugam AutoMapper
+//Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
 
-// Adaugam AddCors ca sa pot face call la API de pe front-end (din Angular).
+//Add AddCors to be able to call the API from the client (front-end).
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
@@ -73,6 +74,12 @@ builder.Services.AddCors(options =>
             builder.WithOrigins(new string[] { "http://localhost:4200", "http://yourdomain.com" }).AllowAnyMethod().AllowAnyHeader();
         });
 });
+
+//...
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 
 var app = builder.Build();
 
@@ -85,7 +92,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("CorsPolicy"); // (are legatura cu: builder.Services.AddCors(options => etc...).
+app.UseCors("CorsPolicy"); //Links with the builder.Services.AddCors(...).
 
 app.UseAuthorization();
 
@@ -98,4 +105,4 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program{ } //
+public partial class Program{ } //To make the class visible.

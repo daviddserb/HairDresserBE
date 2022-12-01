@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Commands.DeleteUser
 {
-    public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, ApplicationUser>
+    public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, User>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -19,7 +19,7 @@ namespace hairDresser.Application.Users.Commands.DeleteUser
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ApplicationUser> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        public async Task<User> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _unitOfWork.UserRepository.GetUserByIdAsync(request.UserId);
             if (user == null) throw new NotFoundException($"The user with the id '{request.UserId}' does not exist!");

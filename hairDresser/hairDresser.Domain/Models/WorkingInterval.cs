@@ -19,7 +19,7 @@ namespace hairDresser.Domain.Models
         //public int EmployeeId { get; set; }
         // AFTER:
         public string EmployeeId { get; set; }
-        public ApplicationUser Employee { get; set; }
+        public User Employee { get; set; }
 
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }

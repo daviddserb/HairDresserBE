@@ -19,8 +19,7 @@
     <Folder Include="Users\Commands\RegisterUser\" />
     <Folder Include="Users\Commands\AssignRoleToUser\" />
     <Folder Include="Users\Commands\LoginUser\" />
-    <Folder Include="Users\Queries\GetAllCustomersByRole\" />
-    <Folder Include="Users\Queries\GetAllEmployeesByRole\" />
+    <Folder Include="Users\Queries\GetAllUsersWithCustomerRole\" />
   </ItemGroup>
 
 </Project>

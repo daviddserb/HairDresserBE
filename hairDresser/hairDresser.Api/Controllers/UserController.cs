@@ -4,6 +4,7 @@ using hairDresser.Application.Users.Commands.DeleteEmployeeHairService;
 using hairDresser.Application.Users.Commands.DeleteUser;
 using hairDresser.Application.Users.Commands.UpdateUser;
 using hairDresser.Application.Users.Queries.GetAllUsers;
+using hairDresser.Application.Users.Queries.GetAllUsersWithEmployeeRole;
 using hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate;
 using hairDresser.Application.Users.Queries.GetEmployeesByHairServices;
 using hairDresser.Application.Users.Queries.GetUserById;
@@ -28,14 +29,14 @@ namespace hairDresser.Presentation.Controllers
     {
         public readonly IMediator _mediator;
         public readonly IMapper _mapper;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public UserController
             (
             IMediator mediator,
             IMapper mapper,
-            UserManager<ApplicationUser> userManager,
+            UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager
             )
         {
@@ -53,7 +54,7 @@ namespace hairDresser.Presentation.Controllers
 
             if (userExists != null) return BadRequest("User already exists.");
 
-            var user = new ApplicationUser
+            var user = new User
             {
                 UserName = userInfo.Username,
                 Email = userInfo.Email,
@@ -149,21 +150,6 @@ namespace hairDresser.Presentation.Controllers
             return Ok($"The role '{userInfo.Role}' is now assigned to the user with the username '{userInfo.Username}'");
         }
 
-        [HttpPost]
-        [Route("employee/hair-service")]
-        public async Task<IActionResult> AddHairServicesToEmployee([FromBody] EmployeeHairServicePostDto employeeHairService)
-        {
-            var command = new AddHairServicesToEmployeeCommand
-            {
-                EmployeeId = employeeHairService.EmployeeId,
-                HairServicesIds = employeeHairService.HairServicesIds
-            };
-
-            var result = await _mediator.Send(command);
-
-            return NoContent();
-        }
-
         [HttpGet]
         [Route("all")]
         public async Task<IActionResult> GetAllUsers()
@@ -183,7 +169,7 @@ namespace hairDresser.Presentation.Controllers
                 Email = user.Email,
                 Address = user.Address,
                 Phone = user.PhoneNumber,
-                Role = string.Join(",", _userManager.GetRolesAsync(user).Result.ToArray())
+                Role = string.Join(", ", _userManager.GetRolesAsync(user).Result.ToArray())
             }).ToList();
 
             return Ok(users);
@@ -194,45 +180,54 @@ namespace hairDresser.Presentation.Controllers
         public async Task<IActionResult> GetUserById(string id)
         {
             // BEFORE:
-            //var query = new GetUserByIdQuery { UserId = id};
+            //var query = new GetUserByIdQuery { UserId = id };
             //var user = await _mediator.Send(query);
             //if (user == null) return NotFound();
             //var mappedUser = _mapper.Map<UserGetDto>(user);
             //return Ok(mappedUser);
 
-            // ??? AFTER V2:
+            // AFTER:
             var user = await _userManager.FindByIdAsync(id);
-            var roles = await _userManager.GetRolesAsync(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
 
-            var userGetDto = new UserGetDto()
+            var userInfo = new UserGetDto()
             {
                 Id = user.Id,
                 Username = user.UserName,
                 Email = user.Email,
                 Address = user.Address,
                 Phone = user.PhoneNumber,
-                Role = string.Join(",", roles)
+                Role = string.Join(", ", userRoles)
             };
 
-            return Ok(userGetDto);
+            return Ok(userInfo);
         }
 
         [HttpGet]
         [Route("customer/all")]
         public async Task<IActionResult> GetAllUsersWithCustomerRole()
         {
-            var usersWithCustomerRole = await _userManager.GetUsersInRoleAsync("customer");
-            // ??? sa pun un DTO
-            return Ok(usersWithCustomerRole);
+            var allCustomers = await _userManager.GetUsersInRoleAsync("customer");
+            // !!! sa pun un DTO
+            return Ok(allCustomers);
         }
 
         [HttpGet]
         [Route("employee/all")]
         public async Task<IActionResult> GetAllUsersWithEmployeeRole()
         {
-            var usersWithEmployeeRole = await _userManager.GetUsersInRoleAsync("employee");
-            // ??? sa pun un DTO
-            return Ok(usersWithEmployeeRole);
+            var allUsersWithTheEmployeeRole = await _userManager.GetUsersInRoleAsync("employee");
+            var allUsersWithTheEmployeeRole_Ids = allUsersWithTheEmployeeRole.Select(employee => employee.Id).ToList();
+
+            var query = new GetAllUsersWithEmployeeRoleQuery { EmployeeIds = allUsersWithTheEmployeeRole_Ids };
+
+            var allEmployees = await _mediator.Send(query);
+
+            if (!allEmployees.Any()) return NotFound();
+
+            var mappedEmployees = _mapper.Map<List<EmployeeGetDto>>(allEmployees);
+
+            return Ok(mappedEmployees);
         }
 
         [HttpGet]
@@ -295,11 +290,45 @@ namespace hairDresser.Presentation.Controllers
         [Route("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var command = new DeleteUserCommand { UserId = id };
+            // BEFORE:
+            //var command = new DeleteUserCommand { UserId = id };
+            //var handlerResult = await _mediator.Send(command);
+            //if (handlerResult == null) return NotFound();
+            //return NoContent();
 
-            var handlerResult = await _mediator.Send(command);
+            // AFTER:
+            var user = await _userManager.FindByIdAsync(id);
 
-            if (handlerResult == null) return NotFound();
+            if (user == null) return NotFound($"The user with the id '{id}' does not exist!");
+            else
+            {
+                var result = await _userManager.DeleteAsync(user);
+
+                // !!!
+                //if (result.Succeeded)
+                //{
+                //    // stergerea user-ului s-a efectuat cu success
+                //    // pot sa trimit un mesaj / sa fac o redirectionare pe pagina cu useri
+                //} else
+                //{
+                //    // daca stergerea user-ului nu s-a efectuat cu success (??? n-am inteles care s-ar putea sa fie motivele)
+                //    // sa printez erorile.
+                //}
+                return NoContent(); // !!! Am aici doar ca sa nu fie eroare. Cand il scot, voi avea in if/else alte return-uri.
+            }
+        }
+
+        [HttpPost]
+        [Route("employee/hair-service")]
+        public async Task<IActionResult> AddHairServicesToEmployee([FromBody] EmployeeHairServicePostDto employeeHairService)
+        {
+            var command = new AddHairServicesToEmployeeCommand
+            {
+                EmployeeId = employeeHairService.EmployeeId,
+                HairServicesIds = employeeHairService.HairServicesIds
+            };
+
+            var result = await _mediator.Send(command);
 
             return NoContent();
         }

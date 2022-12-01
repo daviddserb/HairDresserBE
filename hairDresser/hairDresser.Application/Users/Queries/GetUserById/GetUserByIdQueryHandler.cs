@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Queries.GetUserById
 {
-    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, ApplicationUser>
+    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -19,7 +19,7 @@ namespace hairDresser.Application.Users.Queries.GetUserById
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ApplicationUser> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+        public async Task<User> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
             return await _unitOfWork.UserRepository.GetUserByIdAsync(request.UserId);
         }

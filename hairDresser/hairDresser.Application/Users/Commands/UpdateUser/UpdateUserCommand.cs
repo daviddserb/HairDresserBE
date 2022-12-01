@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Commands.UpdateUser
 {
-    public class UpdateUserCommand : IRequest<ApplicationUser>
+    public class UpdateUserCommand : IRequest<User>
     {
         public string Id { get; set; }
         public string Username { get; set; }
