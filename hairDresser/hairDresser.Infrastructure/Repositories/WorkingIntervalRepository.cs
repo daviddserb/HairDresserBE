@@ -26,10 +26,12 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<WorkingInterval>> ReadWorkingIntervalsAsync()
         {
-            // Include = Join.
+            //Include = Join.
             return context.WorkingIntervals
-                .Include(obj => obj.WorkingDay)
-                .Include(obj => obj.Employee);
+                .Include(workingDay => workingDay.WorkingDay)
+                .Include(employee => employee.Employee)
+                .OrderBy(workingDay => workingDay.WorkingDayId)
+                .ThenBy(startTime => startTime.StartTime);
         }
 
         public async Task<WorkingInterval> GetWorkingIntervalByIdAsync(int workingIntervalId)
@@ -53,10 +55,13 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsByEmployeeIdAsync(string employeeId)
         {
-            return context.WorkingIntervals
+            var employeeWorkingIntervals = context.WorkingIntervals
                 .Where(employee => employee.Employee.Id.Equals(employeeId))
-                .Include(obj => obj.WorkingDay)
-                .Include(obj => obj.Employee);
+                .Include(workingDay => workingDay.WorkingDay)
+                .Include(employee => employee.Employee)
+                .OrderBy(workingDay => workingDay.WorkingDayId)
+                .ThenBy(startTime => startTime.StartTime);
+            return employeeWorkingIntervals;
         }
 
         public async Task<WorkingInterval> UpdateWorkingIntervalAsync(WorkingInterval workingInterval)

@@ -12,12 +12,12 @@ namespace hairDresser.Presentation.Profiles
     {
         public AppointmentProfile()
         {
-            // Source -> Destionation
+            //CreateMap<Source, Destionation>();
+            //When in the controller we use mapper.Map (which converts the object's data type to another one) we need to specify the data types here, based on the data type of each property and it's name.
+            //If the name is not the same or you want to change the name (or other reasons) you can use .ForMember to tell exactly how to do the changes.
             CreateMap<AppointmentPostDto, CreateAppointmentCommand>().ReverseMap();
 
-            // Cand vrem sa facem Get la Appointment, noi il extragem din DB si este de tipul Appointment, si aici il mapam la tipul AppointmentGetDto.
-            // Cand facem maparea, comparam proprietatile obiectului (tipul de date si nume) dintre Appointment si AppointmentGetDto. Cele care difera trebuie mapuit la randul lor.
-            // De ex. aici difera tipul colectiei => trebuie sa o mapam si pe ea.
+            //Here we map the Appointment to AppointmentGetDto and we want to extract only the CustomerName from the entire Customer (same for the employee).
             CreateMap<Appointment, AppointmentGetDto>()
                 // BEFORE:
                 //.ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
@@ -25,7 +25,7 @@ namespace hairDresser.Presentation.Profiles
                 // AFTER:
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.UserName))
                 .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee.UserName));
-            // Aici mapam si tipurile de la colectie.
+            //After we map the Appointment to AppointmentGetDto, we need to map each list/collection that has different data type, so we need to make a separate Dto for each collection.
             CreateMap<AppointmentHairService, AppointmentHairServiceDto>().ReverseMap();
 
             CreateMap<AppointmentPutDto, UpdateAppointmentCommand>().ReverseMap();

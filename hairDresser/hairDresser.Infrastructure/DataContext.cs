@@ -10,9 +10,6 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Infrastructure
 {
-    // BEFORE:
-    // public class DataContext : DbContext
-    // AFTER:
     public class DataContext : IdentityDbContext<User>
     {
         public DataContext(DbContextOptions options) : base(options) { }
@@ -24,13 +21,13 @@ namespace hairDresser.Infrastructure
         public DbSet<WorkingInterval> WorkingIntervals => Set<WorkingInterval>();
         public DbSet<WorkingDay> WorkingDays => Set<WorkingDay>();
 
-        // Even if the many-to-many connection table is automatically created in the DB, if you set it here it will help you to access it.
+        //Even if the many-to-many connection table is automatically created in the DB, if you set it here it will help you to access it.
         public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();
         public DbSet<AppointmentHairService> AppointmentsHairServices => Set<AppointmentHairService>();
 
-        // !!! If I run the application in the:
-        // - Console => trebuie sa decomentez metoda OnConfiguring().
-        // - Presentation (API) => trebuie sa comentez metoda OnConfiguring() pt. ca altfel am erori de tipul "Multiple database connections".
+        //! If I run the application in:
+        //- Console => trebuie sa decomentez metoda OnConfiguring().
+        //- Presentation (API) => trebuie sa comentez metoda OnConfiguring() pt. ca altfel am erori de tipul "Multiple database connections".
         //protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         //{
         //    optionBuilder
@@ -43,15 +40,15 @@ namespace hairDresser.Infrastructure
 
             builder.Entity<HairService>().HasIndex(hairService => hairService.Name).IsUnique();
 
-            // Configuring Foreign Keys With Fluent API (Method 1 = with Collections in the User class).
+            //Configuring Foreign Keys With Fluent API (with Collections in the User class).
             builder.Entity<Appointment>()
                 .HasOne(u => u.Customer)
-                .WithMany(app => app.AppointmentCustomers)
+                .WithMany(app => app.CustomerAppointments)
                 .HasForeignKey(u => u.CustomerId)
                 .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Appointment>()
                 .HasOne(u => u.Employee)
-                .WithMany(app => app.AppointmentEmployees)
+                .WithMany(app => app.EmployeeAppointments)
                 .HasForeignKey(u => u.EmployeeId)
                 .OnDelete(DeleteBehavior.NoAction);
         }

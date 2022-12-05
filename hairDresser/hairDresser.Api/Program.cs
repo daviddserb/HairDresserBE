@@ -75,7 +75,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-//...
+//??? (because I had some errors with LINQ).
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore

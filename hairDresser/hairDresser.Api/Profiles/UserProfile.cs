@@ -11,6 +11,8 @@ namespace hairDresser.Presentation.Profiles
             CreateMap<User, UserGetDto>();
 
             CreateMap<User, EmployeeGetDto>();
+
+            CreateMap<User, EmployeeGetDto>();
         }
     }
 }

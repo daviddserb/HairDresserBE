@@ -208,7 +208,7 @@ namespace hairDresser.Presentation.Controllers
         public async Task<IActionResult> GetAllUsersWithCustomerRole()
         {
             var allCustomers = await _userManager.GetUsersInRoleAsync("customer");
-            // !!! sa pun un DTO
+            // !!!??? sa fac ca si la GetAllUsersWithEmployeeRole
             return Ok(allCustomers);
         }
 
