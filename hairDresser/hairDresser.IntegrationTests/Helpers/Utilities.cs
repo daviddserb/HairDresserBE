@@ -49,112 +49,78 @@ namespace hairDresser.IntegrationTests.Helpers
             };
             db.HairServices.AddRange(hairServices1, hairServices2, hairServices3, hairServices4, hairServices5);
 
-            var customer1 = new Customer
+            var user1 = new User
             {
-                Id = 1,
-                Name = "Grigore",
-                Username = "grigore",
-                Password = "parolagrea123",
-                Email = "grigore@yahoo.com",
-                Phone = "+40765345123",
-                Address = "Timisoara"
-
+                Id = "a27325c9-7b54-4058-a6c3-3e076edb3a77", // customer id
+                UserName = "cristi",
+                Email = "cristi@yahoo.com",
+                PhoneNumber = "+40 742 237 921",
+                Address = "Timisoara",
             };
-            var customer2 = new Customer
+            var user2 = new User
             {
-                Id = 2,
-                Name = "Andrei",
-                Username = "andrei",
-                Password = "321parolagrea",
-                Email = "andrei@yahoo.com",
-                Phone = "+40764376123",
-                Address = "Arad"
+                Id = "e977b9be-b19c-47bb-bac2-813c3cbd2e97", // employee id
+                UserName = "mircea",
+                Email = "mircea@yahoo.com",
+                PhoneNumber = "+40 322 237 921",
+                Address = "Maramures",
             };
-            var customer3 = new Customer
+            var user3 = new User
             {
-                Id = 3,
-                Name = "Marcel",
-                Username = "marcel",
-                Password = "321parolagrea123",
-                Email = "marcel@yahoo.com",
-                Phone = "+40761176432",
-                Address = "Bucuresti"
+                Id = "1827e7ba-a97b-4326-ab6b-a847573d86e6", // customer id
+                UserName = "mihai",
+                Email = "mihai@yahoo.com",
+                PhoneNumber = "+40 322 237 123",
+                Address = "Targoviste",
             };
-            db.Customers.AddRange(customer1, customer2, customer3);
-
-            var employee1 = new Employee
+            var user4 = new User
             {
-                Id = 1,
-                Name = "Matei",
-                // BEFORE:
-                //EmployeeHairServices = new List<EmployeeHairService>()
-                //{
-                //    new EmployeeHairService { EmployeeId = "11223344-5566-7788-99AA-BBCCDDEEFF00", HairServiceId = 1 },
-                //    new EmployeeHairService { EmployeeId = "11223344-5566-7788-99AA-BBCCDDEEFF00", HairServiceId = 2 }
-                //}
+                Id = "fdf45d4c-da75-4a63-aff6-cd9add4d327f", // employee id
+                UserName = "alex",
+                Email = "alex@gmail.com",
+                PhoneNumber = "+40 123 237 921",
+                Address = "Constanta",
             };
-            var employee2 = new Employee
-            {
-                Id = 2,
-                Name = "Onofras",
-                // BEFORE:
-                //EmployeeHairServices = new List<EmployeeHairService>()
-                //{
-                //    new EmployeeHairService { EmployeeId = "11223344-5566-7788-99AB-BBCCDDEEFF00", HairServiceId = 2 },
-                //    new EmployeeHairService { EmployeeId = "11223344-5566-7788-99AB-BBCCDDEEFF00", HairServiceId = 3 }
-                //}
-            };
-            var employee3 = new Employee
-            {
-                Id = 3,
-                Name = "Andreea",
-                // BEFORE:
-                //EmployeeHairServices = new List<EmployeeHairService>()
-                //{
-                //    new EmployeeHairService { EmployeeId = "11223344-5566-7788-99AB-BBCCDDEEFF00", HairServiceId = 4 },
-                //    new EmployeeHairService { EmployeeId = "11223344-5566-7788-99AB-BBCCDDEEFF00", HairServiceId = 5 }
-                //}
-            };
-            db.Employees.AddRange(employee1, employee2, employee3);
+            db.Users.AddRange(user1, user2, user3, user4);
 
             var appointment1 = new Appointment
             {
                 Id = 1,
-                CustomerId = "21223344-5566-7788-99AB-BBCCDDEEFF00",
-                EmployeeId = "11223344-5566-7788-99AA-BBCCDDEEFF00",
+                CustomerId = "1827e7ba-a97b-4326-ab6b-a847573d86e6",
+                EmployeeId = "fdf45d4c-da75-4a63-aff6-cd9add4d327f",
                 AppointmentHairServices = new List<AppointmentHairService>()
                 {
                     new AppointmentHairService { AppointmentId = 1, HairServiceId = 1 },
                     new AppointmentHairService { AppointmentId = 1, HairServiceId = 2 }
                 },
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now
+                StartDate = DateTime.Now.AddDays(2),
+                EndDate = DateTime.Now.AddDays(2)
             };
             var appointment2 = new Appointment
             {
                 Id = 2,
-                CustomerId = "31223344-5566-7788-99AB-BBCCDDEEFF00",
-                EmployeeId = "11223344-5566-7788-99AB-BBCCDDEEFF00",
+                CustomerId = "1827e7ba-a97b-4326-ab6b-a847573d86e6",
+                EmployeeId = "e977b9be-b19c-47bb-bac2-813c3cbd2e97",
                 AppointmentHairServices = new List<AppointmentHairService>()
                 {
                     new AppointmentHairService { AppointmentId = 2, HairServiceId = 2 },
                     new AppointmentHairService { AppointmentId = 2, HairServiceId = 3 }
                 },
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now
+                StartDate = DateTime.Now.AddDays(3),
+                EndDate = DateTime.Now.AddDays(3)
             };
             var appointment3 = new Appointment
             {
                 Id = 3,
-                CustomerId = "41223344-5566-7788-99AB-BBCCDDEEFF00",
-                EmployeeId = "11223344-5566-7788-99AB-BBCCDDEEFF00",
+                CustomerId = "a27325c9-7b54-4058-a6c3-3e076edb3a77",
+                EmployeeId = "fdf45d4c-da75-4a63-aff6-cd9add4d327f",
                 AppointmentHairServices = new List<AppointmentHairService>()
                 {
                     new AppointmentHairService { AppointmentId = 3, HairServiceId = 4 },
                     new AppointmentHairService { AppointmentId = 3, HairServiceId = 5 }
                 },
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now
+                StartDate = DateTime.Now.AddDays(4),
+                EndDate = DateTime.Now.AddDays(4)
             };
             db.Appointments.AddRange(appointment1, appointment2, appointment3);
 

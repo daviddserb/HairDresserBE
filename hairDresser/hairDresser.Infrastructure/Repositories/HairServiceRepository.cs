@@ -130,22 +130,24 @@ namespace hairDresser.Infrastructure.Repositories
             return durationHairServices;
         }
 
+        // ???
         public async Task<float> GetPriceByHairServicesIds(List<int> hairServicesIds)
         {
-            // ??? Nu este foarte rapid, cred ca se poate sa fac count dupa ce filtrez.
-
+            // Method 1
             var selectedHairServices = context.HairServices
                 .Where(hairService => hairServicesIds.Contains(hairService.Id));
-                //.Count(hairServices => hairServices.Price); //???
-
             float priceHairServices = 0;
-
             foreach (var hairService in selectedHairServices)
             {
                 priceHairServices += hairService.Price;
             }
 
-            return priceHairServices;
+            // Method 2:
+            var selectedHairServices2 = context.HairServices
+                .Where(hairService => hairServicesIds.Contains(hairService.Id))
+                .Sum(hairServices => hairServices.Price);
+
+            return selectedHairServices2;
         }
 
         public async Task<HairService> UpdateHairServiceAsync(HairService hairService)
