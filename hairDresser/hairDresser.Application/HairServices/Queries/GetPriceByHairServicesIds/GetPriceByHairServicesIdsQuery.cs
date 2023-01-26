@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.HairServices.Queries.GetPriceByHairServicesIds
 {
-    public class GetPriceByHairServicesIdsQuery : IRequest<float>
+    public class GetPriceByHairServicesIdsQuery : IRequest<decimal>
     {
         public List<int> HairServicesIds { get; set; }
     }

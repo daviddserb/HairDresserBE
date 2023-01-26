@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.HairServices.Queries.GetMissingHairServicesByEmployeeId
 {
-    public class GetMissingHairServicesByEmployeeIdQuery : IRequest<List<HairService>>
+    public class GetMissingHairServicesByEmployeeIdQuery : IRequest<IQueryable<HairService>>
     {
         public string EmployeeId { get; set; }
     }

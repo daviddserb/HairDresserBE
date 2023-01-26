@@ -28,18 +28,14 @@ namespace hairDresser.Infrastructure.Repositories
             return context.WorkingDays;
         }
 
-        // ? Nu stiu daca o sa ma folosesc de ea aceasta metoda, o sa vad...
+        // ??? I still don't use this method but maybe in future.
         public async Task<WorkingDay> GetWorkingDayByIdAsync(int workingDayId)
         {
-            Console.WriteLine("WorkingDayRepository -> GetWorkingDayAsync(int workingDayId):");
-            Console.WriteLine($"nameOfWorkingDay= '{context.WorkingDays.First(obj => obj.Id == workingDayId).Name}'");
             return context.WorkingDays.First(obj => obj.Id == workingDayId);
         }
 
         public async Task<WorkingDay> GetWorkingDayByNameAsync(string workingDayName)
         {
-            Console.WriteLine("WorkingDayRepository -> GetWorkingDayAsync(string workingDayName):");
-            Console.WriteLine($"idOfWorkingDay= '{context.WorkingDays.First(obj => obj.Name == workingDayName).Id}'");
             return context.WorkingDays.First(obj => obj.Name == workingDayName);
         }
     }

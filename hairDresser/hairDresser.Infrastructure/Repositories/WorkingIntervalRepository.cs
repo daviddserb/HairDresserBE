@@ -26,7 +26,6 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<WorkingInterval>> ReadWorkingIntervalsAsync()
         {
-            //Include = Join.
             return context.WorkingIntervals
                 .Include(workingDay => workingDay.WorkingDay)
                 .Include(employee => employee.Employee)
@@ -40,7 +39,6 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(obj => obj.WorkingDay)
                 .Include(obj => obj.Employee)
                 .FirstOrDefaultAsync(workingInterval => workingInterval.Id == workingIntervalId);
-
             return workingInterval;
         }
 

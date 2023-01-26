@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.HairServices.Queries.GetPriceByHairServicesIds
 {
-    public class GetPriceByHairServicesIdsQueryHandler : IRequestHandler<GetPriceByHairServicesIdsQuery, float>
+    public class GetPriceByHairServicesIdsQueryHandler : IRequestHandler<GetPriceByHairServicesIdsQuery, decimal>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -17,7 +17,7 @@ namespace hairDresser.Application.HairServices.Queries.GetPriceByHairServicesIds
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<float> Handle(GetPriceByHairServicesIdsQuery request, CancellationToken cancellationToken)
+        public async Task<decimal> Handle(GetPriceByHairServicesIdsQuery request, CancellationToken cancellationToken)
         {
             return await _unitOfWork.HairServiceRepository.GetPriceByHairServicesIds(request.HairServicesIds);
         }

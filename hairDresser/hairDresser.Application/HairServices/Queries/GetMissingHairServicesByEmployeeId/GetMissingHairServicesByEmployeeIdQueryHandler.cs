@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.HairServices.Queries.GetMissingHairServicesByEmployeeId
 {
-    public class GetMissingHairServicesByEmployeeIdQueryHandler : IRequestHandler<GetMissingHairServicesByEmployeeIdQuery, List<HairService>>
+    public class GetMissingHairServicesByEmployeeIdQueryHandler : IRequestHandler<GetMissingHairServicesByEmployeeIdQuery, IQueryable<HairService>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -20,7 +20,7 @@ namespace hairDresser.Application.HairServices.Queries.GetMissingHairServicesByE
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<HairService>> Handle(GetMissingHairServicesByEmployeeIdQuery request, CancellationToken cancellationToken)
+        public async Task<IQueryable<HairService>> Handle(GetMissingHairServicesByEmployeeIdQuery request, CancellationToken cancellationToken)
         {
             var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");

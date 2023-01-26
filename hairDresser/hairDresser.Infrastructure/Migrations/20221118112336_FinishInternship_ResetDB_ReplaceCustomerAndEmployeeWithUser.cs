@@ -88,7 +88,7 @@ namespace hairDresser.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Duration = table.Column<TimeSpan>(type: "time", nullable: false),
-                    Price = table.Column<float>(type: "real", nullable: false)
+                    Price = table.Column<decimal>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -139,7 +139,7 @@ namespace hairDresser.Infrastructure.Migrations
                     EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Price = table.Column<float>(type: "real", nullable: false),
+                    Price = table.Column<decimal>(type: "real", nullable: false),
                     isDeleted = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>

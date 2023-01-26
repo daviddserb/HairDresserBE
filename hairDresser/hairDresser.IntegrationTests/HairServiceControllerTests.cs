@@ -53,7 +53,7 @@ namespace hairDresser.IntegrationTests
             var hairService = JsonConvert.DeserializeObject<HairServiceGetDto>(result);
 
             Assert.Equal(newHairService.Name, hairService.Name);
-            Assert.Equal((double)newHairService.DurationInMinutes, hairService.Duration.TotalMinutes);
+            Assert.Equal(newHairService.DurationInMinutes, hairService.Duration.TotalMinutes);
             Assert.Equal(newHairService.Price, hairService.Price);
         }
 

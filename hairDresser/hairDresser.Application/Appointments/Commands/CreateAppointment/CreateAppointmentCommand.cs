@@ -17,6 +17,6 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
         public List<int> HairServicesIds { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public float Price { get; set; }
+        public decimal Price { get; set; }
     }
 }

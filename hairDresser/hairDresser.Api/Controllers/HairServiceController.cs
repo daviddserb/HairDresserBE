@@ -144,7 +144,7 @@ namespace hairDresser.Presentation.Controllers
                 Id = id,
                 Name = editedHairService.Name,
                 DurationInMinutes = editedHairService.DurationInMinutes,
-                Price = (float)editedHairService.Price
+                Price = editedHairService.Price
             };
 
 

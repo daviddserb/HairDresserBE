@@ -37,117 +37,53 @@ namespace hairDresser.Infrastructure.Repositories
             return hairService;
         }
 
-        // ???
         public async Task<IQueryable<EmployeeHairService>> GetHairServicesByEmployeeId(string employeeId) {
             var employeeHairServices = context.EmployeesHairServices
                 .Where(employeeHairService => employeeHairService.EmployeeId == employeeId)
                 .Include(employeeHairService => employeeHairService.HairService);
-
             return employeeHairServices;
         }
 
-        public async Task<List<HairService>> GetMissingHairServicesByEmployeeId(string employeeId)
+        public async Task<IQueryable<HairService>>GetMissingHairServicesByEmployeeId(string employeeId)
         {
+            // Method 1:
             var allHairServices = context.HairServices;
-
-            var allEmployeeHairServices = context.EmployeesHairServices
+            var employeeHairServices = context.EmployeesHairServices
                 .Where(employeeHairService => employeeHairService.EmployeeId == employeeId)
                 .Include(employeeHairService => employeeHairService.HairService);
+            var employeeMissingHairServices = allHairServices.Except(employeeHairServices.Select(ehs => ehs.HairService));
 
-            var missingHairServices = new List<HairService>();
-            foreach (var hairService in allHairServices)
-            {
-                var cnt = 0;
-                foreach (var employeeHairService in allEmployeeHairServices)
-                {
-                    if(hairService.Id == employeeHairService.HairServiceId)
-                    {
-                        cnt = 1;
-                    }
-                }
-                if (cnt == 0)
-                {
-                    missingHairServices.Add(hairService);
-                }
-            }
+            // Method 2:
+            var employeeMissingHairServices2 = context.HairServices
+                .Where(hs => !context.EmployeesHairServices
+                    .Any(ehs => ehs.EmployeeId == employeeId && ehs.HairServiceId == hs.Id));
 
-            return missingHairServices;
+            return employeeMissingHairServices2;
         }
 
         public async Task<IQueryable<HairService>> GetAllHairServicesByIdsAsync(List<int> hairServicesIds)
         {
-            //???
-            // Imi aduce doar rezultatele care sunt in lista, dar de ex. daca am dat: 1, 5, 9 si 9 nu se afla in lista, returneaza 1 si 5, dar eu vreau sa nu mai returneze nimic, ca nu toate se afla in lista.
-            // Cum pot imbunatati si atunci nu mai am nevoie de if/else, returnez direct ce trebuie.
             var hairServices = context.HairServices
                 .Where(hairService => hairServicesIds.Contains(hairService.Id));
 
             if (hairServices.Count() == hairServicesIds.Count()) return hairServices;
             else return null;
-
-            // Varianta 2:
-            // ??? Merge bine dar este cu true si fals...
-            var result2 = hairServicesIds
-                .Intersect(context.HairServices.Select(hairService => hairService.Id))
-                .Count() == hairServicesIds.Count();
-
-            // Varianta 3:
-            // ??? Merge bine dar este cu true si fals...
-            var result3 = hairServicesIds
-                .All(hairServiceId => context.HairServices.Select(hairService => hairService.Id).Contains(hairServiceId));
-
-            //??? gresit
-            var result4 = context.HairServices
-                .Where(hairService => hairServicesIds.All(hairServiceId => hairService.Id == hairServiceId));
-
-            //??? gresit
-            var result5 = context.HairServices
-                .Where(hairService => hairServicesIds.All(hairServiceId => hairServicesIds.Contains(hairService.Id)));
-
-            //Testing:
-            // Metoda 1: ??? Merge, dar eu trebuie sa fac pe tabela.Except(lista input) si atunci nu ii bine.
-            var superset = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            var subset = new[] { 2, 4, 6, 8 };
-            var test1 = subset.Except(superset);
-            bool contained = !subset.Except(superset).Any();
         }
 
         public async Task<TimeSpan> GetDurationByHairServicesIds(List<int> hairServicesIds)
         {
-            // ??? Nu este foarte rapid, cred ca se poate sa fac count dupa ce filtrez.
-
-            var selectedHairServices = context.HairServices
-                .Where(hairService => hairServicesIds.Contains(hairService.Id));
-              //.Count(hairServices => hairServices.Duration); //???
-
-            var durationHairServices = new TimeSpan();
-
-            foreach (var hairService in selectedHairServices)
-            {
-                durationHairServices += hairService.Duration;
-            }
-
-            return durationHairServices;
+            var selectedHairServicesTotalDuration = context.HairServices
+                .Where(hairService => hairServicesIds.Contains(hairService.Id))
+                .Sum(hairServices => hairServices.Duration.Hours * 60 + hairServices.Duration.Minutes);
+            return TimeSpan.FromMinutes(selectedHairServicesTotalDuration);
         }
 
-        // ???
-        public async Task<float> GetPriceByHairServicesIds(List<int> hairServicesIds)
+        public async Task<decimal> GetPriceByHairServicesIds(List<int> hairServicesIds)
         {
-            // Method 1
-            var selectedHairServices = context.HairServices
-                .Where(hairService => hairServicesIds.Contains(hairService.Id));
-            float priceHairServices = 0;
-            foreach (var hairService in selectedHairServices)
-            {
-                priceHairServices += hairService.Price;
-            }
-
-            // Method 2:
-            var selectedHairServices2 = context.HairServices
+            var selectedHairServicesTotalPrice = context.HairServices
                 .Where(hairService => hairServicesIds.Contains(hairService.Id))
                 .Sum(hairServices => hairServices.Price);
-
-            return selectedHairServices2;
+            return selectedHairServicesTotalPrice;
         }
 
         public async Task<HairService> UpdateHairServiceAsync(HairService hairService)
