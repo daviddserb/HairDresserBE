@@ -23,18 +23,6 @@ using hairDresser.Infrastructure.Repositories;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-/*
- * DB relationships between entities (domain classes):
- * Un Customer poate sa aibe mai multe Appointments dar un Appointment poate avea doar un singur Customer => One-To-Many.
- * Un Employee poate sa aibe mai multe Appointments dar un Appointment poate avea doar un singur Employee => One-To-Many.
- * Un Employee poate sa aibe mai multe HairServices si un HairService poate sa fie la mai multi Employees => Many-To-Many.
- * Un Appointment poate sa aibe mai multe HairServices si un HairService poate sa fie la mai multe Appointments => Many-To-Many.
------------------------------------------------------------------------------------------------------------------------------
- * Un Employee poate sa aiba mai multe WorkingDays si un WorkingDay poate sa fie la mai multi Employee => Many-To-Many. Observatie, aceasta legatura o fac prin intermediul tabelei WorkingInterval, unde:
- * Un Employee poate sa aiba mai multe WorkingIntervals dar un WorkingInterval nu poate sa fie la mai multi Employees.
- * Un WorkingDay poate sa aiba mai multe WorkingIntervals dar un WorkingInterval nu poate sa aiba mai multe WorkingDays.
-*/
-
 // di = Dependency Injection
 var diContainer = new ServiceCollection()
     //Facem legatura cu server-ul nostru din DB.
@@ -56,6 +44,7 @@ var diContainer = new ServiceCollection()
 
     // Build-uim acest container ...
     .BuildServiceProvider();
+
 var mediator = diContainer.GetRequiredService<IMediator>();
 
 //bool showMenu = true;

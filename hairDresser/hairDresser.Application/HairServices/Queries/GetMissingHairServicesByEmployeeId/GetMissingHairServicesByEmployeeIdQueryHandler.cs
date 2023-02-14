@@ -25,7 +25,7 @@ namespace hairDresser.Application.HairServices.Queries.GetMissingHairServicesByE
             var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
 
-            return await _unitOfWork.HairServiceRepository.GetMissingHairServicesByEmployeeId(request.EmployeeId);
+            return await _unitOfWork.HairServiceRepository.GetMissingHairServicesByEmployeeIdAsync(request.EmployeeId);
         }
     }
 }

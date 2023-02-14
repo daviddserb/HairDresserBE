@@ -23,7 +23,7 @@ namespace hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate
         {
             // Set a maximum number of appointments per month for the customer.
             var maximumCustomerAppointmentsPerMonth = 5;
-            var customerAppointmentsLastMonth = await _unitOfWork.AppointmentRepository.GetHowManyAppointmentsCustomerHasInLastMonth(request.CustomerId);
+            var customerAppointmentsLastMonth = await _unitOfWork.AppointmentRepository.GetHowManyAppointmentsCustomerHasInLastMonthAsync(request.CustomerId);
             if (customerAppointmentsLastMonth > maximumCustomerAppointmentsPerMonth) throw new ClientException("Can't create more appointments for this month because you have reached the appointments limit!");
 
             var appointmentDate = new DateTime(request.Year, request.Month, request.Date);

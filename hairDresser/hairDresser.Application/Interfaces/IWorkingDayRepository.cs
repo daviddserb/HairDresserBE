@@ -10,8 +10,11 @@ namespace hairDresser.Application.Interfaces
     public interface IWorkingDayRepository
     {
         Task CreateWorkingDayAsync(WorkingDay workingDay);
+
         Task<IQueryable<WorkingDay>> ReadWorkingDaysAsync();
+
         Task<WorkingDay> GetWorkingDayByIdAsync(int dayId);
+
         Task<WorkingDay> GetWorkingDayByNameAsync(string dayName);
     }
 }

@@ -37,14 +37,14 @@ namespace hairDresser.Infrastructure.Repositories
             return hairService;
         }
 
-        public async Task<IQueryable<EmployeeHairService>> GetHairServicesByEmployeeId(string employeeId) {
+        public async Task<IQueryable<EmployeeHairService>> GetHairServicesByEmployeeIdAsync(string employeeId) {
             var employeeHairServices = context.EmployeesHairServices
                 .Where(employeeHairService => employeeHairService.EmployeeId == employeeId)
                 .Include(employeeHairService => employeeHairService.HairService);
             return employeeHairServices;
         }
 
-        public async Task<IQueryable<HairService>>GetMissingHairServicesByEmployeeId(string employeeId)
+        public async Task<IQueryable<HairService>> GetMissingHairServicesByEmployeeIdAsync(string employeeId)
         {
             // Method 1:
             var allHairServices = context.HairServices;
@@ -70,7 +70,7 @@ namespace hairDresser.Infrastructure.Repositories
             else return null;
         }
 
-        public async Task<TimeSpan> GetDurationByHairServicesIds(List<int> hairServicesIds)
+        public async Task<TimeSpan> GetDurationByHairServicesIdsAsync(List<int> hairServicesIds)
         {
             var selectedHairServicesTotalDuration = context.HairServices
                 .Where(hairService => hairServicesIds.Contains(hairService.Id))
@@ -78,7 +78,7 @@ namespace hairDresser.Infrastructure.Repositories
             return TimeSpan.FromMinutes(selectedHairServicesTotalDuration);
         }
 
-        public async Task<decimal> GetPriceByHairServicesIds(List<int> hairServicesIds)
+        public async Task<decimal> GetPriceByHairServicesIdsAsync(List<int> hairServicesIds)
         {
             var selectedHairServicesTotalPrice = context.HairServices
                 .Where(hairService => hairServicesIds.Contains(hairService.Id))

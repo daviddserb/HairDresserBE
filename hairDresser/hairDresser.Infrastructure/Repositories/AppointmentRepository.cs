@@ -74,7 +74,7 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
                 .ThenInclude(hairServices => hairServices.HairService);
         }
-        public async Task<int> GetHowManyAppointmentsCustomerHasInLastMonth(string customerId)
+        public async Task<int> GetHowManyAppointmentsCustomerHasInLastMonthAsync(string customerId)
         {
             return context.Appointments
                 .Where(appointment => appointment.CustomerId == customerId)

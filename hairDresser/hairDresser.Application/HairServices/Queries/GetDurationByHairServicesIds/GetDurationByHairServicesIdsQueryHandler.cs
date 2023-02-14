@@ -19,7 +19,7 @@ namespace hairDresser.Application.HairServices.Queries.GetDurationByHairServices
 
         public async Task<TimeSpan> Handle(GetDurationByHairServicesIdsQuery request, CancellationToken cancellationToken)
         {
-            return await _unitOfWork.HairServiceRepository.GetDurationByHairServicesIds(request.HairServicesIds);
+            return await _unitOfWork.HairServiceRepository.GetDurationByHairServicesIdsAsync(request.HairServicesIds);
         }
     }
 }

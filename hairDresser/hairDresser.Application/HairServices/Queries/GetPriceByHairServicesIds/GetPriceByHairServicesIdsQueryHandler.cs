@@ -19,7 +19,7 @@ namespace hairDresser.Application.HairServices.Queries.GetPriceByHairServicesIds
 
         public async Task<decimal> Handle(GetPriceByHairServicesIdsQuery request, CancellationToken cancellationToken)
         {
-            return await _unitOfWork.HairServiceRepository.GetPriceByHairServicesIds(request.HairServicesIds);
+            return await _unitOfWork.HairServiceRepository.GetPriceByHairServicesIdsAsync(request.HairServicesIds);
         }
     }
 }

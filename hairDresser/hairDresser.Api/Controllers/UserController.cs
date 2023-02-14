@@ -124,8 +124,10 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpPost]
         [Route("assign-role")]
-        public async Task<IActionResult> AddToRole(UserRoleDto userInfo)
+        public async Task<IActionResult> AssignRole(UserRoleDto userInfo)
         {
+            Console.WriteLine("AssignRole Controller ->");
+
             var userExists = await _userManager.FindByNameAsync(userInfo.Username);
 
             if (userExists == null) return BadRequest("User does not exist.");
@@ -147,13 +149,16 @@ namespace hairDresser.Presentation.Controllers
                 return BadRequest("Failed to add user to role.");
             }
 
-            return Ok($"The role '{userInfo.Role}' is now assigned to the user with the username '{userInfo.Username}'");
+            // ??? Cum sa trimit Ok dar si cu un mesaj. Daca pun mesajul in Ok, pe FE imi intra in bucla de eroare, chiar daca se salveaza rolul in DB.
+            return Ok();
+            //return Ok($"The role '{userInfo.Role}' is now assigned to the user with the username '{userInfo.Username}'");
         }
 
         [HttpGet]
         [Route("all")]
         public async Task<IActionResult> GetAllUsers()
         {
+            // ???
             // BEFORE:
             //var query = new GetAllUsersQuery();
             //var allUsers = await _mediator.Send(query);
@@ -161,7 +166,7 @@ namespace hairDresser.Presentation.Controllers
             //var mappedAllUsers = _mapper.Map<List<UserGetDto>>(allUsers);
             //return Ok(mappedAllUsers);
 
-            // AFTER:
+            // AFTER x1:
             var users = _userManager.Users.Select(user => new UserGetDto()
             {
                 Id = user.Id,
@@ -170,7 +175,8 @@ namespace hairDresser.Presentation.Controllers
                 Address = user.Address,
                 Phone = user.PhoneNumber,
                 Role = string.Join(", ", _userManager.GetRolesAsync(user).Result.ToArray())
-            }).ToList();
+            }
+            ).ToList();
 
             return Ok(users);
         }
@@ -179,17 +185,7 @@ namespace hairDresser.Presentation.Controllers
         [Route("id")]
         public async Task<IActionResult> GetUserById(string id)
         {
-            // BEFORE:
-            //var query = new GetUserByIdQuery { UserId = id };
-            //var user = await _mediator.Send(query);
-            //if (user == null) return NotFound();
-            //var mappedUser = _mapper.Map<UserGetDto>(user);
-            //return Ok(mappedUser);
-
-            // AFTER:
             var user = await _userManager.FindByIdAsync(id);
-            var userRoles = await _userManager.GetRolesAsync(user);
-
             var userInfo = new UserGetDto()
             {
                 Id = user.Id,
@@ -197,7 +193,7 @@ namespace hairDresser.Presentation.Controllers
                 Email = user.Email,
                 Address = user.Address,
                 Phone = user.PhoneNumber,
-                Role = string.Join(", ", userRoles)
+                Role = string.Join(", ", _userManager.GetRolesAsync(user).Result.ToArray())
             };
 
             return Ok(userInfo);
@@ -208,7 +204,7 @@ namespace hairDresser.Presentation.Controllers
         public async Task<IActionResult> GetAllUsersWithCustomerRole()
         {
             var allCustomers = await _userManager.GetUsersInRoleAsync("customer");
-            // !!!??? sa fac ca si la GetAllUsersWithEmployeeRole
+            // ??? Nu folosesc acest endpoint. Daca voi avea nevoie, fac ca si la employee/all, adica ca in metoda GetAllUsersWithEmployeeRole.
             return Ok(allCustomers);
         }
 

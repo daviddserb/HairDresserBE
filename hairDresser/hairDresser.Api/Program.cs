@@ -75,7 +75,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-//??? (because I had some errors with LINQ).
+//???(because I had some errors with LINQ).
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -105,4 +105,5 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program{ } //To make the class visible.
+//To make the class visible.
+public partial class Program{ }
