@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using hairDresser.Application.Users.Commands.AddHairServicesToEmployee;
+using hairDresser.Application.Users.Commands.AddRoleToUser;
 using hairDresser.Application.Users.Commands.DeleteEmployeeHairService;
 using hairDresser.Application.Users.Commands.DeleteUser;
 using hairDresser.Application.Users.Commands.LoginUser;
@@ -58,7 +59,7 @@ namespace hairDresser.Presentation.Controllers
 
             var mappedUser = _mapper.Map<UserGetDto>(user);
 
-            return CreatedAtAction(nameof(GetUserById), new {userId = mappedUser.Id}, mappedUser);
+            return CreatedAtAction(nameof(GetUserById), new { userId = mappedUser.Id }, mappedUser);
         }
 
         [HttpPost]
@@ -77,34 +78,18 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpPost]
         [Route("assign-role")]
-        public async Task<IActionResult> AssignRole(UserRoleDto userInfo)
+        public async Task<IActionResult> AssignRoleToUser(UserRoleDto userInfo)
         {
-            Console.WriteLine("AssignRole Controller ->");
+            var command = _mapper.Map<AddRoleToUserCommand>(userInfo);
 
-            var userExists = await _userManager.FindByNameAsync(userInfo.Username);
+            var user = await _mediator.Send(command);
 
-            if (userExists == null) return BadRequest("User does not exist.");
+            var mappedUser = _mapper.Map<UserGetDto>(user);
 
-            var role = await _roleManager.FindByNameAsync(userInfo.Role);
-        
-            if (role == null)
-            {
-                var roleAdded = await _roleManager.CreateAsync(new IdentityRole
-                {
-                    Name = userInfo.Role
-                });
-            }
+            var message = $"The role '{userInfo.Role}' is now assigned to the user with the username '{userInfo.Username}'";
 
-            var addRoleToUser = await _userManager.AddToRoleAsync(userExists, userInfo.Role);
+            return Ok(message);
 
-            if (!addRoleToUser.Succeeded)
-            {
-                return BadRequest("Failed to add user to role.");
-            }
-
-            // ??? Cum sa trimit Ok dar si cu un mesaj. Daca pun mesajul in Ok, pe FE imi intra in bucla de eroare, chiar daca se salveaza rolul in DB.
-            return Ok();
-            //return Ok($"The role '{userInfo.Role}' is now assigned to the user with the username '{userInfo.Username}'");
         }
 
         [HttpGet]

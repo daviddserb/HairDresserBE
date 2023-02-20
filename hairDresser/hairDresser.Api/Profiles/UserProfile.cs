@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using hairDresser.Application.Users.Commands.AddRoleToUser;
 using hairDresser.Application.Users.Commands.LoginUser;
 using hairDresser.Application.Users.Commands.RegisterUser;
 using hairDresser.Domain.Models;
@@ -15,6 +16,8 @@ namespace hairDresser.Presentation.Profiles
 
             CreateMap<UserLoginDto, LoginUserCommand>();
             CreateMap<UserToken, UserGetDto>();
+
+            CreateMap<UserRoleDto, AddRoleToUserCommand>();
 
             CreateMap<User, EmployeeGetDto>();
             CreateMap<User, EmployeeGetDto>();
