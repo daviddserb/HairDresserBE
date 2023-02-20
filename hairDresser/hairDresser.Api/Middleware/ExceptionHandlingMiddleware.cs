@@ -14,15 +14,6 @@ namespace hairDresser.Presentation.Middleware
         {
             _next = next;
             _logger = logger;
-
-            /* Order from low (Trace) to high (Critical):
-            Critical
-            Error
-            Warning
-            Information
-            Debug
-            Trace
-            */
         }
 
         public async Task Invoke(HttpContext httpContext)
@@ -48,7 +39,6 @@ namespace hairDresser.Presentation.Middleware
             }
         }
 
-        // ??? Sa fac aceste Handle-uri in alta parte? Sau sa nici nu mai fac?
         private Task HandleNotFoundException (HttpContext httpContext, NotFoundException exception)
         {
             httpContext.Response.ContentType = "application/json";

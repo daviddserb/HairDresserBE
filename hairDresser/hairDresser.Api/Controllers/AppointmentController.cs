@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using hairDresser.Application.Appointments.Commands.CreateAppointment;
 using hairDresser.Application.Appointments.Commands.DeleteAppointment;
-using hairDresser.Application.Appointments.Commands.UpdateAppointment;
 using hairDresser.Application.Appointments.Queries.GetAllAppointments;
 using hairDresser.Application.Appointments.Queries.GetAllAppointmentsByCustomerId;
 using hairDresser.Application.Appointments.Queries.GetAllAppointmentsByEmployeeId;
@@ -32,9 +31,8 @@ namespace hairDresser.Presentation.Controllers
         public async Task<IActionResult> CreateAppointmentAsync([FromBody] AppointmentPostDto appointmentInput)
         {
             //_logger.LogInformation("Start process: Create appointment...");
-            //Console.WriteLine("CreateAppointmentAsync");
 
-            // Map the object type, which means change the type from AppointmentPostDto to CreateAppointmentCommand and match (map) as well the properties (by type and name).
+            // Map the object type, which it changes the type from AppointmentPostDto to CreateAppointmentCommand and match (map) as well the properties, by data type and name.
             var command = _mapper.Map<CreateAppointmentCommand>(appointmentInput);
 
             // Send() method calls the Handler => will have the result (return) from the Handle method.
@@ -44,7 +42,7 @@ namespace hairDresser.Presentation.Controllers
 
             //_logger.LogInformation("Appointment created successfully.");
 
-            return CreatedAtAction(nameof(GetAppointmentById), new { appointmentId = mappedAppointment.Id }, mappedAppointment);
+            return CreatedAtAction(nameof(GetAppointmentById), new {appointmentId = mappedAppointment.Id}, mappedAppointment);
         }
 
         [HttpGet]
@@ -122,27 +120,6 @@ namespace hairDresser.Presentation.Controllers
             return Ok(mappedEmployeeAppointments);
 
         }
-
-        // !!!??? Nu mai folosesc cea de update appointment
-        //[HttpPut]
-        //[Route("{appointmentId}")]
-        //public async Task<IActionResult> UpdateAppointment(int appointmentId, [FromBody] AppointmentPutDto editedAppointment)
-        //{
-        //    var command = new UpdateAppointmentCommand
-        //    {
-        //        AppointmentId = appointmentId,
-        //        HairServicesIds = editedAppointment.HairServicesIds,
-        //        EmployeeId = editedAppointment.EmployeeId,
-        //        StartDate = editedAppointment.StartDate,
-        //        EndDate = editedAppointment.EndDate
-        //    };
-
-        //    var result = await _mediator.Send(command);
-
-        //    if (result == null) return NotFound();
-
-        //    return NoContent();
-        //}
 
         [HttpDelete]
         [Route("{appointmentId}")]

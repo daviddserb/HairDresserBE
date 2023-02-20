@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using hairDresser.Application.Appointments.Commands.CreateAppointment;
-using hairDresser.Application.Appointments.Commands.UpdateAppointment;
 using hairDresser.Domain.Models;
 using hairDresser.Presentation.Dto.AppointmentDtos;
 using hairDresser.Presentation.Dto.AppointmentHairServiceDtos;
@@ -27,8 +26,6 @@ namespace hairDresser.Presentation.Profiles
                 .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee.UserName));
             //After we map the Appointment to AppointmentGetDto, we need to map each list/collection that has different data type, so we need to make a separate Dto for each collection.
             CreateMap<AppointmentHairService, AppointmentHairServiceDto>().ReverseMap();
-
-            CreateMap<AppointmentPutDto, UpdateAppointmentCommand>().ReverseMap();
         }
     }
 }

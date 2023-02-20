@@ -2,6 +2,8 @@
 using hairDresser.Application.Users.Commands.AddHairServicesToEmployee;
 using hairDresser.Application.Users.Commands.DeleteEmployeeHairService;
 using hairDresser.Application.Users.Commands.DeleteUser;
+using hairDresser.Application.Users.Commands.LoginUser;
+using hairDresser.Application.Users.Commands.RegisterUser;
 using hairDresser.Application.Users.Commands.UpdateUser;
 using hairDresser.Application.Users.Queries.GetAllUsers;
 using hairDresser.Application.Users.Queries.GetAllUsersWithEmployeeRole;
@@ -48,78 +50,29 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register(UserRegisterDto userInfo)
+        public async Task<IActionResult> RegisterUser(UserRegisterDto userInfo)
         {
-            var userExists = await _userManager.FindByNameAsync(userInfo.Username);
+            var command = _mapper.Map<RegisterUserCommand>(userInfo);
 
-            if (userExists != null) return BadRequest("User already exists.");
+            var user = await _mediator.Send(command);
 
-            var user = new User
-            {
-                UserName = userInfo.Username,
-                Email = userInfo.Email,
-                PhoneNumber = userInfo.Phone,
-                Address = userInfo.Address,
-            };
+            var mappedUser = _mapper.Map<UserGetDto>(user);
 
-            var result = await _userManager.CreateAsync(user, userInfo.Password);
-
-            if (!result.Succeeded)
-            {
-                // OAuth has some validations on its own columns.
-                // For example the password must have at least one: uppercase letter (A, ...), digit (1, ...) and alphanumeric character (symbols: #, @, %, ...).
-                return BadRequest("Failed to create user.");
-            }
-
-            // ??? Can't send message inside the Ok() method. I need to find a new method like Ok where I can send a message. 
-            return Ok();
+            return CreatedAtAction(nameof(GetUserById), new {userId = mappedUser.Id}, mappedUser);
         }
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login(UserLoginDto userInfo)
+        public async Task<IActionResult> LoginUser(UserLoginDto userInfo)
         {
-            var user = await _userManager.FindByNameAsync(userInfo.Username);
+            var command = _mapper.Map<LoginUserCommand>(userInfo);
 
-            if (user != null && await _userManager.CheckPasswordAsync(user, userInfo.Password))
-            {
-                // If the user exists, after the login, we need to return a token, and to do that we need to add some Claims.
+            var user = await _mediator.Send(command);
 
-                var userRoles = await _userManager.GetRolesAsync(user);
+            var mappedUser = _mapper.Map<UserGetDto>(user);
 
-                // Will be visible in the token.
-                var authClaims = new List<Claim>
-                {
-                    new Claim("username", userInfo.Username),
-                    new Claim("password", userInfo.Password)
-                };
+            return Ok(mappedUser);
 
-                // Add the roles, from the DB, from the specific user, to the claims.
-                foreach (var userRole in userRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-                }
-
-                // Generate the key (which is the same as the key from the Program.cs).
-                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdee-312423d-dsa213321"));
-
-                var token = new JwtSecurityToken(
-                    issuer: "https://localhost:7192", // back-end
-                    audience: "https://localhost:4200", // front-end
-                    claims: authClaims,
-                    expires: DateTime.Now.AddHours(10),
-                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
-
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    username = userInfo.Username,
-                    id = user.Id,
-                    expiration = token.ValidTo
-                });
-            }
-
-            return Unauthorized("Account doesn't exist.");
         }
 
         [HttpPost]
@@ -183,9 +136,9 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("id")]
-        public async Task<IActionResult> GetUserById(string id)
+        public async Task<IActionResult> GetUserById(string userId)
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(userId);
             var userInfo = new UserGetDto()
             {
                 Id = user.Id,

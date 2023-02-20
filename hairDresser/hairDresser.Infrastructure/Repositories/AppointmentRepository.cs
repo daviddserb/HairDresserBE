@@ -100,12 +100,6 @@ namespace hairDresser.Infrastructure.Repositories
                 .ThenInclude(hairServices => hairServices.HairService);
         }
 
-        public async Task<Appointment> UpdateAppointmentAsync(Appointment appointment)
-        {
-            context.Appointments.Update(appointment);
-            return appointment;
-        }
-
         public async Task DeleteAppointmentAsync(int appointmentId)
         {
             var appointment = await context.Appointments.FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);

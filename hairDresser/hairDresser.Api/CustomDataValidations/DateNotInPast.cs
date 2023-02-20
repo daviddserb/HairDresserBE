@@ -6,7 +6,6 @@ namespace hairDresser.Presentation.CustomDataValidations
     {
         public override bool IsValid(object value)
         {
-            Console.WriteLine("### DateStartAttribute:");
             // Get the StartDate input.
             DateTime dateStart = (DateTime)value;
             Console.WriteLine("dateStart= " + dateStart);
@@ -35,8 +34,6 @@ namespace hairDresser.Presentation.CustomDataValidations
         // Override IsValid.
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            Console.WriteLine("@@@ DateGreaterThanAttribute:");
-
             //Get PropertyInfo Object
             var basePropertyInfo = validationContext.ObjectType.GetProperty(_basePropertyName);
 

@@ -14,10 +14,6 @@ namespace hairDresser.Domain.Models
         public int WorkingDayId { get; set; }
         public WorkingDay WorkingDay { get; set; }
 
-        // BEFORE:
-        //public Employee Employee { get; set; }
-        //public int EmployeeId { get; set; }
-        // AFTER:
         public string EmployeeId { get; set; }
         public User Employee { get; set; }
 

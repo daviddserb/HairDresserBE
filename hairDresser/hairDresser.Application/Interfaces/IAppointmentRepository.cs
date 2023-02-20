@@ -20,8 +20,6 @@ namespace hairDresser.Application.Interfaces
         Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdByDateAsync(string employeeId, DateTime appointmentDate);
         Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdAsync(string employeeId);
 
-        Task<Appointment> UpdateAppointmentAsync(Appointment appointment);
-
         Task DeleteAppointmentAsync(int appointmentId);
     }
 }
