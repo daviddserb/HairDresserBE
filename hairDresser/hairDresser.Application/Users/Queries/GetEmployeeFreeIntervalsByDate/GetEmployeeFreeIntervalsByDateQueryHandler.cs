@@ -22,42 +22,36 @@ namespace hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate
         public async Task<List<EmployeeFreeInterval>> Handle(GetEmployeeFreeIntervalsByDateQuery request, CancellationToken cancellationToken)
         {
             // Set a maximum number of appointments per month for the customer.
-            var maximumCustomerAppointmentsPerMonth = 5;
-            var customerAppointmentsLastMonth = await _unitOfWork.AppointmentRepository.GetHowManyAppointmentsCustomerHasInLastMonthAsync(request.CustomerId);
-            if (customerAppointmentsLastMonth > maximumCustomerAppointmentsPerMonth) throw new ClientException("Can't create more appointments for this month because you have reached the appointments limit!");
+            var maxCustomerAppointmentsPerMonth = 5;
+            var customerAppointmentsLastMonth = await _unitOfWork.AppointmentRepository.CountCustomerAppointmentsLastMonthAsync(request.CustomerId);
+            if (customerAppointmentsLastMonth > maxCustomerAppointmentsPerMonth) throw new ClientException($"Can't make more appointments for this month because you have reached the maximum appointments limit ({maxCustomerAppointmentsPerMonth})!");
 
             var appointmentDate = new DateTime(request.Year, request.Month, request.Date);
-            Console.WriteLine($"appointment (with the selected Date, ignore Time)= '{appointmentDate}'");
 
             var duration = TimeSpan.FromMinutes(request.DurationInMinutes);
-            Console.WriteLine($"\nduration (converted from minutes to TimeSpan)= '{duration}'");
 
             var employeeAppointmentsDates = new List<(DateTime startDate, DateTime endDate)>();
             Console.WriteLine("\nAll the appointments from the selected employee and the selected date:");
             foreach (var appointment in await _unitOfWork.AppointmentRepository.GetAllAppointmentsByEmployeeIdByDateAsync(request.EmployeeId, appointmentDate))
             {
                 employeeAppointmentsDates.Add((appointment.StartDate, appointment.EndDate));
-                // BEFORE:
-                //Console.WriteLine($"{appointment.Id} - customer= '{appointment.Customer.Name}', employee='{appointment.Employee.Name}', start= '{appointment.StartDate}', end= '{appointment.EndDate}'");
-                // AFTER v1:
                 Console.WriteLine($"{appointment.Id} - customer= '{appointment.Customer.UserName}', employee='{appointment.Employee.UserName}', start= '{appointment.StartDate}', end= '{appointment.EndDate}'");
             }
-
-            Console.WriteLine("\nSorted appointments:");
             var sorted_employeeAppointmentsDates = employeeAppointmentsDates.OrderBy(date => date.startDate);
+            Console.WriteLine("\nSorted appointments:");
             foreach (var sortedAppointment in sorted_employeeAppointmentsDates)
             {
                 Console.WriteLine($"start= '{sortedAppointment.startDate}', end= '{sortedAppointment.endDate}'");
             }
 
             var nameOfDay = appointmentDate.ToString("dddd");
-            Console.WriteLine($"\nname of the day based on the selected date is= '{nameOfDay}'");
+            Console.WriteLine($"\nName of the day based on the selected date is= '{nameOfDay}'");
 
             var workingDay = await _unitOfWork.WorkingDayRepository.GetWorkingDayByNameAsync(nameOfDay);
 
             var employeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, workingDay.Id);
 
-            if (!employeeWorkingIntervals.Any()) return await Task.FromResult(new List<EmployeeFreeInterval>());
+            if (!employeeWorkingIntervals.Any()) throw new NotFoundException("The selected employee has no working intervals in the selected day!");
 
             var possibleIntervals = new List<DateTime>();
             foreach (var intervals in employeeWorkingIntervals)
@@ -80,8 +74,9 @@ namespace hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate
                 Console.WriteLine(intervals);
             }
 
+            // ???
             // Am lista asta doar de testare a intervalelor. !!! Ca sa scap de ea, as putea sa parsez lista de EmployeeFreeInterval, dar trebuie sa invat sa vad cum fac asta.
-            //var validIntervals = new List<(DateTime startDate, DateTime endDate)>();
+            // var validIntervals = new List<(DateTime startDate, DateTime endDate)>();
             var employeeFreeIntervalList = new List<EmployeeFreeInterval>();
             Console.WriteLine("\nCheck for valid intervals:");
             for (int i = 0; i < possibleIntervals.Count - 1; i += 2)
@@ -115,7 +110,6 @@ namespace hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate
             // Check, all the possible free intervals from the employee in the selected date, to don't overlap with the appointments from the customer in the selected date.
             for (int i = 0; i < employeeFreeIntervalList.Count; ++i)
             {
-                //Console.WriteLine("i= " + i);
                 //Console.WriteLine($"EMPLOYEE: start= '{employeeFreeIntervalList[i].StartDate}', end= '{employeeFreeIntervalList[i].EndDate}'");
                 foreach (var customerAppointments in customerAppointmentsInSelectedDate)
                 {
@@ -129,10 +123,11 @@ namespace hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate
                         break;
                     }
                 }
-                //Console.WriteLine("---\n");
             }
 
-            Console.WriteLine("\nFINAL VALID INTERVALS:");
+            if (!employeeFreeIntervalList.Any()) throw new NotFoundException("No available intervals for appointment!");
+
+            Console.WriteLine("\nValid intervals:");
             foreach (var employeeFreeInterval in employeeFreeIntervalList)
             {
                 Console.WriteLine($"start= '{employeeFreeInterval.StartDate}', end= '{employeeFreeInterval.EndDate}'");

@@ -22,7 +22,6 @@ namespace hairDresser.Application.Users.Commands.UpdateUser
         public async Task<User> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _unitOfWork.UserRepository.GetUserByIdAsync(request.Id);
-
             if (user == null) throw new NotFoundException($"The user with the id '{request.Id}' does not exist!");
 
             user.UserName = request.Username;

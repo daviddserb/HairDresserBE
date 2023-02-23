@@ -13,18 +13,17 @@ namespace hairDresser.Application.Users.Commands.RegisterUser
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, User>
     {
-        private readonly UserManager<User> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterUserCommandHandler(UserManager<User> userManager)
+        public RegisterUserCommandHandler(IUnitOfWork unitOfWork)
         {
-            _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<User> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByNameAsync(request.Username);
-
-            if (user != null) throw new ClientException("User account already exists!");
+            var user = await _unitOfWork.UserRepository.GetUserByUserNameAsync(request.Username);
+            if (user != null) throw new ClientException("Username already exists!");
 
             user = new User
             {
@@ -34,15 +33,7 @@ namespace hairDresser.Application.Users.Commands.RegisterUser
                 Address = request.Address,
             };
 
-            var result = await _userManager.CreateAsync(user, request.Password);
-
-            if (!result.Succeeded)
-            {
-                // OAuth has some validations on its own columns. Some of the requirements:
-                // Password must have at least one: uppercase letter (A, ...), digit (1, ...) and alphanumeric character (symbols: #, @, %, ...).
-                // Username can't have space inside it.
-                throw new ClientException("Failed to create the account!");
-            }
+            await _unitOfWork.UserRepository.CreateUserAsync(user, request.Password);
 
             return user;
         }

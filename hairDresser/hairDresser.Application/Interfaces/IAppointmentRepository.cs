@@ -16,7 +16,7 @@ namespace hairDresser.Application.Interfaces
         Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdByDateAsync(string customerId, DateTime appointmentDate);
         Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdAsync(string customerId);
         Task<IQueryable<Appointment>> GetInWorkAppointmentsByCustomerIdAsync(string customerId);
-        Task<int> GetHowManyAppointmentsCustomerHasInLastMonthAsync(string customerId);
+        Task<int> CountCustomerAppointmentsLastMonthAsync(string customerId);
         Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdByDateAsync(string employeeId, DateTime appointmentDate);
         Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdAsync(string employeeId);
 

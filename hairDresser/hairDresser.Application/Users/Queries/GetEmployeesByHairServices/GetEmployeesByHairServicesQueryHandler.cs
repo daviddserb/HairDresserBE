@@ -1,4 +1,5 @@
-﻿using hairDresser.Application.Interfaces;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
 using System;
@@ -21,6 +22,7 @@ namespace hairDresser.Application.Users.Queries.GetEmployeesByHairServices
         public async Task<IQueryable<User>> Handle(GetEmployeesByHairServicesQuery request, CancellationToken cancellationToken)
         {
             var validEmployees = await _unitOfWork.UserRepository.GetAllEmployeesByHairServicesIdsAsync(request.HairServicesId);
+            if (!validEmployees.Any()) throw new NotFoundException("No employees found with the selected hair services!");
             return await Task.FromResult(validEmployees);
         }
     }

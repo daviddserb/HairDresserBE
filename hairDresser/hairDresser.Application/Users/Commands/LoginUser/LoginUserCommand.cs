@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Commands.LoginUser
 {
-    public class LoginUserCommand : IRequest<UserToken>
+    public class LoginUserCommand : IRequest<UserWithToken>
     {
         public string Username { get; set; }
-
         public string Password { get; set; }
     }
 }

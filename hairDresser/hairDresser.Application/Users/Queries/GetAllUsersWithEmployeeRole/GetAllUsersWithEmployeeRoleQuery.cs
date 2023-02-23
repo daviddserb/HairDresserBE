@@ -8,8 +8,5 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Queries.GetAllUsersWithEmployeeRole
 {
-    public class GetAllUsersWithEmployeeRoleQuery : IRequest<IQueryable<User>>
-    {
-        public List<string> EmployeeIds { get; set; }
-    }
+    public class GetAllUsersWithEmployeeRoleQuery : IRequest<IQueryable<User>> {}
 }

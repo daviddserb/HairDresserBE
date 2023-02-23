@@ -3,6 +3,7 @@
     public class EmployeeHairServicePostDto
     {
         public string EmployeeId { get; set; }
+
         public List<int> HairServicesIds { get; set; }
     }
 }

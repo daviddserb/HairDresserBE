@@ -1,4 +1,5 @@
 ﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -13,25 +14,24 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Commands.LoginUser
 {
-    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, UserToken>
+    public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, UserWithToken>
     {
-        private readonly UserManager<User> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public LoginUserCommandHandler(UserManager<User> userManager)
+        public LoginUserCommandHandler(IUnitOfWork unitOfWork)
         {
-            _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<UserToken> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+        public async Task<UserWithToken> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByNameAsync(request.Username);
+            var user = await _unitOfWork.UserRepository.GetUserByUserNameAsync(request.Username);
 
-            if (user != null && await _userManager.CheckPasswordAsync(user, request.Password))
+            if (user != null && await _unitOfWork.UserRepository.CheckUserPasswordAsync(user, request.Password))
             {
-                // If the user exists, after the login, we need to return a token, and to do that we need to add some Claims.
-                var userRoles = await _userManager.GetRolesAsync(user);
+                var userRoles = await _unitOfWork.UserRepository.GetUserRolesAsync(user);
 
-                // Will be visible in the token.
+                // If the user exists, after the login, we need to return a token, and to do that we need to add some Claims, and will be visible in the token.
                 var authClaims = new List<Claim>
                 {
                     new Claim("username", request.Username),
@@ -56,7 +56,7 @@ namespace hairDresser.Application.Users.Commands.LoginUser
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
 
-                return new UserToken
+                return new UserWithToken
                 {
                     Id = user.Id,
                     Username = request.Username,
@@ -64,7 +64,6 @@ namespace hairDresser.Application.Users.Commands.LoginUser
                     Expiration = token.ValidTo
                 };
             }
-
             throw new NotFoundException("Account doesn't exist!");
         }
     }

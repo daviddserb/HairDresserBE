@@ -11,15 +11,16 @@ namespace hairDresser.Presentation.Profiles
     public class UserProfile : Profile
     {
         public UserProfile() {
-            CreateMap< UserRegisterDto, RegisterUserCommand>();
+            CreateMap<UserRegisterDto, RegisterUserCommand>();
             CreateMap<User, UserGetDto>();
 
             CreateMap<UserLoginDto, LoginUserCommand>();
-            CreateMap<UserToken, UserGetDto>();
+            CreateMap<UserWithToken, UserGetDto>();
 
             CreateMap<UserRoleDto, AddRoleToUserCommand>();
 
-            CreateMap<User, EmployeeGetDto>();
+            CreateMap<UserWithRole, UserGetDto>();
+
             CreateMap<User, EmployeeGetDto>();
         }
     }

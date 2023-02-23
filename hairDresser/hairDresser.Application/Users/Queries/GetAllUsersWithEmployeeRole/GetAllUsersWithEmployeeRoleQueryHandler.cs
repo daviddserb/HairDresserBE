@@ -1,6 +1,8 @@
-﻿using hairDresser.Application.Interfaces;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,9 @@ namespace hairDresser.Application.Users.Queries.GetAllUsersWithEmployeeRole
 
         public async Task<IQueryable<User>> Handle(GetAllUsersWithEmployeeRoleQuery request, CancellationToken cancellationToken)
         {
-            return await _unitOfWork.UserRepository.GetAllUsersWithEmployeeRoleAsync(request.EmployeeIds);
+            var allEmployees = await _unitOfWork.UserRepository.GetAllUsersWithEmployeeRoleAsync();
+            if (!allEmployees.Any()) throw new NotFoundException("No employees found!");
+            return allEmployees;
         }
     }
 }
