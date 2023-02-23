@@ -38,7 +38,7 @@ namespace hairDresser.Infrastructure.Repositories
         {
             // Method 1:
             var user = await context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
-            // Method 2 using UserManager Service, will have same result as Method 1:
+            // Method 2, using UserManager Service, will have same result as Method 1:
             // var user2 = await _userManager.FindByIdAsync(userId);
             return user;
         }
@@ -51,12 +51,18 @@ namespace hairDresser.Infrastructure.Repositories
 
         }
 
-        public async Task<IQueryable<User>> GetAllUsersAsync()
+        public async Task<IQueryable<UserWithRole>> GetAllUsersAsync()
         {
-            // Method 1:
-            return context.Users;
-            // Method 2 using UserManager Service, will have same result as Method 1:
-            // return _userManager.Users;
+            var users = _userManager.Users.Select(user => new UserWithRole
+            {
+                Id = user.Id,
+                Username = user.UserName,
+                Email = user.Email,
+                Address = user.Address,
+                Phone = user.PhoneNumber,
+                Role = string.Join(", ", _userManager.GetRolesAsync(user).Result.ToArray())
+            });
+            return users;
         }
 
         public async Task<IList<string>> GetUserRolesAsync(User user)

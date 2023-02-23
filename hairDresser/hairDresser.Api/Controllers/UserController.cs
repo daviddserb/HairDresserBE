@@ -94,10 +94,7 @@ namespace hairDresser.Presentation.Controllers
         [Route("id")]
         public async Task<IActionResult> GetUserById(string userId)
         {
-            var query = new GetUserByIdQuery
-            {
-                UserId = userId
-            };
+            var query = new GetUserByIdQuery{ UserId = userId };
 
             var user = await _mediator.Send(query);
 
@@ -114,7 +111,6 @@ namespace hairDresser.Presentation.Controllers
             throw new NotImplementedException();
         }
 
-        // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         [HttpGet]
         [Route("employee/all")]
         public async Task<IActionResult> GetAllEmployees()

@@ -12,32 +12,20 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Queries.GetUserById
 {
-    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserWithRole>
+    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User>
     {
-        private readonly UserManager<User> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetUserByIdQueryHandler(UserManager<User> userManager)
+        public GetUserByIdQueryHandler(IUnitOfWork unitOfWork)
         {
-            _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<UserWithRole> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+        public async Task<User> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByIdAsync(request.UserId);
+            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(request.UserId);
             if (user == null) throw new NotFoundException($"The user with the '{request.UserId}' id does not exist!");
-
-            var userWithRole = new UserWithRole()
-            {
-                Id = user.Id,
-                Username = user.UserName,
-                Email = user.Email,
-                Address = user.Address,
-                Phone = user.PhoneNumber,
-                // ??? sa rezolv GetAllUsersQueryHandler si apoi sa vad aici daca are rost sa fac ceva
-                Role = string.Join(", ", _userManager.GetRolesAsync(user).Result.ToArray())
-            };
-
-            return userWithRole;
+            return user;
         }
     }
 }

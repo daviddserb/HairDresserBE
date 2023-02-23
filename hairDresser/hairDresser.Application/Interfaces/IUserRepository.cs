@@ -14,7 +14,7 @@ namespace hairDresser.Application.Interfaces
 
         Task<User> GetUserByIdAsync(string userId);
         Task<User> GetUserByUserNameAsync(string userName);
-        Task<IQueryable<User>> GetAllUsersAsync();
+        Task<IQueryable<UserWithRole>> GetAllUsersAsync();
         Task<IList<string>> GetUserRolesAsync(User user);
         Task<IQueryable<User>> GetAllUsersWithCustomerRoleAsync();
         Task<IQueryable<User>> GetAllUsersWithEmployeeRoleAsync();
