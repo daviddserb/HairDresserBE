@@ -1,4 +1,4 @@
-# HairDresser
+# HairDresser (back-end)
 
 Hair Dresser it's web application that allows customers to make appointments for their needs. To use it, you need to register an account.
 There are three types of users:
