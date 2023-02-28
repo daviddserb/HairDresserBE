@@ -43,6 +43,21 @@ namespace hairDresser.Infrastructure.Repositories
             return user;
         }
 
+        public async Task<UserWithRole> GetUserWithRoleByIdAsync(string userId)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
+            var userWithRole = new UserWithRole
+            {
+                Id = user.Id,
+                Username = user.UserName,
+                Email = user.Email,
+                Address = user.Address,
+                Phone = user.PhoneNumber,
+                Role = string.Join(", ", _userManager.GetRolesAsync(user).Result.ToArray())
+            };
+            return userWithRole;
+        }
+
         public async Task<User> GetUserByUserNameAsync(string userName)
         {
             // userName because it's the name of the user (don't confuse it with username).
@@ -67,7 +82,8 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IList<string>> GetUserRolesAsync(User user)
         {
-            return await _userManager.GetRolesAsync(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
+            return userRoles;
         }
 
         public async Task<IQueryable<User>> GetAllUsersWithCustomerRoleAsync()

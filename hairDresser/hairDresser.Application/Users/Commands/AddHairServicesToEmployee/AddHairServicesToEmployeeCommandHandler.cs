@@ -20,8 +20,8 @@ namespace hairDresser.Application.Users.Commands.AddHairServicesToEmployee
         }
         public async Task<User> Handle(AddHairServicesToEmployeeCommand request, CancellationToken cancellationToken)
         {
-            var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
-            if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
+            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
+            if (user == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
 
             var employeeHairServices = request.HairServicesIds.Select(hairServiceId => new EmployeeHairService
             {
@@ -32,7 +32,7 @@ namespace hairDresser.Application.Users.Commands.AddHairServicesToEmployee
             await _unitOfWork.UserRepository.AddHairServiceToEmployeeAsync(employeeHairServices);
             await _unitOfWork.SaveAsync();
 
-            return employee;
+            return user;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using hairDresser.Application.Interfaces;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
 using System;
@@ -19,8 +20,8 @@ namespace hairDresser.Application.Employees.Commands.AddEmployeeHairServices
         }
         public async Task<User> Handle(AddEmployeeHairServicesCommand request, CancellationToken cancellationToken)
         {
-            var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
-            if (employee == null) return null;
+            var user = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
+            if (user == null) throw new NotFoundException($"The user with the id '{request.EmployeeId}' does not exist!");
 
             var employeeHairServices = request.HairServicesIds.Select(x => new EmployeeHairService
             {
@@ -31,7 +32,7 @@ namespace hairDresser.Application.Employees.Commands.AddEmployeeHairServices
             await _unitOfWork.EmployeeRepository.AddEmployeeHairServicesAsync(employeeHairServices);
             await _unitOfWork.SaveAsync();
 
-            return employee;
+            return user;
         }
     }
 }

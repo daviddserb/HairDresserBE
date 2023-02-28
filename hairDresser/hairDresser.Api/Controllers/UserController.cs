@@ -11,6 +11,7 @@ using hairDresser.Application.Users.Queries.GetAllUsersWithEmployeeRole;
 using hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate;
 using hairDresser.Application.Users.Queries.GetEmployeesByHairServices;
 using hairDresser.Application.Users.Queries.GetUserById;
+using hairDresser.Application.Users.Queries.GetUserWithRoleById;
 using hairDresser.Domain.Models;
 using hairDresser.Presentation.Dto.EmployeeDtos;
 using hairDresser.Presentation.Dto.EmployeeFreeIntervalsDtos;
@@ -61,7 +62,6 @@ namespace hairDresser.Presentation.Controllers
             var mappedUser = _mapper.Map<UserGetDto>(user);
 
             return Ok(mappedUser);
-
         }
 
         [HttpPost]
@@ -95,6 +95,19 @@ namespace hairDresser.Presentation.Controllers
         public async Task<IActionResult> GetUserById(string userId)
         {
             var query = new GetUserByIdQuery{ UserId = userId };
+
+            var user = await _mediator.Send(query);
+
+            var mappedUser = _mapper.Map<UserGetDto>(user);
+
+            return Ok(mappedUser);
+        }
+
+        [HttpGet]
+        [Route("with-role/id")]
+        public async Task<IActionResult> GetUserWithRoleById(string userId)
+        {
+            var query = new GetUserWithRoleById { UserId = userId };
 
             var user = await _mediator.Send(query);
 

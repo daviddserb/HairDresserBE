@@ -13,6 +13,7 @@ namespace hairDresser.Application.Interfaces
         Task CreateUserAsync(User user, string userPassowrd);
 
         Task<User> GetUserByIdAsync(string userId);
+        Task<UserWithRole> GetUserWithRoleByIdAsync(string userId);
         Task<User> GetUserByUserNameAsync(string userName);
         Task<IQueryable<UserWithRole>> GetAllUsersAsync();
         Task<IList<string>> GetUserRolesAsync(User user);
