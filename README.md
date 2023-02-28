@@ -10,7 +10,6 @@ There are three types of users:
 - Add the hair services that they are capable of doing.
 - View all his appointments.
 - Make their working intervals, which can be multiple in a working day.
-
 3. Customer:
 - Make appointments, which means: selecting hair services, choosing an employee, picking a date, and choosing the interval time.
 - View all his appointments, with the option to cancel only those whose start time is at least one day from the current day.
