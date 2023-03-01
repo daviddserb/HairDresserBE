@@ -74,7 +74,6 @@ namespace hairDresser.Presentation.Controllers
 
             var message = $"The role '{userInfo.Role}' is now assigned to the user with the username '{userInfo.Username}'";
             return Ok(message);
-
         }
 
         [HttpGet]
@@ -109,11 +108,11 @@ namespace hairDresser.Presentation.Controllers
         {
             var query = new GetUserWithRoleById { UserId = userId };
 
-            var user = await _mediator.Send(query);
+            var userWithRole = await _mediator.Send(query);
 
-            var mappedUser = _mapper.Map<UserGetDto>(user);
+            var mappedUserWithRole = _mapper.Map<UserGetDto>(userWithRole);
 
-            return Ok(mappedUser);
+            return Ok(mappedUserWithRole);
         }
 
         //!!! Momentan nu folsoesc aceasta metoda. Daca voi avea nevoie, fac ca si la ruta employee/all, adica ca in metoda GetAllEmployees().
@@ -184,9 +183,9 @@ namespace hairDresser.Presentation.Controllers
                 Address = editedUser.Address
             };
 
-            var result = await _mediator.Send(command);
+            var userEdited = await _mediator.Send(command);
 
-            return Ok(result);
+            return Ok(userEdited);
         }
 
         [HttpDelete]

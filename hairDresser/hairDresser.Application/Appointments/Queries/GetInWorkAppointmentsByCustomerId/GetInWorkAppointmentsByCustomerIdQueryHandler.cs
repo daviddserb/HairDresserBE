@@ -1,4 +1,5 @@
-﻿using hairDresser.Application.Interfaces;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
 using System;
@@ -20,7 +21,12 @@ namespace hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByCu
 
         public async Task<IQueryable<Appointment>> Handle(GetInWorkAppointmentsByCustomerIdQuery request, CancellationToken cancellationToken)
         {
-            return await _unitOfWork.AppointmentRepository.GetInWorkAppointmentsByCustomerIdAsync(request.CustomerId);
+            var customer = await _unitOfWork.UserRepository.GetUserByIdAsync(request.CustomerId);
+            if (customer == null) throw new NotFoundException($"The customer with the id '{request.CustomerId}' does not exist!");
+
+            var customerAppointmentsInWork = await _unitOfWork.AppointmentRepository.GetInWorkAppointmentsByCustomerIdAsync(request.CustomerId);
+            if (!customerAppointmentsInWork.Any()) throw new NotFoundException($"The customer with the id '{request.CustomerId}' has no in work appointments!");
+            return customerAppointmentsInWork;
         }
     }
 }

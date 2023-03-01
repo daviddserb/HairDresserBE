@@ -24,7 +24,9 @@ namespace hairDresser.Application.Appointments.Queries.GetAllAppointmentsByEmplo
             var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
 
-            return await _unitOfWork.AppointmentRepository.GetAllAppointmentsByEmployeeIdAsync(request.EmployeeId);
+            var employeeAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByEmployeeIdAsync(request.EmployeeId);
+            if (!employeeAppointments.Any()) throw new NotFoundException($"The customer with the id '{request.EmployeeId}' has no appointments!");
+            return employeeAppointments;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using hairDresser.Application.Interfaces;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
 using System;
@@ -18,11 +19,10 @@ namespace hairDresser.Application.Appointments.Queries.GetAppointmentById
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Appointment?> Handle(GetAppointmentByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Appointment> Handle(GetAppointmentByIdQuery request, CancellationToken cancellationToken)
         {
             var appointment = await _unitOfWork.AppointmentRepository.GetAppointmentByIdAsync(request.AppointmentId);
-
-            if (appointment == null) return null;
+            if (appointment == null) throw new NotFoundException($"There is no appointment with the id '{request.AppointmentId}'!");
             return appointment;
         }
     }

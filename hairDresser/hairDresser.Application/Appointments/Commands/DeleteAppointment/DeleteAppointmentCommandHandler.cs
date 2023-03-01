@@ -22,8 +22,7 @@ namespace hairDresser.Application.Appointments.Commands.DeleteAppointment
         public async Task<Appointment> Handle(DeleteAppointmentCommand request, CancellationToken cancellationToken)
         {
             var appointment = await _unitOfWork.AppointmentRepository.GetAppointmentByIdAsync(request.AppointmentId);
-
-            if (appointment == null) return null;
+            if (appointment == null) throw new NotFoundException($"There is no appointment with the id '{request.AppointmentId}'!");
 
             var currentDate = DateTime.Now;
             currentDate.AddDays(1);

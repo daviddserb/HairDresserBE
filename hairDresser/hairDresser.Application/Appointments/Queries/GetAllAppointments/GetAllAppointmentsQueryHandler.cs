@@ -1,4 +1,5 @@
-﻿using hairDresser.Application.Interfaces;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
 using System;
@@ -20,7 +21,9 @@ namespace hairDresser.Application.Appointments.Queries.GetAllAppointments
 
         public async Task<IQueryable<Appointment>> Handle(GetAllAppointmentsQuery request, CancellationToken cancellationToken)
         {
-            return await _unitOfWork.AppointmentRepository.GetAllAppointmentsAsync(request.PageNumber, request.PageSize);
+            var allAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsAsync(request.PageNumber, request.PageSize);
+            if (!allAppointments.Any()) throw new NotFoundException("There are no appointments!");
+            return allAppointments;
         }
     }
 }
