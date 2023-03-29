@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace hairDresser.IntegrationTests
 {
-    // This class set the environment for testing.
+    // This class sets the environment for testing.
     public class CustomWebApplicationFactory<TProgram>
         : WebApplicationFactory<TProgram> where TProgram : class
     {

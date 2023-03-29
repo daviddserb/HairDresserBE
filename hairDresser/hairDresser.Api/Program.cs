@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,7 +20,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Everytime when somebody depends on a interface (creates an object from an interface, which is impossible), we create an object of the class type that represents that interface (IAppointmentRepository -> AppointmentRepository).
+//When somebody depends on an interface (creates an object from an interface, which is impossible), we create an object of the class type that represents that interface: IAppointmentRepository -> AppointmentRepository
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IHairServiceRepository, HairServiceRepository>();
@@ -29,7 +30,7 @@ builder.Services.AddScoped<IWorkingIntervalRepository, WorkingIntervalRepository
 builder.Services.AddScoped<IWorkingDayRepository, WorkingDayRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-//For Entity Framework (the link with the DB server).
+//For Entity Framework, the link with the DB server
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
@@ -58,14 +59,14 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-//Add MediatR which scans all the messages (Queries and Commands) and all the handlers from inside.
-//In order to tell the MediatR where to go to scan, we can give a single interface/class (example IHairServiceRepository) from the layer that we want MediatR to operate and he will scan all of files from that layer (Application).
+//Add MediatR which scans all the messages (Queries and Commands) and all the handlers from inside
+//In order to tell the MediatR where to go to scan, we can give a single interface/class (IHairServiceRepository) from the layer that we want MediatR to operate and he will scan all of files from that layer (Application).
 builder.Services.AddMediatR(typeof(IHairServiceRepository));
 
 //Add AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
 
-//Add AddCors to be able to call the API from the client (front-end).
+//Add AddCors to be able to call the API from the client (front-end)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
@@ -105,5 +106,5 @@ app.MapControllers();
 
 app.Run();
 
-//To make the class visible.
+//To make the class visible
 public partial class Program{ }

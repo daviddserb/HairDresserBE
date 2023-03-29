@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByEmployeeId
 {
-    public class GetInWorkAppointmentsByEmployeeIdHandler : IRequestHandler<GetInWorkAppointmentsByEmployeeId, IQueryable<Appointment>>
+    public class GetInWorkAppointmentsByEmployeeIdQueryHandler : IRequestHandler<GetInWorkAppointmentsByEmployeeIdQuery, IQueryable<Appointment>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public GetInWorkAppointmentsByEmployeeIdHandler(IUnitOfWork unitOfWork)
+        public GetInWorkAppointmentsByEmployeeIdQueryHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IQueryable<Appointment>> Handle(GetInWorkAppointmentsByEmployeeId request, CancellationToken cancellationToken)
+        public async Task<IQueryable<Appointment>> Handle(GetInWorkAppointmentsByEmployeeIdQuery request, CancellationToken cancellationToken)
         {
             var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");

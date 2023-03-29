@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hairDresser.Application", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hairDresser.Presentation", "hairDresser.Api\hairDresser.Presentation.csproj", "{957267F9-8BCE-4112-AE34-5224154DCFE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hairDresser.IntegrationTests", "hairDresser.IntegrationTests\hairDresser.IntegrationTests.csproj", "{79254865-D000-44F2-95C7-26C99341F945}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hairDresser.IntegrationTests", "hairDresser.IntegrationTests\hairDresser.IntegrationTests.csproj", "{79254865-D000-44F2-95C7-26C99341F945}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hairDresser.UnitTests", "hairDresser.UnitTests\hairDresser.UnitTests.csproj", "{D9C8B2F9-EECB-45ED-BFB3-9060606D0E89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hairDresser.UnitTests", "hairDresser.UnitTests\hairDresser.UnitTests.csproj", "{D9C8B2F9-EECB-45ED-BFB3-9060606D0E89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -62,7 +62,18 @@ namespace hairDresser.Infrastructure.Repositories
                 .OrderBy(date => date.StartDate);
         }
 
-        // For the in future appointments (not finished) for a customer.
+        public async Task<IQueryable<Appointment>> GetFinishedAppointmentsByCustomerIdAsync(string customerId)
+        {
+            return context.Appointments
+                .Where(appointment => appointment.CustomerId == customerId)
+                .Where(date => date.StartDate < DateTime.Now.Date)
+                .OrderBy(date => date.StartDate)
+                .Include(customers => customers.Customer)
+                .Include(employees => employees.Employee)
+                .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
+                    .ThenInclude(hairServices => hairServices.HairService);
+        }
+
         public async Task<IQueryable<Appointment>> GetInWorkAppointmentsByCustomerIdAsync(string customerId)
         {
             return context.Appointments
@@ -100,6 +111,18 @@ namespace hairDresser.Infrastructure.Repositories
                 .Where(id => id.EmployeeId == employeeId)
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee);
+        }
+
+        public async Task<IQueryable<Appointment>> GetFinishedAppointmentsByEmployeeIdAsync(string employeeId)
+        {
+            return context.Appointments
+                .Where(appointment => appointment.EmployeeId == employeeId)
+                .Where(date => date.StartDate < DateTime.Now.Date)
+                .OrderBy(date => date.StartDate)
+                .Include(customers => customers.Customer)
+                .Include(employees => employees.Employee)
+                .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
+                    .ThenInclude(hairServices => hairServices.HairService);
         }
 
         public async Task<IQueryable<Appointment>> GetInWorkAppointmentsByEmployeeIdAsync(string employeeId)

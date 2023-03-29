@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByEmployeeId
+namespace hairDresser.Application.Appointments.Queries.GetFinishedAppointmentsByEmployeeId
 {
-    public class GetInWorkAppointmentsByEmployeeId : IRequest<IQueryable<Appointment>>
+    public class GetFinishedAppointmentsByEmployeeIdQuery : IRequest<IQueryable<Appointment>>
     {
         public string EmployeeId { get; set; }
     }

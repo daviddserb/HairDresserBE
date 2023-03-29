@@ -27,22 +27,19 @@ namespace hairDresser.UnitTests
         [Fact]
         public async Task GetAllAppointments_GetAllAppointmentsQueryIsCalled()
         {
-            //Arrange:
+            // Arrange
             _mockMediator
                 .Setup(mediator => mediator.Send(It.IsAny<GetAllAppointmentsQuery>(), It.IsAny<CancellationToken>()))
                 .Verifiable();
-
-            //Act:
+            // Act
             var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
-
             var pagination = new GetAllAppointmentsQuery
             {
                 PageNumber = 1,
                 PageSize = 1
             };
             await controller.GetAllAppointments(pagination);
-
-            //Assert:
+            // Assert:=
             _mockMediator.Verify(x => x.Send(It.IsAny<GetAllAppointmentsQuery>(), It.IsAny<CancellationToken>()), Times.Once());
         }
 

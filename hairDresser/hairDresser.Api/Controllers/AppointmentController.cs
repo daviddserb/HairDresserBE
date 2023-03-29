@@ -5,6 +5,8 @@ using hairDresser.Application.Appointments.Queries.GetAllAppointments;
 using hairDresser.Application.Appointments.Queries.GetAllAppointmentsByCustomerId;
 using hairDresser.Application.Appointments.Queries.GetAllAppointmentsByEmployeeId;
 using hairDresser.Application.Appointments.Queries.GetAppointmentById;
+using hairDresser.Application.Appointments.Queries.GetFinishedAppointmentsByCustomerId;
+using hairDresser.Application.Appointments.Queries.GetFinishedAppointmentsByEmployeeId;
 using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByCustomerId;
 using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByEmployeeId;
 using hairDresser.Presentation.Dto.AppointmentDtos;
@@ -80,7 +82,19 @@ namespace hairDresser.Presentation.Controllers
             var mappedCustomerAppointments = _mapper.Map<List<AppointmentGetDto>>(allCustomerAppointments);
 
             return Ok(mappedCustomerAppointments);
+        }
 
+        [HttpGet]
+        [Route("finished/customer/{customerId}")]
+        public async Task<IActionResult> GetFinishedAppointmentsByCustomerId(string customerId)
+        {
+            var query = new GetFinishedAppointmentsByCustomerIdQuery { CustomerId = customerId };
+
+            var customerFinishedAppointments = await _mediator.Send(query);
+
+            var mappedCustomerFinishedAppointments = _mapper.Map<List<AppointmentGetDto>>(customerFinishedAppointments);
+
+            return Ok(mappedCustomerFinishedAppointments);
         }
 
         [HttpGet]
@@ -89,11 +103,11 @@ namespace hairDresser.Presentation.Controllers
         {
             var query = new GetInWorkAppointmentsByCustomerIdQuery { CustomerId = customerId };
 
-            var allCustomerInWorkAppointments = await _mediator.Send(query);
+            var customerInWorkAppointments = await _mediator.Send(query);
 
-            var mappedAllCustomerInWorkAppointments = _mapper.Map<List<AppointmentGetDto>>(allCustomerInWorkAppointments);
+            var mappedCustomerInWorkAppointments = _mapper.Map<List<AppointmentGetDto>>(customerInWorkAppointments);
 
-            return Ok(mappedAllCustomerInWorkAppointments);
+            return Ok(mappedCustomerInWorkAppointments);
         }
 
         [HttpGet]
@@ -110,10 +124,23 @@ namespace hairDresser.Presentation.Controllers
         }
 
         [HttpGet]
+        [Route("finished/employee/{employeeId}")]
+        public async Task<IActionResult> GetFinishedAppointmentsByEmployeeId(string employeeId)
+        {
+            var query = new GetFinishedAppointmentsByEmployeeIdQuery { EmployeeId = employeeId };
+
+            var employeeFinishedAppointments = await _mediator.Send(query);
+
+            var mappedEmployeeFinishedAppointments = _mapper.Map<List<AppointmentGetDto>>(employeeFinishedAppointments);
+
+            return Ok(mappedEmployeeFinishedAppointments);
+        }
+
+        [HttpGet]
         [Route("in-work/employee/{employeeId}")]
         public async Task<IActionResult> GetInWorkAppointmentsByEmployeeId(string employeeId)
         {
-            var query = new GetInWorkAppointmentsByEmployeeId { EmployeeId = employeeId };
+            var query = new GetInWorkAppointmentsByEmployeeIdQuery { EmployeeId = employeeId };
 
             var employeeInWorkAppointments = await _mediator.Send(query);
 

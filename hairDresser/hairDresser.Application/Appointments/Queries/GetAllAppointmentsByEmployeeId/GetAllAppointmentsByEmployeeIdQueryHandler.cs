@@ -25,7 +25,7 @@ namespace hairDresser.Application.Appointments.Queries.GetAllAppointmentsByEmplo
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
 
             var employeeAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByEmployeeIdAsync(request.EmployeeId);
-            if (!employeeAppointments.Any()) throw new NotFoundException($"The customer with the id '{request.EmployeeId}' has no appointments!");
+            if (!employeeAppointments.Any()) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' has no appointments!");
             return employeeAppointments;
         }
     }
