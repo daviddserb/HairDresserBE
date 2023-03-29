@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Appointments\Commands\ReviewAppointment\" />
     <Folder Include="Users\Queries\GetAllUsersWithCustomerRole\" />
   </ItemGroup>
 

@@ -137,7 +137,7 @@ namespace hairDresser.Infrastructure.Repositories
                     .ThenInclude(hairServices => hairServices.HairService);
         }
 
-        // !!! Not permanently deleted but soft deleted.
+        // Soft delete, not permanently delete.
         public async Task DeleteAppointmentAsync(int appointmentId)
         {
             var appointment = await context.Appointments.FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);

@@ -149,6 +149,9 @@ namespace hairDresser.Presentation.Controllers
             return Ok(mappedEmployeeInWorkAppointments);
         }
 
+        // !!! To do:
+        // ReviewAppointment(int appointmentId)
+
         [HttpDelete]
         [Route("{appointmentId}")]
         public async Task<IActionResult> DeleteAppointment(int appointmentId)
