@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using hairDresser.Application.Appointments.Commands.CreateAppointment;
 using hairDresser.Application.Appointments.Commands.DeleteAppointment;
+using hairDresser.Application.Appointments.Commands.ReviewAppointment;
 using hairDresser.Application.Appointments.Queries.GetAllAppointments;
 using hairDresser.Application.Appointments.Queries.GetAllAppointmentsByCustomerId;
 using hairDresser.Application.Appointments.Queries.GetAllAppointmentsByEmployeeId;
@@ -10,6 +11,7 @@ using hairDresser.Application.Appointments.Queries.GetFinishedAppointmentsByEmpl
 using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByCustomerId;
 using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByEmployeeId;
 using hairDresser.Presentation.Dto.AppointmentDtos;
+using hairDresser.Presentation.Dto.ReviewDtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -149,9 +151,20 @@ namespace hairDresser.Presentation.Controllers
             return Ok(mappedEmployeeInWorkAppointments);
         }
 
-        // !!! To do:
-        // ReviewAppointment(int appointmentId)
+        [HttpPost]
+        [Route("review")]
+        public async Task<IActionResult> ReviewAppointment([FromBody] ReviewPostDto reviewInput)
+        {
+            var command = _mapper.Map<ReviewAppointmentCommand>(reviewInput);
 
+            var review = await _mediator.Send(command);
+
+            _mapper.Map<AppointmentGetDto>(review);
+
+            return Ok();
+        }
+
+        // Cancel appointment
         [HttpDelete]
         [Route("{appointmentId}")]
         public async Task<IActionResult> DeleteAppointment(int appointmentId)

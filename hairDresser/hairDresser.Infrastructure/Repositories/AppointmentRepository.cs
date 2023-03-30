@@ -41,6 +41,7 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
                     .ThenInclude(hairServices => hairServices.HairService)
+                .Include(review => review.Review)
                 .FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
         }
 
@@ -71,7 +72,8 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
-                    .ThenInclude(hairServices => hairServices.HairService);
+                    .ThenInclude(hairServices => hairServices.HairService)
+                .Include(review => review.Review);
         }
 
         public async Task<IQueryable<Appointment>> GetInWorkAppointmentsByCustomerIdAsync(string customerId)
@@ -83,7 +85,8 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
-                    .ThenInclude(hairServices => hairServices.HairService);
+                    .ThenInclude(hairServices => hairServices.HairService)
+                .Include(review => review.Review);
         }
 
         public async Task<int> CountCustomerAppointmentsLastMonthAsync(string customerId)
@@ -122,7 +125,8 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
-                    .ThenInclude(hairServices => hairServices.HairService);
+                    .ThenInclude(hairServices => hairServices.HairService)
+                .Include(review => review.Review);
         }
 
         public async Task<IQueryable<Appointment>> GetInWorkAppointmentsByEmployeeIdAsync(string employeeId)
@@ -134,7 +138,13 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
-                    .ThenInclude(hairServices => hairServices.HairService);
+                    .ThenInclude(hairServices => hairServices.HairService)
+                .Include(review => review.Review);
+        }
+
+        public async Task ReviewAppointmentAsync(Review review)
+        {
+            await context.Reviews.AddAsync(review);
         }
 
         // Soft delete, not permanently delete.

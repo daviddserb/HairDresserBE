@@ -18,10 +18,6 @@ namespace hairDresser.Presentation.Profiles
 
             //Here we map the Appointment to AppointmentGetDto and we want to extract only the CustomerName from the entire Customer (same for the employee).
             CreateMap<Appointment, AppointmentGetDto>()
-                // BEFORE:
-                //.ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
-                //.ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee.Name));
-                // AFTER:
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.UserName))
                 .ForMember(dest => dest.EmployeeName, opt => opt.MapFrom(src => src.Employee.UserName));
             //After we map the Appointment to AppointmentGetDto, we need to map each list/collection that has different data type, so we need to make a separate Dto for each collection.

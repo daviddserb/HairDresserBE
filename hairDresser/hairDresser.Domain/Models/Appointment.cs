@@ -13,11 +13,9 @@ namespace hairDresser.Domain.Models
         public int Id { get; set; }
 
         public string CustomerId { get; set; } // scalar property
-        [ForeignKey("CustomerId")] // ??? Nu cred ca mai am nevoie pt. ca le-am pus in Fluent API
         public User Customer { get; set; } //navigation property
 
         public string EmployeeId { get; set; }
-        [ForeignKey("EmployeeId")] // ??? Nu cred ca mai am nevoie pt. ca le-am pus in Fluent API
         public User Employee { get; set; }
 
         public DateTime StartDate { get; set; }
@@ -26,6 +24,9 @@ namespace hairDresser.Domain.Models
         public decimal Price { get; set; }
 
         public DateTime? isDeleted { get; set; }
+
+        public int? ReviewId { get; set; }
+        public Review Review { get; set; }
 
         public ICollection<AppointmentHairService> AppointmentHairServices { get; set; }
     }

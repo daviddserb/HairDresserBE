@@ -1,7 +1,7 @@
-﻿using hairDresser.Domain.Models;
-using hairDresser.Presentation.Dto.AppointmentHairServiceDtos;
+﻿using hairDresser.Presentation.Dto.AppointmentHairServiceDtos;
 using hairDresser.Presentation.Dto.CustomerDtos;
 using hairDresser.Presentation.Dto.EmployeeDtos;
+using hairDresser.Presentation.Dto.ReviewDtos;
 
 namespace hairDresser.Presentation.Dto.AppointmentDtos
 {
@@ -23,6 +23,8 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
         public float Price { get; set; }
 
         public DateTime? isDeleted { get; set; }
+
+        public ReviewGetDto Review { get; set; }
 
         public ICollection<AppointmentHairServiceDto> AppointmentHairServices { get; set; }
     }
