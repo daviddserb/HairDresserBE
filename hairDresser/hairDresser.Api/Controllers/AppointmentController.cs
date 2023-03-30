@@ -152,26 +152,30 @@ namespace hairDresser.Presentation.Controllers
         }
 
         [HttpPost]
-        [Route("review")]
-        public async Task<IActionResult> ReviewAppointment([FromBody] ReviewPostDto reviewInput)
+        [Route("{appointmentId}/review")]
+        public async Task<IActionResult> ReviewAppointment(int appointmentId, [FromBody] ReviewPostDto reviewInput)
         {
-            var command = _mapper.Map<ReviewAppointmentCommand>(reviewInput);
+            var command = new ReviewAppointmentCommand
+            {
+                AppointmentId = appointmentId,
+                Rating = reviewInput.Rating,
+                Comments = reviewInput.Comments
+            };
 
-            var review = await _mediator.Send(command);
+            var appointmentReviewed = await _mediator.Send(command);
 
-            _mapper.Map<AppointmentGetDto>(review);
+            var mappedAppointmentReviewed = _mapper.Map<AppointmentGetDto>(appointmentReviewed);
 
-            return Ok();
+            return Ok(mappedAppointmentReviewed);
         }
 
-        // Cancel appointment
         [HttpDelete]
         [Route("{appointmentId}")]
         public async Task<IActionResult> DeleteAppointment(int appointmentId)
         {
             var command = new DeleteAppointmentCommand { AppointmentId = appointmentId };
 
-            var appointmentDeleted = await _mediator.Send(command);
+            await _mediator.Send(command);
 
             return NoContent();
         }
