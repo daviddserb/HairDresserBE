@@ -80,7 +80,8 @@ namespace hairDresser.Infrastructure.Repositories
         {
             return context.Appointments
                 .Where(appointment => appointment.CustomerId == customerId)
-                .Where(date => date.StartDate >= DateTime.Now.Date)
+                .Where(appointment => appointment.StartDate >= DateTime.Now.Date)
+                .Where(appointment => appointment.isDeleted == null)
                 .OrderBy(date => date.StartDate)
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee)
@@ -133,7 +134,8 @@ namespace hairDresser.Infrastructure.Repositories
         {
             return context.Appointments
                 .Where(appointment => appointment.EmployeeId == employeeId)
-                .Where(date => date.StartDate >= DateTime.Now.Date)
+                .Where(appointment => appointment.StartDate >= DateTime.Now.Date)
+                .Where(appointment => appointment.isDeleted == null)
                 .OrderBy(date => date.StartDate)
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee)
