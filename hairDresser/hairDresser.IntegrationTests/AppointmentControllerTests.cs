@@ -26,16 +26,6 @@ namespace hairDresser.IntegrationTests
         }
 
         [Fact]
-        public async Task DeleteAppointment_ShouldReturnNoContent()
-        {
-            var client = _factory.CreateClient();
-
-            var response = await client.DeleteAsync("api/appointment/1");
-
-            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
-        }
-
-        [Fact]
         public async Task CreateAppointment_ShouldReturnCreatedAppointment()
         {
             var newAppointment = new AppointmentPostDto
@@ -44,9 +34,7 @@ namespace hairDresser.IntegrationTests
                 EmployeeId = "e977b9be-b19c-47bb-bac2-813c3cbd2e97",
                 StartDate = DateTime.Now.AddHours(4),
                 EndDate = DateTime.Now.AddHours(6),
-
-                // List este reference type si atunci trebuie folosit new.
-                HairServicesIds = new List<int> { 3, 4 }
+                HairServicesIds = new List<int> { 3, 4 } //List is reference type => we need to use the new keyword.
             };
 
             var client = _factory.CreateClient();
@@ -58,6 +46,16 @@ namespace hairDresser.IntegrationTests
             var appointment = JsonConvert.DeserializeObject<AppointmentGetDto>(result);
 
             Assert.Equal(newAppointment.StartDate, appointment.StartDate);
+        }
+
+        [Fact]
+        public async Task DeleteAppointment_ShouldReturnNoContent()
+        {
+            var client = _factory.CreateClient();
+
+            var response = await client.DeleteAsync("api/appointment/1");
+
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
         public static void ClassCleanup()

@@ -29,11 +29,11 @@ namespace hairDresser.IntegrationTests
         {
             builder.ConfigureServices(services =>
             {
-                // Find the service provider (Program.cs) which uses the DB and remove it.
+                //Find the service provider (Program.cs) which uses the DB and remove it.
                 var serviceDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<DataContext>));
                 services.Remove(serviceDescriptor);
 
-                // Create a new service provider.
+                //Create a new service provider.
                 var serviceProvider = new ServiceCollection()
                 .AddEntityFrameworkSqlite()
                 .BuildServiceProvider();
@@ -44,7 +44,7 @@ namespace hairDresser.IntegrationTests
                     options.UseInternalServiceProvider(serviceProvider);
                 }, ServiceLifetime.Scoped);
 
-                // Build the service provider.
+                //Build the service provider.
                 var sp = services.BuildServiceProvider();
 
                 using (var scope = sp.CreateScope())
@@ -55,10 +55,10 @@ namespace hairDresser.IntegrationTests
 
                     db.Database.EnsureDeleted();
 
-                    // Ensure the DB is created.
+                    //Ensure the DB is created.
                     db.Database.EnsureCreated();
 
-                    // Send the DB with test data.
+                    //Send the DB with test data.
                     Utilities.InitializeDbForTests(db);
                 }
             });

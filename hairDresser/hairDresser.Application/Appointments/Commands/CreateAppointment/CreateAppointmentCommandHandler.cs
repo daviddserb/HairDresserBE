@@ -24,14 +24,19 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
         {
             var appointment = new Appointment();
 
+            // Cand verific customer si employee, eu defapt verific daca exista id-ul utilizatorului in baza de date. Totusi, ar trebui sa verific, pe langa asta, si rolurilor lor?
+            //Adica, id-ul de la customer trebuie ca acel utilizator sa aiba rolul de customer. La fel si pentru employee.
+            //Pentru ca altfel, eu pot face un appointment unde sa trimit un id de la un utilizator care nu are rol de employee si sa ii salvez id-ul in coloana de employee din tabelul de appointments.
+            //Pt. asta pot face un GetCustomerByIdAsync, in UserRepository.
             var customer = await _unitOfWork.UserRepository.GetUserByIdAsync(request.CustomerId);
-            if (customer == null) throw new NotFoundException($"The customer with the id '{request.CustomerId}' does not exist!");
+            if (customer == null) throw new NotFoundException($"The user with the id '{request.CustomerId}' does not exist!");
 
+            // ???
             var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
-            if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
+            if (employee == null) throw new NotFoundException($"The user with the id '{request.EmployeeId}' does not exist!");
 
             var hairServices = await _unitOfWork.HairServiceRepository.GetAllHairServicesByIdsAsync(request.HairServicesIds);
-            if (hairServices == null) throw new NotFoundException($"All or some of the hair services with the ids '{String.Join(", ", request.HairServicesIds)}' do not exist!");
+            if (hairServices == null) throw new NotFoundException($"Not all hair services ids '{String.Join(", ", request.HairServicesIds)}' are valid!");
 
             appointment.CustomerId = customer.Id;
             appointment.EmployeeId = employee.Id;

@@ -31,6 +31,7 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
                     .ThenInclude(hairServices => hairServices.HairService)
+                .Include(review => review.Review)
                 .Skip((pageNumber - 1) * PageSize)
                 .Take(PageSize);
         }

@@ -61,7 +61,6 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("{appointmentId}")]
-        //[ActionName(nameof(GetAppointmentById))]
         public async Task<IActionResult> GetAppointmentById(int appointmentId)
         {
             var query = new GetAppointmentByIdQuery { AppointmentId = appointmentId };
