@@ -46,6 +46,7 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task<UserWithRole> GetUserWithRoleByIdAsync(string userId)
         {
             var user = await context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
+            if (user == null) throw new NotFoundException($"The user with the id '{userId}' does not exist!");
             var userWithRole = new UserWithRole
             {
                 Id = user.Id,

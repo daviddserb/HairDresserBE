@@ -13,11 +13,13 @@ using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByEmploy
 using hairDresser.Presentation.Dto.AppointmentDtos;
 using hairDresser.Presentation.Dto.ReviewDtos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hairDresser.Presentation.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/appointment")]
     public class AppointmentController : ControllerBase
     {

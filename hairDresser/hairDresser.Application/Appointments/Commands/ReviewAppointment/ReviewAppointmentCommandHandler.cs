@@ -23,6 +23,7 @@ namespace hairDresser.Application.Appointments.Commands.ReviewAppointment
             var appointment = await _unitOfWork.AppointmentRepository.GetAppointmentByIdAsync(request.AppointmentId);
             if (appointment == null) throw new NotFoundException($"The appointment with the id '{request.AppointmentId}' does not exist!");
             if (appointment.ReviewId != null) throw new ClientException($"The appointment with the id '{request.AppointmentId}' already has a review!");
+
             // Make reviews available only for finished appointments
             var currentDate = DateTime.Now;
             if (appointment.EndDate >= currentDate) throw new ClientException($"Reviews are available only for finished appointments!");

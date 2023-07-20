@@ -37,6 +37,11 @@ namespace hairDresser.Presentation.Middleware
                 _logger.LogError($"ClientException: {exception}");
                 await HandleClientException(httpContext, exception);
             }
+            catch (Exception exception)
+            {
+                _logger.LogError($"Exception: {exception}");
+                await HandleGeneralException(httpContext, exception);
+            }
         }
 
         private Task HandleNotFoundException (HttpContext httpContext, NotFoundException exception)
@@ -60,6 +65,17 @@ namespace hairDresser.Presentation.Middleware
             {
                 StatusCode = httpContext.Response.StatusCode,
                 Message = exception.Message
+            }.ToString());
+        }
+        private Task HandleGeneralException(HttpContext httpContext, Exception exception)
+        {
+            httpContext.Response.ContentType = "application/json";
+            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            return httpContext.Response.WriteAsync(new ErrorDetails
+            {
+                StatusCode = httpContext.Response.StatusCode,
+                Message = "An unexpected error occurred on the server."
             }.ToString());
         }
     }

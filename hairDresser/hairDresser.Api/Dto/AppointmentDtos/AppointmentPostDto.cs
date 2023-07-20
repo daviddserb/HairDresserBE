@@ -23,7 +23,8 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
         [DateGreaterThan("StartDate")]
         public DateTime EndDate { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Price required.")]
+        [Range(1, float.MaxValue, ErrorMessage = "The price must be between {1} and {2}.")]
         public float Price { get; set; }
     }
 }
