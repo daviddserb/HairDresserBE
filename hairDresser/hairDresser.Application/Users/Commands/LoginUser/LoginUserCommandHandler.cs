@@ -44,7 +44,7 @@ namespace hairDresser.Application.Users.Commands.LoginUser
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
 
-                // Generate the key (which is the same as the key from the Program.cs).
+                // Generate the key, which is the same as the key from the Program.cs.
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdee-312423d-dsa213321"));
 
                 var token = new JwtSecurityToken
@@ -52,7 +52,7 @@ namespace hairDresser.Application.Users.Commands.LoginUser
                     issuer: "https://localhost:7192", // back-end
                     audience: "https://localhost:4200", // front-end
                     claims: authClaims,
-                    expires: DateTime.Now.AddHours(10),
+                    expires: DateTime.Now.AddHours(8),
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
 

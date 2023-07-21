@@ -26,6 +26,7 @@ namespace hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByCu
 
             var customerAppointmentsInWork = await _unitOfWork.AppointmentRepository.GetInWorkAppointmentsByCustomerIdAsync(request.CustomerId);
             if (!customerAppointmentsInWork.Any()) throw new NotFoundException($"The customer with the id '{request.CustomerId}' has no in work appointments!");
+
             return customerAppointmentsInWork;
         }
     }

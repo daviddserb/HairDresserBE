@@ -18,8 +18,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace hairDresser.Presentation.Controllers
 {
+    //[Authorize]
     [ApiController]
-    [Authorize]
     [Route("api/appointment")]
     public class AppointmentController : ControllerBase
     {
@@ -50,8 +50,12 @@ namespace hairDresser.Presentation.Controllers
             return CreatedAtAction(nameof(GetAppointmentById), new {appointmentId = mappedAppointment.Id}, mappedAppointment);
         }
 
+        ///<summary>
+        ///Get All Users from the Database.
+        ///</summary>
         [HttpGet]
         [Route("all")]
+        //[Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAllAppointments([FromQuery] GetAllAppointmentsQuery paginationQuery)
         {
             var allAppointments = await _mediator.Send(paginationQuery);
