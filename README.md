@@ -1,19 +1,8 @@
-# HairDresser (back-end)
+# Hair Dresser Appointment (back-end)
 
-Hair Dresser it's web application that allows customers to make appointments for their needs. To use it, you need to register an account.
-There are three types of users:
-1. Admin:
-- CRUD hair services.
-- View all appointments and even the canceled ones.
-- View all employees with their hair services and working intervals.
-2. Employee:
-- Add the hair services that they are capable of doing.
-- View all his appointments.
-- Make their working intervals, which can be multiple in a working day.
-3. Customer:
-- Make appointments, which means: selecting hair services, choosing an employee, picking a date, and choosing the interval time.
-- View all his appointments, with the option to cancel only those whose start time is at least one day from the current day.
+- It's a web application enabling seamless online booking for a hair salon and saving the client time and cost with a user-friendly interface.
+- Users include admins who manage salon hair services and oversee appointments, employees who set their skills and working intervals, and customers who schedule, cancel, and review consultations.
+- I utilized xUnit to implement both Unit and Integration Tests.
+- For user feedback, pop-up messages will appear.
 
-I used the following:
-  - back-end: C#, ASP .NET Core Web API, Database: Microsoft SQL Server with ORM: Entity Framework Core.
-  - front-end: Angular with Material UI.
+- Skills: .NET, C#, ASP.NET Web API, Microsoft SQL Server, Entity Framework Core, and Angular with Material UI.
