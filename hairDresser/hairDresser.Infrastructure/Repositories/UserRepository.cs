@@ -29,8 +29,8 @@ namespace hairDresser.Infrastructure.Repositories
             var createdUser = await _userManager.CreateAsync(user, userPassowrd);
 
             // OAuth has some validations on its own columns from the DB Table. Some of the requirements:
-            // Password must have at least one: uppercase letter (A, ...), digit (1, ...) and alphanumeric character (symbols: #, @, %, ...).
             // Username can't have white space.
+            // Password must have at least one: uppercase letter (A, ...), digit (1, ...) and alphanumeric character (symbols: #, @, %, ...).
             if (!createdUser.Succeeded) throw new ClientException("Failed to create the account!");
         }
 
@@ -38,7 +38,7 @@ namespace hairDresser.Infrastructure.Repositories
         {
             // Method 1:
             var user = await context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
-            // Method 2, using UserManager Service, will have same result as Method 1:
+            // Method 2 (same result but using IdentityUser methods):
             // var user2 = await _userManager.FindByIdAsync(userId);
             return user;
         }
@@ -160,8 +160,18 @@ namespace hairDresser.Infrastructure.Repositories
             return validEmployees.AsQueryable();
         }
 
+        public async Task<List<int>> GetEmployeeHairServicesIds(string employeeId)
+        {
+            var employeeHairServicesIds = context.EmployeesHairServices
+            .Where(ehs => ehs.EmployeeId == employeeId)
+            .Select(ehs => ehs.HairServiceId)
+            .ToList();
+            return employeeHairServicesIds;
+        }
+
         public async Task<EmployeeHairService> CheckIfEmployeeHairServiceIdExistsAsync(int employeeHairServiceId)
         {
+            // Get the hair service IDs of the specific employee
             return await context.EmployeesHairServices.FirstOrDefaultAsync(employeeHairService => employeeHairService.Id == employeeHairServiceId);
         }
 

@@ -59,8 +59,9 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task<IQueryable<Appointment>> GetAllAppointmentsByCustomerIdByDateAsync(string customerId, DateTime appointmentDate)
         {
             return context.Appointments
-                .Where(date => date.StartDate.Date == appointmentDate.Date)
-                .Where(id => id.CustomerId == customerId)
+                .Where(appointment => appointment.CustomerId == customerId)
+                .Where(appointment => appointment.isDeleted == null)
+                .Where(appointment => appointment.StartDate.Date == appointmentDate.Date)
                 .OrderBy(date => date.StartDate);
         }
 
@@ -112,8 +113,10 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task<IQueryable<Appointment>> GetAllAppointmentsByEmployeeIdByDateAsync(string employeeId, DateTime appointmentDate)
         {
             return context.Appointments
-                .Where(date => date.StartDate.Date == appointmentDate.Date)
-                .Where(id => id.EmployeeId == employeeId)
+                .Where(appointment => appointment.EmployeeId == employeeId)
+                .Where(appointment => appointment.isDeleted == null)
+                .Where(appointment => appointment.StartDate.Date == appointmentDate.Date)
+                .OrderBy(date => date.StartDate)
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee);
         }

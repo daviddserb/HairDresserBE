@@ -48,7 +48,9 @@ namespace hairDresser.Infrastructure.Repositories
                 .Where(employee => employee.Employee.Id.Equals(employeeId))
                 .Where(workingDay => workingDay.WorkingDay.Id == workingDayId)
                 .Include(obj => obj.WorkingDay)
-                .Include(obj => obj.Employee);
+                .Include(obj => obj.Employee)
+                .OrderBy(workingDay => workingDay.WorkingDayId)
+                .ThenBy(startTime => startTime.StartTime);
         }
 
         public async Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsByEmployeeIdAsync(string employeeId)

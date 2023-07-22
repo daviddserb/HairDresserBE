@@ -34,6 +34,7 @@ namespace hairDresser.Application.Interfaces
 
         // EmployeeHairService:
         Task<IQueryable<User>> GetAllEmployeesByHairServicesIdsAsync(List<int> hairServicesIds);
+        Task<List<int>> GetEmployeeHairServicesIds(string employeeId);
         Task<EmployeeHairService> CheckIfEmployeeHairServiceIdExistsAsync(int employeeHairServiceId);
         Task AddHairServiceToEmployeeAsync(List<EmployeeHairService> employee);
         Task DeleteHairServiceFromEmployeeAsync(int employeeHairServiceId);

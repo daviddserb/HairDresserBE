@@ -21,11 +21,6 @@ namespace hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate
 
         public async Task<List<EmployeeFreeInterval>> Handle(GetEmployeeFreeIntervalsByDateQuery request, CancellationToken cancellationToken)
         {
-            // Set a maximum number of appointments per month for the customer.
-            var maxCustomerAppointmentsPerMonth = 5;
-            var customerAppointmentsLastMonth = await _unitOfWork.AppointmentRepository.CountCustomerAppointmentsLastMonthAsync(request.CustomerId);
-            if (customerAppointmentsLastMonth > maxCustomerAppointmentsPerMonth) throw new ClientException($"Can't make more appointments for this month because you have reached the maximum appointments limit ({maxCustomerAppointmentsPerMonth})!");
-
             var appointmentDate = new DateTime(request.Year, request.Month, request.Date);
 
             var duration = TimeSpan.FromMinutes(request.DurationInMinutes);

@@ -46,16 +46,16 @@ namespace hairDresser.Presentation.Controllers
 
             var mappedAppointment = _mapper.Map<AppointmentGetDto>(appointment);
 
-            _logger.LogInformation("Appointment created successfully.");
+            _logger.LogInformation("Appointment successfully created.");
             return CreatedAtAction(nameof(GetAppointmentById), new {appointmentId = mappedAppointment.Id}, mappedAppointment);
         }
 
         ///<summary>
         ///Get All Users from the Database.
         ///</summary>
+        //[Authorize(Roles = "admin")]
         [HttpGet]
         [Route("all")]
-        //[Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAllAppointments([FromQuery] GetAllAppointmentsQuery paginationQuery)
         {
             var allAppointments = await _mediator.Send(paginationQuery);
@@ -158,6 +158,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpPost]
         [Route("{appointmentId}/review")]
+        // !!! To do: ar trb. sa trimit si CustomerId ca si parametru, pt. ca doar customer-ul poate da review si poate doar la appointment-urile lui.
         public async Task<IActionResult> ReviewAppointment(int appointmentId, [FromBody] ReviewPostDto reviewInput)
         {
             var command = new ReviewAppointmentCommand
