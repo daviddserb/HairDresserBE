@@ -44,13 +44,22 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<WorkingInterval>> GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(string employeeId, int workingDayId)
         {
-            return context.WorkingIntervals
+            // BEFORE:
+            //return context.WorkingIntervals
+            //    .Where(employee => employee.Employee.Id.Equals(employeeId))
+            //    .Where(workingDay => workingDay.WorkingDay.Id == workingDayId)
+            //    .Include(obj => obj.WorkingDay)
+            //    .Include(obj => obj.Employee)
+            //    .OrderBy(workingDay => workingDay.WorkingDayId)
+            //    .ThenBy(startTime => startTime.StartTime);
+
+            // AFTER (because in Integration Test, when calling this method with SQLite, there are some methods that are not compatible):
+            var workingIntervals = context.WorkingIntervals
                 .Where(employee => employee.Employee.Id.Equals(employeeId))
                 .Where(workingDay => workingDay.WorkingDay.Id == workingDayId)
                 .Include(obj => obj.WorkingDay)
-                .Include(obj => obj.Employee)
-                .OrderBy(workingDay => workingDay.WorkingDayId)
-                .ThenBy(startTime => startTime.StartTime);
+                .Include(obj => obj.Employee);
+            return workingIntervals;
         }
 
         public async Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsByEmployeeIdAsync(string employeeId)

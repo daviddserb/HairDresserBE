@@ -56,23 +56,23 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             TimeSpan appointmentStartTime = request.StartDate.TimeOfDay;
             TimeSpan appointmentEndTime = request.EndDate.TimeOfDay;
             bool atLeastOneIntervalValid = false;
-            // Check if Appointment's Start and End Dates are valid in the Employee's Working Interval.
+            // Check if Appointment Interval is valid in the Employee's Working Interval.
             foreach (var interval in employeeWorkingIntervals)
             {
-                // If it is valid
+                // If valid
                 if (appointmentStartTime >= interval.StartTime && appointmentEndTime <= interval.EndTime)
                 {
                     atLeastOneIntervalValid = true;
 
                     var employeeAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByEmployeeIdByDateAsync(request.EmployeeId, request.StartDate);
-                    // Check if the Appointment interval is overlapping with the existing Employee's Appointments in that day.
+                    // Check if Appointment Interval is overlapping with the existing Employee's Appointments in that day.
                     foreach (var employeeAppointment in employeeAppointments)
                     {
                         bool appointmentsOverlap = appointmentStartTime < employeeAppointment.EndDate.TimeOfDay && appointmentEndTime > employeeAppointment.StartDate.TimeOfDay;
                         if (appointmentsOverlap == true) throw new ClientException($"The appointment interval is overlaping with the employee '{employee.Username}' current appointments!");
                     }
 
-                    break; // Appointment's Start and End Dates can be valid only in a singular Employee's Working Interval.
+                    break; // Appointment Interval can be valid only in a singular Employee's Working Interval.
                 }
             }
             if (atLeastOneIntervalValid == false)
@@ -86,9 +86,8 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
                 throw new ClientException($"The appointment's interval '{appointmentStartTime.ToString("hh\\:mm\\:ss")} - {appointmentEndTime.ToString("hh\\:mm\\:ss")}' is not available for the employee {employee.Username}'s working intervals: '{intervals}'");
             }
 
-            // Check if the Appointment interval is overlapping with the existing Customer's Appointments in that day.
+            // Check if Appointment Interval is overlapping with the existing Customer's Appointments in that day.
             var customerAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByCustomerIdByDateAsync(request.CustomerId, request.StartDate);
-            // Check if the Appointment interval is overlapping with the existing Employee's Appointments in that day.
             foreach (var customerAppointment in customerAppointments)
             {
                 bool appointmentsOverlap = appointmentStartTime < customerAppointment.EndDate.TimeOfDay && appointmentEndTime > customerAppointment.StartDate.TimeOfDay;

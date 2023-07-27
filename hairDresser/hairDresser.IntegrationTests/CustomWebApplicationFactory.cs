@@ -1,6 +1,8 @@
-﻿using hairDresser.Infrastructure;
+﻿using hairDresser.Domain.Models;
+using hairDresser.Infrastructure;
 using hairDresser.IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +15,12 @@ using System.Threading.Tasks;
 
 namespace hairDresser.IntegrationTests
 {
-    // This class sets the environment for testing.
-    public class CustomWebApplicationFactory<TProgram>
-        : WebApplicationFactory<TProgram> where TProgram : class
+    /// <summary>
+    /// Sets the enviroment for testing.
+    /// In our case, we prepare a copy of the Real Database (Tables and Columns) to a In-Memory Database using SQLite.
+    /// </summary>
+    /// <typeparam name="TProgram"></typeparam>
+    public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
     {
         private SqliteConnection _connection;
 

@@ -55,8 +55,7 @@ namespace hairDresser.Infrastructure.Repositories
 
             // Method 2:
             var employeeMissingHairServices2 = context.HairServices
-                .Where(hs => !context.EmployeesHairServices
-                    .Any(ehs => ehs.EmployeeId == employeeId && ehs.HairServiceId == hs.Id));
+                .Where(hs => !context.EmployeesHairServices.Any(ehs => ehs.EmployeeId == employeeId && ehs.HairServiceId == hs.Id));
 
             return employeeMissingHairServices2;
         }
@@ -72,17 +71,37 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<TimeSpan> GetDurationByHairServicesIdsAsync(List<int> hairServicesIds)
         {
-            var selectedHairServicesTotalDuration = context.HairServices
+            // BEFORE:
+            //return context.HairServices
+            //    .Where(hairService => hairServicesIds.Contains(hairService.Id))
+            //    .Sum(hairServices => hairServices.Duration.Hours * 60 + hairServices.Duration.Minutes);
+
+            // AFTER (because in Integration Test, when calling this method with SQLite, there are some methods that are not compatible):
+            var selectedHairServices = await context.HairServices
                 .Where(hairService => hairServicesIds.Contains(hairService.Id))
-                .Sum(hairServices => hairServices.Duration.Hours * 60 + hairServices.Duration.Minutes);
-            return TimeSpan.FromMinutes(selectedHairServicesTotalDuration);
+                .ToListAsync();
+
+            int selectedHairServicesTotalDurationInMinutes = selectedHairServices
+                .Sum(hairService => hairService.Duration.Hours * 60 + hairService.Duration.Minutes);
+
+            return TimeSpan.FromMinutes(selectedHairServicesTotalDurationInMinutes);
         }
 
         public async Task<decimal> GetPriceByHairServicesIdsAsync(List<int> hairServicesIds)
         {
-            var selectedHairServicesTotalPrice = context.HairServices
+            // BEFORE:
+            //return context.HairServices
+            //    .Where(hairService => hairServicesIds.Contains(hairService.Id))
+            //    .Sum(hairServices => hairServices.Price);
+
+            // AFTER (because in Integration Test, when calling this method with SQLite, there are some methods that are not compatible):
+            var selectedHairServices = await context.HairServices
                 .Where(hairService => hairServicesIds.Contains(hairService.Id))
-                .Sum(hairServices => hairServices.Price);
+                .ToListAsync();
+
+            decimal selectedHairServicesTotalPrice = selectedHairServices
+                .Sum(hairService => hairService.Price);
+
             return selectedHairServicesTotalPrice;
         }
 

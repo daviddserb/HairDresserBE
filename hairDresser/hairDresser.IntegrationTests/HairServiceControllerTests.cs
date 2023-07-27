@@ -39,9 +39,9 @@ namespace hairDresser.IntegrationTests
         {
             var newHairService = new HairServicePostPutDto
             {
-                Name = "premium haircut",
-                DurationInMinutes = 60,
-                Price = 300
+                Name = "nails",
+                DurationInMinutes = 15,
+                Price = 20.99m
             };
 
             var client = _factory.CreateClient();

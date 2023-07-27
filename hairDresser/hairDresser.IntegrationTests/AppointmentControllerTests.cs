@@ -28,13 +28,16 @@ namespace hairDresser.IntegrationTests
         [Fact]
         public async Task CreateAppointment_ShouldReturnCreatedAppointment()
         {
+            // Appointment data input must be valid in order for the Test to Succed.
             var newAppointment = new AppointmentPostDto
             {
-                CustomerId = "a27325c9-7b54-4058-a6c3-3e076edb3a77",
-                EmployeeId = "e977b9be-b19c-47bb-bac2-813c3cbd2e97",
-                StartDate = DateTime.Now.AddHours(4),
-                EndDate = DateTime.Now.AddHours(6),
-                HairServicesIds = new List<int> { 3, 4 } //List is reference type => we need to use the new keyword.
+                CustomerId = "80a9c339-2b14-4024-b548-1f782adbda25",
+                EmployeeId = "fdf45d4c-da75-4a63-aff6-cd9add4d327f",
+                //List is Reference Type => need to use new keyword.
+                HairServicesIds = new List<int> { 1, 2 },
+                Price = 159.98f,
+                StartDate = new DateTime(2023, 08, 24, 09, 00, 00),
+                EndDate = new DateTime(2023, 08, 24, 09, 37, 00)
             };
 
             var client = _factory.CreateClient();

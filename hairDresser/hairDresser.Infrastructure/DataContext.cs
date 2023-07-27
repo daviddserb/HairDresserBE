@@ -39,7 +39,9 @@ namespace hairDresser.Infrastructure
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<HairService>().HasIndex(hairService => hairService.Name).IsUnique();
+            builder.Entity<HairService>()
+                .HasIndex(hairService => hairService.Name)
+                .IsUnique();
 
             // Configuring Foreign Keys With Fluent API (with Collections in the User class).
             builder.Entity<Appointment>()

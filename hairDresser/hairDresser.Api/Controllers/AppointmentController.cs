@@ -34,6 +34,11 @@ namespace hairDresser.Presentation.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Customers Create Appointments
+        /// </summary>
+        /// <param name="appointmentInput"></param>
+        /// <returns>Returns the created appointment</returns>
         [HttpPost]
         public async Task<IActionResult> CreateAppointmentAsync([FromBody] AppointmentPostDto appointmentInput)
         {
