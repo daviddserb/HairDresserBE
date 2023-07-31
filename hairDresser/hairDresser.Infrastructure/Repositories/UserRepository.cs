@@ -37,8 +37,8 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task<User> GetUserByIdAsync(string userId)
         {
             // Method 1:
-            var user = await context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
-            // Method 2 (same result but using IdentityUser methods):
+            var user = await context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+            // Method 2 (same result but using IdentityUser method):
             // var user2 = await _userManager.FindByIdAsync(userId);
             return user;
         }

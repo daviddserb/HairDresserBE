@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace hairDresser.Presentation.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/appointment")]
     public class AppointmentController : ControllerBase
@@ -40,6 +40,7 @@ namespace hairDresser.Presentation.Controllers
         /// <param name="appointmentInput"></param>
         /// <returns>Returns the created appointment</returns>
         [HttpPost]
+        [Authorize(Roles = "customer")]
         public async Task<IActionResult> CreateAppointmentAsync([FromBody] AppointmentPostDto appointmentInput)
         {
             _logger.LogInformation("Start process: Create appointment...");
@@ -58,9 +59,9 @@ namespace hairDresser.Presentation.Controllers
         ///<summary>
         ///Get All Users from the Database.
         ///</summary>
-        //[Authorize(Roles = "admin")]
         [HttpGet]
         [Route("all")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAllAppointments([FromQuery] GetAllAppointmentsQuery paginationQuery)
         {
             var allAppointments = await _mediator.Send(paginationQuery);
@@ -163,11 +164,12 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpPost]
         [Route("{appointmentId}/review")]
-        // !!! To do: ar trb. sa trimit si CustomerId ca si parametru, pt. ca doar customer-ul poate da review si poate doar la appointment-urile lui.
+        [Authorize(Roles = "customer")]
         public async Task<IActionResult> ReviewAppointment(int appointmentId, [FromBody] ReviewPostDto reviewInput)
         {
             var command = new ReviewAppointmentCommand
             {
+                CustomerId = reviewInput.CustomerId,
                 AppointmentId = appointmentId,
                 Rating = reviewInput.Rating,
                 Comments = reviewInput.Comments
@@ -179,12 +181,16 @@ namespace hairDresser.Presentation.Controllers
 
             return Ok(mappedAppointmentReviewed);
         }
-
+        
         [HttpDelete]
-        [Route("{appointmentId}")]
-        public async Task<IActionResult> DeleteAppointment(int appointmentId)
+        [Route("{customerId}/{appointmentId}")]
+        [Authorize(Roles = "customer")]
+        public async Task<IActionResult> DeleteAppointment(string customerId, int appointmentId)
         {
-            var command = new DeleteAppointmentCommand { AppointmentId = appointmentId };
+            var command = new DeleteAppointmentCommand {
+                CustomerId = customerId,
+                AppointmentId = appointmentId
+            };
 
             await _mediator.Send(command);
 

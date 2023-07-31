@@ -20,21 +20,19 @@ namespace hairDresser.Application.Appointments.Commands.ReviewAppointment
         }
         public async Task<Appointment> Handle(ReviewAppointmentCommand request, CancellationToken cancellationToken)
         {
+            var customerAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByCustomerIdAsync(request.CustomerId);
+            if (customerAppointments.All(appointment => appointment.Id != request.AppointmentId)) throw new ClientException($"The appointment with the id '{request.AppointmentId}' does not belong to the selected customer!");
+            
             var appointment = await _unitOfWork.AppointmentRepository.GetAppointmentByIdAsync(request.AppointmentId);
             if (appointment == null) throw new NotFoundException($"The appointment with the id '{request.AppointmentId}' does not exist!");
             if (appointment.ReviewId != null) throw new ClientException($"The appointment with the id '{request.AppointmentId}' already has a review!");
+            if (appointment.EndDate >= DateTime.Now) throw new ClientException("Reviews are available only for finished appointments!");
 
-            // Make reviews available only for finished appointments
-            var currentDate = DateTime.Now;
-            if (appointment.EndDate >= currentDate) throw new ClientException($"Reviews are available only for finished appointments!");
-
-            // Create a new review for the appointment
             var review = new Review
             {
                 Rating = request.Rating,
                 Comments = request.Comments
             };
-
             // Associate the review with the appointment -> will be saved the Id from the Review to the ReviewId from Appointment because of mapping from Review navigation property.
             appointment.Review = review;
 

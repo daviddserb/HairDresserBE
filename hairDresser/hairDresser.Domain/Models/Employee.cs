@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// I don't use the Employee class anymore.
 namespace hairDresser.Domain.Models
 {
+    /// <summary>
+    /// I don't use the Employee class anymore.
+    /// </summary>
     public class Employee
     {
         public int Id { get; set; }
