@@ -18,7 +18,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace hairDresser.Presentation.Controllers
 {
-    //[Authorize]
     [ApiController]
     [Route("api/appointment")]
     public class AppointmentController : ControllerBase
@@ -61,8 +60,7 @@ namespace hairDresser.Presentation.Controllers
         ///</summary>
         [HttpGet]
         [Route("all")]
-        //[Authorize(Roles = "admin")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAllAppointments([FromQuery] GetAllAppointmentsQuery paginationQuery)
         {
             var allAppointments = await _mediator.Send(paginationQuery);

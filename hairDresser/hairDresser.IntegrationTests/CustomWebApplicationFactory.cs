@@ -1,12 +1,11 @@
-﻿using hairDresser.Domain.Models;
-using hairDresser.Infrastructure;
+﻿using hairDresser.Infrastructure;
 using hairDresser.IntegrationTests.Helpers;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -67,6 +66,12 @@ namespace hairDresser.IntegrationTests
                     //Send the DB with test data.
                     Utilities.InitializeDbForTests(db);
                 }
+            });
+
+            // To bypass the [Authorize] Attribute from the Controller.
+            builder.ConfigureTestServices(services =>
+            {
+                services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
             });
         }
 

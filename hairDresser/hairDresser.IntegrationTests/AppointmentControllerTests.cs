@@ -1,6 +1,5 @@
 ﻿using hairDresser.Presentation.Dto.AppointmentDtos;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Net;
 using System.Text;
@@ -11,14 +10,14 @@ namespace hairDresser.IntegrationTests
     {
         private static WebApplicationFactory<Program> _factory = new CustomWebApplicationFactory<Program>();
 
-        // ??? All tests fail because of the [Authorize] Attribute from the AppointmentController.
         [Fact]
         public async Task GetAllAppointments_ShouldReturnOkReponse()
         {
+            //Arrange:
             var client = _factory.CreateClient();
-
+            //Act:
             var response = await client.GetAsync("api/appointment/all?PageNumber=1&PageSize=1"); // hard-coded the parameter values
-
+            //Assert:
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -27,7 +26,7 @@ namespace hairDresser.IntegrationTests
         {
             var client = _factory.CreateClient();
 
-            // Appointment data input must be valid in order for the Test to Succed.
+            // Appointment data input must be valid in order for the Test to Succeed.
             var newAppointment = new AppointmentPostDto
             {
                 CustomerId = "80a9c339-2b14-4024-b548-1f782adbda25",
@@ -51,7 +50,7 @@ namespace hairDresser.IntegrationTests
         {
             var client = _factory.CreateClient();
 
-            var response = await client.DeleteAsync("api/appointment/1");
+            var response = await client.DeleteAsync("api/appointment/1827e7ba-a97b-4326-ab6b-a847573d86e6/1");
 
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
