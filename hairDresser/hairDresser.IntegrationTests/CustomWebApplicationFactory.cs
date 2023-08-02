@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace hairDresser.IntegrationTests
             builder.ConfigureServices(services =>
             {
                 //Find the service provider (Program.cs) which uses the DB and remove it.
-                var serviceDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<DataContext>));
+                var serviceDescriptor = services.SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<DataContext>));
                 services.Remove(serviceDescriptor);
 
                 //Create a new service provider.

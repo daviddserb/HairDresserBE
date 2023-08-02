@@ -11,6 +11,7 @@ using hairDresser.Application.HairServices.Queries.GetMissingHairServicesByEmplo
 using hairDresser.Application.HairServices.Queries.GetPriceByHairServicesIds;
 using hairDresser.Presentation.Dto.HairServiceDtos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hairDresser.Presentation.Controllers

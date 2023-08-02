@@ -22,7 +22,7 @@ namespace hairDresser.Application.Appointments.Queries.GetAllAppointments
         public async Task<IQueryable<Appointment>> Handle(GetAllAppointmentsQuery request, CancellationToken cancellationToken)
         {
             var allAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsAsync(request.PageNumber, request.PageSize);
-            if (!allAppointments.Any()) throw new NotFoundException("There are no appointments!");
+            if (!allAppointments.Any()) throw new NotFoundException("There are no appointments registered!");
             return allAppointments;
         }
     }

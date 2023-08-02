@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace hairDresser.Presentation.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/appointment")]
     public class AppointmentController : ControllerBase
@@ -52,7 +52,7 @@ namespace hairDresser.Presentation.Controllers
 
             var mappedAppointment = _mapper.Map<AppointmentGetDto>(appointment);
 
-            _logger.LogInformation("Appointment successfully created.");
+            _logger.LogInformation("Finish process: Appointment successfully created.");
             return CreatedAtAction(nameof(GetAppointmentById), new {appointmentId = mappedAppointment.Id}, mappedAppointment);
         }
 
@@ -61,7 +61,8 @@ namespace hairDresser.Presentation.Controllers
         ///</summary>
         [HttpGet]
         [Route("all")]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
+        [Authorize]
         public async Task<IActionResult> GetAllAppointments([FromQuery] GetAllAppointmentsQuery paginationQuery)
         {
             var allAppointments = await _mediator.Send(paginationQuery);

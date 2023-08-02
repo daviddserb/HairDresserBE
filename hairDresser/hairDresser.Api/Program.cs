@@ -18,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -73,7 +74,6 @@ builder.Services
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     })
-
     //Add the support we need, what we need to validate for JWT (https://jwt.io/).
     .AddJwtBearer(options =>
     {
@@ -88,7 +88,6 @@ builder.Services
             ValidateIssuerSigningKey = true
         };
     });
-
 builder.Services.AddAuthorization();
 
 //Add MediatR which scans all the messages (Queries and Commands) and all the handlers from inside

@@ -29,22 +29,21 @@ namespace hairDresser.Application.Users.Commands.LoginUser
 
             if (user != null && await _unitOfWork.UserRepository.CheckUserPasswordAsync(user, request.Password))
             {
-                var userRoles = await _unitOfWork.UserRepository.GetUserRolesAsync(user);
-
-                // If the user exists, after the login, we need to return a token, and to do that we need to add some Claims, and will be visible in the token.
+                //If user exists => add Claims to the Token
                 var authClaims = new List<Claim>
                 {
                     new Claim("username", request.Username),
                     new Claim("password", request.Password)
                 };
 
-                // Add the roles, from the DB, from the specific user, to the claims.
+                var userRoles = await _unitOfWork.UserRepository.GetUserRolesAsync(user);
+                //Add the roles, from DB, from the logged-in user, to the Claims.
                 foreach (var userRole in userRoles)
                 {
                     authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
 
-                // Generate the key, which is the same as the key from the Program.cs.
+                //Generate the key, which is the same as the key from the Program.cs.
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdee-312423d-dsa213321"));
 
                 var token = new JwtSecurityToken
