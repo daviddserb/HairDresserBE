@@ -1,5 +1,4 @@
-﻿using hairDresser.Application.Customers.Queries.GetCustomerById;
-using hairDresser.Application.CustomExceptions;
+﻿using hairDresser.Application.CustomExceptions;
 using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;

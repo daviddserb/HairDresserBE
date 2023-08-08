@@ -15,20 +15,18 @@ namespace hairDresser.Infrastructure
         public DataContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Appointment> Appointments => Set<Appointment>();
-        public DbSet<Customer> Customers => Set<Customer>();
-        public DbSet<Employee> Employees => Set<Employee>();
         public DbSet<HairService> HairServices => Set<HairService>();
         public DbSet<WorkingInterval> WorkingIntervals => Set<WorkingInterval>();
+        public DbSet<Review> Reviews => Set<Review>();
         public DbSet<WorkingDay> WorkingDays => Set<WorkingDay>();
-        public DbSet<Review> Reviews { get; set; }
 
         // Even if the many-to-many connection table is automatically created in the DB, if you set it here it will help you to access it.
         public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();
         public DbSet<AppointmentHairService> AppointmentsHairServices => Set<AppointmentHairService>();
 
-        //! If I run the application in:
-        //- Console => trebuie sa decomentez metoda OnConfiguring().
-        //- Presentation (API) => trebuie sa comentez metoda OnConfiguring() pt. ca altfel am erori de tipul "Multiple database connections".
+        // If I run the application in:
+        // - Console => OnConfiguring() method must run.
+        // - API => OnConfiguring() method must not run (error: "Multiple database connections").
         //protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         //{
         //    optionBuilder

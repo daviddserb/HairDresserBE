@@ -3,13 +3,6 @@ using hairDresser.Application.Appointments.Queries.GetAllAppointments;
 using hairDresser.Application.Appointments.Queries.GetAllAppointmentsByCustomerId;
 using hairDresser.Application.Appointments.Queries.GetAppointmentById;
 using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByCustomerId;
-using hairDresser.Application.Customers.Commands.CreateCustomer;
-using hairDresser.Application.Customers.Queries.GetAllCustomers;
-using hairDresser.Application.Employees.Commands.CreateEmployee;
-using hairDresser.Application.Employees.Commands.DeleteEmployee;
-using hairDresser.Application.Employees.Queries.GetAllEmployees;
-using hairDresser.Application.Employees.Queries.GetEmployeeFreeIntervalsForAppointmentByDate;
-using hairDresser.Application.Employees.Queries.GetEmployeesByServices;
 using hairDresser.Application.HairServices.Commands.CreateHairService;
 using hairDresser.Application.HairServices.Queries;
 using hairDresser.Application.HairServices.Queries.GetAllHairServicesByIds;
@@ -32,10 +25,8 @@ var diContainer = new ServiceCollection()
     // De fiecare data cand vei vedea ca cineva depinde de IHairServiceRepository, creezi o instanta de HairServiceRepository (la fel si pt. restul).
     .AddScoped<IUnitOfWork, UnitOfWork>()
     .AddScoped<IHairServiceRepository, HairServiceRepository>()
-    .AddScoped<IEmployeeRepository, EmployeeRepository>()
     .AddScoped<IAppointmentRepository, AppointmentRepository>()
     .AddScoped<IWorkingIntervalRepository, WorkingIntervalRepository>()
-    .AddScoped<ICustomerRepository, CustomerRepository>()
     .AddScoped<IWorkingDayRepository, WorkingDayRepository>()
 
     // Adaugam MediatR, care scaneaza toate mesajele (Queries/Commands) si toate handle-urile, de tipul typeof().
