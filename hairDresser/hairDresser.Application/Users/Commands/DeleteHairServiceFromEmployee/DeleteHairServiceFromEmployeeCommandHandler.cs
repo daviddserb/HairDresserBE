@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Commands.DeleteEmployeeHairService
 {
-    public class DeleteEmployeeHairServiceCommandHandler : IRequestHandler<DeleteEmployeeHairServiceCommand>
+    public class DeleteHairServiceFromEmployeeCommandHandler : IRequestHandler<DeleteHairServiceFromEmployeeCommand>
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteEmployeeHairServiceCommandHandler(IUnitOfWork unitOfWork)
+        public DeleteHairServiceFromEmployeeCommandHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Unit> Handle(DeleteEmployeeHairServiceCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteHairServiceFromEmployeeCommand request, CancellationToken cancellationToken)
         {
             var employeeHairService = await _unitOfWork.UserRepository.CheckIfEmployeeHairServiceIdExistsAsync(request.EmployeeHairServiceId);
             if (employeeHairService == null) throw new NotFoundException("The selected employee does not have the selected hair service!");

@@ -132,5 +132,5 @@ app.MapControllers();
 
 app.Run();
 
-//To make the class visible
-public partial class Program{ }
+//To make the file (Program.cs), which is a class, visible.
+public partial class Program {}

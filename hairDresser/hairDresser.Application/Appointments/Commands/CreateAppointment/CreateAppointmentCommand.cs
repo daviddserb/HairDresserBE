@@ -8,10 +8,14 @@ using System.Threading.Tasks;
 
 namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 {
-    // To use the MediatR library, we need to implemenet IRequest interface, which can receive a parameter or not, which represents the returned data type.
+    /// <summary>
+    /// To use the MediatR library, we need to implemenet IRequest interface, which can receive a parameter or not, which represents the returned data type of the Handler.
+    /// </summary>
     public class CreateAppointmentCommand : IRequest<Appointment>
     {
-        // These are all the properties needed to make an appointment, that means I need user input in all of them and I will be able to use them in the Handler class.
+        /// <summary>
+        /// These are all the properties needed to make an appointment, that means I need user input in all of them and I will be able to use them in the Handler class.
+        /// </summary>
         public string CustomerId { get; set; }
         public string EmployeeId { get; set; }
         public List<int> HairServicesIds { get; set; }

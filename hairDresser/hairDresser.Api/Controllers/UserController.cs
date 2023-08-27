@@ -12,15 +12,12 @@ using hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate;
 using hairDresser.Application.Users.Queries.GetEmployeesByHairServices;
 using hairDresser.Application.Users.Queries.GetUserById;
 using hairDresser.Application.Users.Queries.GetUserWithRoleById;
-using hairDresser.Domain.Models;
 using hairDresser.Presentation.Dto.EmployeeDtos;
 using hairDresser.Presentation.Dto.EmployeeFreeIntervalsDtos;
 using hairDresser.Presentation.Dto.EmployeeHairServiceDtos;
 using hairDresser.Presentation.Dto.UserDtos;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Text;
 
 namespace hairDresser.Presentation.Controllers
@@ -115,7 +112,6 @@ namespace hairDresser.Presentation.Controllers
             return Ok(mappedUserWithRole);
         }
 
-        //!!! Momentan nu folsoesc aceasta metoda. Daca voi avea nevoie, fac ca si la ruta employee/all, adica ca in metoda GetAllEmployees().
         [HttpGet]
         [Route("customer/all")]
         public async Task<IActionResult> GetAllCustomers()
@@ -123,6 +119,7 @@ namespace hairDresser.Presentation.Controllers
             throw new NotImplementedException();
         }
 
+        // ???
         [HttpGet]
         [Route("employee/all")]
         public async Task<IActionResult> GetAllEmployees()
@@ -136,6 +133,7 @@ namespace hairDresser.Presentation.Controllers
             return Ok(mappedAllEmployees);
         }
 
+        // ???
         [HttpGet]
         [Route("employee/all/by-hair-services")]
         public async Task<IActionResult> GetEmployeesByHairServices([FromQuery] List<int> hairServicesIds)
@@ -218,7 +216,7 @@ namespace hairDresser.Presentation.Controllers
         [Route("employee/hair-service/{hairServiceId}")]
         public async Task<IActionResult> DeleteHairServiceFromEmployee(int hairServiceId)
         {
-            var command = new DeleteEmployeeHairServiceCommand { EmployeeHairServiceId = hairServiceId };
+            var command = new DeleteHairServiceFromEmployeeCommand { EmployeeHairServiceId = hairServiceId };
 
             await _mediator.Send(command);
 
