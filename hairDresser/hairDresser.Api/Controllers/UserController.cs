@@ -119,7 +119,6 @@ namespace hairDresser.Presentation.Controllers
             throw new NotImplementedException();
         }
 
-        // ???
         [HttpGet]
         [Route("employee/all")]
         public async Task<IActionResult> GetAllEmployees()
@@ -133,7 +132,6 @@ namespace hairDresser.Presentation.Controllers
             return Ok(mappedAllEmployees);
         }
 
-        // ???
         [HttpGet]
         [Route("employee/all/by-hair-services")]
         public async Task<IActionResult> GetEmployeesByHairServices([FromQuery] List<int> hairServicesIds)
@@ -147,6 +145,7 @@ namespace hairDresser.Presentation.Controllers
             return Ok(mappedValidEmployees);
         }
 
+        // ???
         [HttpGet]
         [Route("employee/free-intervals")]
         public async Task<IActionResult> GetEmployeeFreeIntervalsByDate([FromQuery] EmployeeFreeIntervalDto employeeFreeInterval)

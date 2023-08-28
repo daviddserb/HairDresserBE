@@ -10,7 +10,7 @@ namespace hairDresser.Presentation.Dto.UserDtos
         [Required(ErrorMessage = "Password is required!")]
         public string Password { get; set; }
 
-        // string? means nullable strings => makes the field (Phone) not required.
+        // string? means nullable strings => makes the field not required.
         public string? Phone { get; set; }
 
         [Required(ErrorMessage = "Email is required!")]
