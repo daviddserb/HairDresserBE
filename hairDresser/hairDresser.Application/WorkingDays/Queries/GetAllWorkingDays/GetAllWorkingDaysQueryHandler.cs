@@ -19,7 +19,7 @@ namespace hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays
         }
         public async Task<IQueryable<WorkingDay>> Handle(GetAllWorkingDaysQuery request, CancellationToken cancellationToken)
         {
-            return await _unitOfWork.WorkingDayRepository.ReadWorkingDaysAsync();
+            return await _unitOfWork.WorkingDayRepository.GetAllWorkingDaysAsync();
         }
     }
 }

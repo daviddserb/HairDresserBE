@@ -23,7 +23,7 @@ namespace hairDresser.Infrastructure.Repositories
             await context.WorkingDays.AddAsync(workingDay);
         }
 
-        public async Task<IQueryable<WorkingDay>> ReadWorkingDaysAsync()
+        public async Task<IQueryable<WorkingDay>> GetAllWorkingDaysAsync()
         {
             return context.WorkingDays;
         }

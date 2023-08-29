@@ -11,8 +11,7 @@ namespace hairDresser.Application.Interfaces
     {
         Task CreateWorkingDayAsync(WorkingDay workingDay);
 
-        Task<IQueryable<WorkingDay>> ReadWorkingDaysAsync();
-
+        Task<IQueryable<WorkingDay>> GetAllWorkingDaysAsync();
         Task<WorkingDay> GetWorkingDayByIdAsync(int dayId);
 
         Task<WorkingDay> GetWorkingDayByNameAsync(string dayName);

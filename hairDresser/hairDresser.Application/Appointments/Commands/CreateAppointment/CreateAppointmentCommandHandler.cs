@@ -35,7 +35,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             var hairServices = await _unitOfWork.HairServiceRepository.GetAllHairServicesByIdsAsync(request.HairServicesIds);
             if (hairServices == null) throw new NotFoundException($"Not all hair services ids '{String.Join(", ", request.HairServicesIds)}' are valid!");
 
-            var employeeHairServicesIds = await _unitOfWork.UserRepository.GetEmployeeHairServicesIds(request.EmployeeId);
+            var employeeHairServicesIds = await _unitOfWork.UserRepository.GetEmployeeHairServicesIdsAsync(request.EmployeeId);
             bool employeeValidHairServices = request.HairServicesIds.All(id => employeeHairServicesIds.Contains(id));
             if (employeeValidHairServices == false) throw new ClientException($"The employee '{employee.Username}' is not valid for the selected hair services!");
 

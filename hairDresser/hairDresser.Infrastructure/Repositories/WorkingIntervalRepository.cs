@@ -24,7 +24,7 @@ namespace hairDresser.Infrastructure.Repositories
             await context.WorkingIntervals.AddAsync(workingInterval);
         }
 
-        public async Task<IQueryable<WorkingInterval>> ReadWorkingIntervalsAsync()
+        public async Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsAsync()
         {
             return context.WorkingIntervals
                 .Include(workingDay => workingDay.WorkingDay)
@@ -39,7 +39,20 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(obj => obj.WorkingDay)
                 .Include(obj => obj.Employee)
                 .FirstOrDefaultAsync(workingInterval => workingInterval.Id == workingIntervalId);
+
             return workingInterval;
+        }
+
+        public async Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsByEmployeeIdAsync(string employeeId)
+        {
+            var employeeWorkingIntervals = context.WorkingIntervals
+                .Where(employee => employee.Employee.Id.Equals(employeeId))
+                .Include(workingDay => workingDay.WorkingDay)
+                .Include(employee => employee.Employee)
+                .OrderBy(workingDay => workingDay.WorkingDayId)
+                .ThenBy(startTime => startTime.StartTime);
+
+            return employeeWorkingIntervals;
         }
 
         public async Task<IQueryable<WorkingInterval>> GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(string employeeId, int workingDayId)
@@ -59,23 +72,14 @@ namespace hairDresser.Infrastructure.Repositories
                 .Where(workingDay => workingDay.WorkingDay.Id == workingDayId)
                 .Include(obj => obj.WorkingDay)
                 .Include(obj => obj.Employee);
-            return workingIntervals;
-        }
 
-        public async Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsByEmployeeIdAsync(string employeeId)
-        {
-            var employeeWorkingIntervals = context.WorkingIntervals
-                .Where(employee => employee.Employee.Id.Equals(employeeId))
-                .Include(workingDay => workingDay.WorkingDay)
-                .Include(employee => employee.Employee)
-                .OrderBy(workingDay => workingDay.WorkingDayId)
-                .ThenBy(startTime => startTime.StartTime);
-            return employeeWorkingIntervals;
+            return workingIntervals;
         }
 
         public async Task<WorkingInterval> UpdateWorkingIntervalAsync(WorkingInterval workingInterval)
         {
             context.WorkingIntervals.Update(workingInterval);
+
             return workingInterval;
         }
 

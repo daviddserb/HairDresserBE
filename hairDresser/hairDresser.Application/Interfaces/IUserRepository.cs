@@ -12,10 +12,11 @@ namespace hairDresser.Application.Interfaces
     {
         Task CreateUserAsync(User user, string userPassowrd);
 
+        Task<IQueryable<UserWithRole>> GetAllUsersAsync();
         Task<User> GetUserByIdAsync(string userId);
         Task<UserWithRole> GetUserWithRoleByIdAsync(string userId);
+
         Task<User> GetUserByUserNameAsync(string userName);
-        Task<IQueryable<UserWithRole>> GetAllUsersAsync();
         Task<IList<string>> GetUserRolesAsync(User user);
         Task<IQueryable<User>> GetAllUsersWithCustomerRoleAsync();
         Task<IQueryable<User>> GetAllUsersWithEmployeeRoleAsync();
@@ -24,19 +25,21 @@ namespace hairDresser.Application.Interfaces
 
         Task DeleteUserAsync(string userId);
 
-        // Check Password:
         Task<bool> CheckUserPasswordAsync(User user, string userPassword);
 
         // User Roles:
-        Task<IdentityRole> GetRoleByNameAsync(string roleName);
         Task CreateRoleAsync(string roleName);
         Task AddRoleToUserAsync(User user, string roleName);
+        Task<IdentityRole> GetRoleByNameAsync(string roleName);
 
         // EmployeeHairService:
-        Task<IQueryable<User>> GetAllEmployeesByHairServicesIdsAsync(List<int> hairServicesIds);
-        Task<List<int>> GetEmployeeHairServicesIds(string employeeId);
-        Task<EmployeeHairService> CheckIfEmployeeHairServiceIdExistsAsync(int employeeHairServiceId);
         Task AddHairServiceToEmployeeAsync(List<EmployeeHairService> employee);
+
+        Task<IQueryable<User>> GetAllEmployeesByHairServicesIdsAsync(List<int> hairServicesIds);
+        Task<List<int>> GetEmployeeHairServicesIdsAsync(string employeeId);
+
+        Task<EmployeeHairService> CheckIfEmployeeHairServiceIdExistsAsync(int employeeHairServiceId);
+
         Task DeleteHairServiceFromEmployeeAsync(int employeeHairServiceId);
     }
 }

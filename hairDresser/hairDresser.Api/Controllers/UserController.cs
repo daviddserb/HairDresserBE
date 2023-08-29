@@ -145,7 +145,6 @@ namespace hairDresser.Presentation.Controllers
             return Ok(mappedValidEmployees);
         }
 
-        // ???
         [HttpGet]
         [Route("employee/free-intervals")]
         public async Task<IActionResult> GetEmployeeFreeIntervalsByDate([FromQuery] EmployeeFreeIntervalDto employeeFreeInterval)

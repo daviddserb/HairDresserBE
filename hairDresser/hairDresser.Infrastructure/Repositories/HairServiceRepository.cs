@@ -24,7 +24,7 @@ namespace hairDresser.Infrastructure.Repositories
             await context.HairServices.AddAsync(hairService);
         }
 
-        public async Task<IQueryable<HairService>> ReadHairServicesAsync()
+        public async Task<IQueryable<HairService>> GetAllHairServicesAsync()
         {
             var allHairServices = context.HairServices;
             return allHairServices;
@@ -37,23 +37,16 @@ namespace hairDresser.Infrastructure.Repositories
             return hairService;
         }
 
-        public async Task<IQueryable<EmployeeHairService>> GetHairServicesByEmployeeIdAsync(string employeeId) {
+        public async Task<IQueryable<EmployeeHairService>> GetAcquiredHairServicesByEmployeeIdAsync(string employeeId) {
             var employeeHairServices = context.EmployeesHairServices
                 .Where(employeeHairService => employeeHairService.EmployeeId == employeeId)
                 .Include(employeeHairService => employeeHairService.HairService);
+
             return employeeHairServices;
         }
 
         public async Task<IQueryable<HairService>> GetMissingHairServicesByEmployeeIdAsync(string employeeId)
         {
-            // Method 1:
-            var allHairServices = context.HairServices;
-            var employeeHairServices = context.EmployeesHairServices
-                .Where(employeeHairService => employeeHairService.EmployeeId == employeeId)
-                .Include(employeeHairService => employeeHairService.HairService);
-            var employeeMissingHairServices = allHairServices.Except(employeeHairServices.Select(ehs => ehs.HairService));
-
-            // Method 2:
             var employeeMissingHairServices2 = context.HairServices
                 .Where(hs => !context.EmployeesHairServices.Any(ehs => ehs.EmployeeId == employeeId && ehs.HairServiceId == hs.Id));
 

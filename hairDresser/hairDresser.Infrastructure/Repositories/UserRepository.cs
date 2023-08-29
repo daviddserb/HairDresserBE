@@ -118,19 +118,12 @@ namespace hairDresser.Infrastructure.Repositories
             context.Users.Remove(user);
         }
 
-        // Check Password:
         public async Task<bool> CheckUserPasswordAsync(User user, string userPassword)
         {
             return await _userManager.CheckPasswordAsync(user, userPassword);
         }
 
         // User Roles:
-        public async Task<IdentityRole> GetRoleByNameAsync(string roleName)
-        {
-            var role = await _roleManager.FindByNameAsync(roleName);
-            return role;
-        }
-
         public async Task CreateRoleAsync(string roleName)
         {
             await _roleManager.CreateAsync(new IdentityRole
@@ -149,6 +142,11 @@ namespace hairDresser.Infrastructure.Repositories
             }
         }
 
+        public async Task<IdentityRole> GetRoleByNameAsync(string roleName)
+        {
+            return await _roleManager.FindByNameAsync(roleName);
+        }
+
         // EmployeeHairService:
         public async Task<IQueryable<User>> GetAllEmployeesByHairServicesIdsAsync(List<int> hairServicesIds)
         {
@@ -160,7 +158,7 @@ namespace hairDresser.Infrastructure.Repositories
             return validEmployees.AsQueryable();
         }
 
-        public async Task<List<int>> GetEmployeeHairServicesIds(string employeeId)
+        public async Task<List<int>> GetEmployeeHairServicesIdsAsync(string employeeId)
         {
             var employeeHairServicesIds = context.EmployeesHairServices
             .Where(ehs => ehs.EmployeeId == employeeId)
