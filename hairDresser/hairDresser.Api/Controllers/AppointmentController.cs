@@ -13,6 +13,7 @@ using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByEmploy
 using hairDresser.Presentation.Dto.AppointmentDtos;
 using hairDresser.Presentation.Dto.ReviewDtos;
 using MediatR;
+using MethodTimer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,6 +62,7 @@ namespace hairDresser.Presentation.Controllers
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = "admin")]
+        [Time("Retrieved appointments")] // The library (MethodTimer.Fody), at the moment, in it's message, doesn't accept object property as a parameter ({paginationQuery.PageSize})
         public async Task<IActionResult> GetAllAppointments([FromQuery] GetAllAppointmentsQuery paginationQuery)
         {
             var allAppointments = await _mediator.Send(paginationQuery);

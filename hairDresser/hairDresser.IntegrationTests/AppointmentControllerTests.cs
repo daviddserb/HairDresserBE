@@ -37,8 +37,6 @@ namespace hairDresser.IntegrationTests
                 EmployeeId = "fdf45d4c-da75-4a63-aff6-cd9add4d327f",
                 HairServicesIds = new List<int> { 1, 2 }, //List is Reference Type => need to use 'new' keyword
                 Price = 159.98f,
-                //StartDate = new DateTime(2023, 08, 24, 09, 00, 00),
-                //EndDate = new DateTime(2023, 08, 24, 09, 37, 00)
                 StartDate = currentDate.Date.AddHours(9).AddMinutes(0).AddSeconds(0),
                 EndDate = currentDate.Date.AddHours(9).AddMinutes(37).AddSeconds(0)
             };

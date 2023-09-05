@@ -3,6 +3,7 @@ using hairDresser.Domain.Models;
 using hairDresser.Infrastructure;
 using hairDresser.Infrastructure.Repositories;
 using hairDresser.Presentation.Middleware;
+using hairDresser.Presentation.TimeLogger;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -111,6 +112,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 var app = builder.Build();
+MethodTimeLogger.Logger = app.Logger; // ???
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
