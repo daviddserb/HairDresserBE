@@ -18,7 +18,6 @@ using hairDresser.Presentation.Dto.EmployeeHairServiceDtos;
 using hairDresser.Presentation.Dto.UserDtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
 
 namespace hairDresser.Presentation.Controllers
 {

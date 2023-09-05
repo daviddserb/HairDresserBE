@@ -31,7 +31,6 @@ namespace hairDresser.Presentation.Controllers
             var command = _mapper.Map<CreateWorkingIntervalCommand>(workingIntervalInput);
 
             var workingInterval = await _mediator.Send(command);
-
             // Working interval overlapping or not minimum 1 hour pause between them.
             if (workingInterval.WorkingDay == null) return BadRequest();
 
@@ -49,7 +48,6 @@ namespace hairDresser.Presentation.Controllers
             var query = new GetAllWorkingIntervalsQuery();
 
             var allWorkingIntervals = await _mediator.Send(query);
-
             if (!allWorkingIntervals.Any()) return NotFound();
 
             var mappedWorkingIntervals = _mapper.Map<List<WorkingIntervalGetDto>>(allWorkingIntervals);
@@ -64,7 +62,6 @@ namespace hairDresser.Presentation.Controllers
             var query = new GetWorkingIntervalByIdQuery { WorkingIntervalId = workingIntervalId };
 
             var workingInterval = await _mediator.Send(query);
-
             if (workingInterval == null) return NotFound();
 
             var mappedWorkingInterval = _mapper.Map<WorkingIntervalGetDto>(workingInterval);
@@ -79,7 +76,6 @@ namespace hairDresser.Presentation.Controllers
             var query = new GetAllWorkingIntervalsByEmployeeIdQuery{ EmployeeId = employeeId };
 
             var allWorkingIntervalsByEmployeeId = await _mediator.Send(query);
-
             if (!allWorkingIntervalsByEmployeeId.Any()) return NotFound("The employee has no working intervals!");
 
             var mappedWorkingIntervalsByEmployeeId = _mapper.Map<List<WorkingIntervalGetDto>>(allWorkingIntervalsByEmployeeId);
@@ -98,7 +94,6 @@ namespace hairDresser.Presentation.Controllers
             };
 
             var allWorkingIntervalsByEmployeeIdByDate = await _mediator.Send(query);
-
             if (!allWorkingIntervalsByEmployeeIdByDate.Any()) return NotFound();
 
             var mappedWorkingIntervalsByEmployeeIdByDate = _mapper.Map<List<WorkingIntervalGetDto>>(allWorkingIntervalsByEmployeeIdByDate);
@@ -119,7 +114,6 @@ namespace hairDresser.Presentation.Controllers
             };
 
             var result = await _mediator.Send(command);
-
             if (result == null) return NotFound();
 
             return NoContent();
@@ -132,7 +126,6 @@ namespace hairDresser.Presentation.Controllers
             var command = new DeleteWorkingIntervalCommand { WorkingIntervalId = workingIntervalId };
 
             var handlerResult = await _mediator.Send(command);
-
             if (handlerResult == null) return NotFound();
 
             return NoContent();

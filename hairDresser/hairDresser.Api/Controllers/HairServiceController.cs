@@ -11,7 +11,6 @@ using hairDresser.Application.HairServices.Queries.GetMissingHairServicesByEmplo
 using hairDresser.Application.HairServices.Queries.GetPriceByHairServicesIds;
 using hairDresser.Presentation.Dto.HairServiceDtos;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hairDresser.Presentation.Controllers
@@ -38,9 +37,7 @@ namespace hairDresser.Presentation.Controllers
 
             var mappedHairService = _mapper.Map<HairServiceGetDto>(hairService);
 
-            return CreatedAtAction(nameof(GetHairServiceById),
-                new { id = mappedHairService.Id },
-                mappedHairService);
+            return CreatedAtAction(nameof(GetHairServiceById), new { id = mappedHairService.Id }, mappedHairService);
         }
 
         [HttpGet]
@@ -50,7 +47,6 @@ namespace hairDresser.Presentation.Controllers
             var query = new GetAllHairServicesQuery();
 
             var allHairServices = await _mediator.Send(query);
-
             if (!allHairServices.Any()) return NotFound();
 
             var mappedHairServices = _mapper.Map<List<HairServiceGetDto>>(allHairServices);
@@ -65,7 +61,6 @@ namespace hairDresser.Presentation.Controllers
             var query = new GetHairServiceByIdQuery { Id = id };
 
             var hairService = await _mediator.Send(query);
-
             if (hairService == null) return NotFound();
 
             var mappedhairService = _mapper.Map<HairServiceGetDto>(hairService);
@@ -106,7 +101,6 @@ namespace hairDresser.Presentation.Controllers
             var query = new GetAllHairServicesByIdsQuery { HairServicesIds = ids };
 
             var hairServices = await _mediator.Send(query);
-
             if (hairServices == null) return NotFound();
 
             var mappedhairServices = _mapper.Map<List<HairServiceGetDto>>(hairServices);
@@ -148,9 +142,7 @@ namespace hairDresser.Presentation.Controllers
                 Price = editedHairService.Price
             };
 
-
             var result = await _mediator.Send(command);
-
             if (result == null) return NotFound();
 
             return NoContent();
@@ -163,7 +155,6 @@ namespace hairDresser.Presentation.Controllers
             var command = new DeleteHairServiceCommand { Id = id };
 
             var handlerResult = await _mediator.Send(command);
-
             if (handlerResult == null) return NotFound();
 
             return NoContent();
