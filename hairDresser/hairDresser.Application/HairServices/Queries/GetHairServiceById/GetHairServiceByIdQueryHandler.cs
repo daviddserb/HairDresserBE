@@ -1,4 +1,5 @@
-﻿using hairDresser.Application.Interfaces;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
 using System;
@@ -20,7 +21,9 @@ namespace hairDresser.Application.HairServices.Queries.GetHairServiceById
 
         public async Task<HairService> Handle(GetHairServiceByIdQuery request, CancellationToken cancellationToken)
         {
-            return await _unitOfWork.HairServiceRepository.GetHairServiceByIdAsync(request.Id);
+            var hairService = await _unitOfWork.HairServiceRepository.GetHairServiceByIdAsync(request.HairServiceId);
+            if (hairService == null) throw new NotFoundException($"There is no hair service registered with the id '{request.HairServiceId}'!");
+            return hairService;
         }
     }
 }

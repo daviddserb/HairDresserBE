@@ -22,7 +22,7 @@ namespace hairDresser.Application.Appointments.Queries.GetAppointmentById
         public async Task<Appointment> Handle(GetAppointmentByIdQuery request, CancellationToken cancellationToken)
         {
             var appointment = await _unitOfWork.AppointmentRepository.GetAppointmentByIdAsync(request.AppointmentId);
-            if (appointment == null) throw new NotFoundException($"There is no appointment with the id '{request.AppointmentId}'!");
+            if (appointment == null) throw new NotFoundException($"There is no appointment registered with the id '{request.AppointmentId}'!");
             return appointment;
         }
     }

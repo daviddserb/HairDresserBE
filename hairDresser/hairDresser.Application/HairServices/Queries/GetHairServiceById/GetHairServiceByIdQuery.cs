@@ -10,6 +10,6 @@ namespace hairDresser.Application.HairServices.Queries.GetHairServiceById
 {
     public class GetHairServiceByIdQuery : IRequest<HairService>
     {
-        public int Id { get; set; }
+        public int HairServiceId { get; set; }
     }
 }

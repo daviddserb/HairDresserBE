@@ -26,22 +26,19 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<HairService>> GetAllHairServicesAsync()
         {
-            var allHairServices = context.HairServices;
-            return allHairServices;
+            return context.HairServices;
         }
 
         public async Task<HairService> GetHairServiceByIdAsync(int hairServiceId)
         {
-            var hairService = await context.HairServices.FirstOrDefaultAsync(HairService => HairService.Id == hairServiceId);
-            if (hairService == null) return null;
-            return hairService;
+            return await context.HairServices
+                .FirstOrDefaultAsync(HairService => HairService.Id == hairServiceId);
         }
 
         public async Task<IQueryable<EmployeeHairService>> GetAcquiredHairServicesByEmployeeIdAsync(string employeeId) {
             var employeeHairServices = context.EmployeesHairServices
                 .Where(employeeHairService => employeeHairService.EmployeeId == employeeId)
                 .Include(employeeHairService => employeeHairService.HairService);
-
             return employeeHairServices;
         }
 

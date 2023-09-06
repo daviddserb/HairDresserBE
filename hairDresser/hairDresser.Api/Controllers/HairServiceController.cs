@@ -44,10 +44,7 @@ namespace hairDresser.Presentation.Controllers
         [Route("all")]
         public async Task<IActionResult> GetAllHairServices()
         {
-            var query = new GetAllHairServicesQuery();
-
-            var allHairServices = await _mediator.Send(query);
-            if (!allHairServices.Any()) return NotFound();
+            var allHairServices = await _mediator.Send(new GetAllHairServicesQuery());
 
             var mappedHairServices = _mapper.Map<List<HairServiceGetDto>>(allHairServices);
 
@@ -55,13 +52,12 @@ namespace hairDresser.Presentation.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetHairServiceById(int id)
+        [Route("{hairServiceId}")]
+        public async Task<IActionResult> GetHairServiceById(int hairServiceId)
         {
-            var query = new GetHairServiceByIdQuery { Id = id };
+            var query = new GetHairServiceByIdQuery { HairServiceId = hairServiceId };
 
             var hairService = await _mediator.Send(query);
-            if (hairService == null) return NotFound();
 
             var mappedhairService = _mapper.Map<HairServiceGetDto>(hairService);
 

@@ -35,6 +35,7 @@ namespace hairDresser.Infrastructure.Repositories
                 .Skip((pageNumber - 1) * PageSize)
                 .Take(PageSize);
         }
+
         public async Task<Appointment> GetAppointmentByIdAsync(int appointmentId)
         {
             return await context.Appointments
