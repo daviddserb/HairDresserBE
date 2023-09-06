@@ -1,4 +1,5 @@
-﻿using hairDresser.Application.Interfaces;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
 using System;
@@ -21,8 +22,7 @@ namespace hairDresser.Application.WorkingIntervals.Queries.GetWorkingIntervalByI
         public async Task<WorkingInterval> Handle(GetWorkingIntervalByIdQuery request, CancellationToken cancellationToken)
         {
             var workingInterval = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalByIdAsync(request.WorkingIntervalId);
-
-            if (workingInterval == null) return null;
+            if (workingInterval == null) throw new NotFoundException($"There is no working interval registered with the id '{request.WorkingIntervalId}'!");
             return workingInterval;
         }
     }

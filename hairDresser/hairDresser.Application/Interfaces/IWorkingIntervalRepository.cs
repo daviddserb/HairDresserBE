@@ -11,7 +11,6 @@ namespace hairDresser.Application.Interfaces
     {
         Task CreateWorkingIntervalAsync(WorkingInterval workingInterval);
 
-        Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsAsync();
         Task<WorkingInterval> GetWorkingIntervalByIdAsync(int workingIntervalId);
 
         Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsByEmployeeIdAsync(string employeeId);

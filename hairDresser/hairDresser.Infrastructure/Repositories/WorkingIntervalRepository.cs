@@ -1,12 +1,6 @@
 ﻿using hairDresser.Application.Interfaces;
-using hairDresser.Domain;
 using hairDresser.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace hairDresser.Infrastructure.Repositories
 {
@@ -24,22 +18,12 @@ namespace hairDresser.Infrastructure.Repositories
             await context.WorkingIntervals.AddAsync(workingInterval);
         }
 
-        public async Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsAsync()
-        {
-            return context.WorkingIntervals
-                .Include(workingDay => workingDay.WorkingDay)
-                .Include(employee => employee.Employee)
-                .OrderBy(workingDay => workingDay.WorkingDayId)
-                .ThenBy(startTime => startTime.StartTime);
-        }
-
         public async Task<WorkingInterval> GetWorkingIntervalByIdAsync(int workingIntervalId)
         {
             var workingInterval = await context.WorkingIntervals
                 .Include(obj => obj.WorkingDay)
                 .Include(obj => obj.Employee)
                 .FirstOrDefaultAsync(workingInterval => workingInterval.Id == workingIntervalId);
-
             return workingInterval;
         }
 
@@ -51,41 +35,35 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(employee => employee.Employee)
                 .OrderBy(workingDay => workingDay.WorkingDayId)
                 .ThenBy(startTime => startTime.StartTime);
-
             return employeeWorkingIntervals;
         }
 
+        /// <summary>
+        /// After modifying the method's body (the query), ensure the Integration Tests are working correctly. It's essential because translating the query into SQLite can potentially lead to issues.
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <param name="workingDayId"></param>
+        /// <returns></returns>
         public async Task<IQueryable<WorkingInterval>> GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(string employeeId, int workingDayId)
         {
-            // BEFORE:
-            //return context.WorkingIntervals
-            //    .Where(employee => employee.Employee.Id.Equals(employeeId))
-            //    .Where(workingDay => workingDay.WorkingDay.Id == workingDayId)
-            //    .Include(obj => obj.WorkingDay)
-            //    .Include(obj => obj.Employee)
-            //    .OrderBy(workingDay => workingDay.WorkingDayId)
-            //    .ThenBy(startTime => startTime.StartTime);
-
-            // AFTER (because in Integration Test, when calling this method with SQLite, there are some methods that are not compatible):
-            var workingIntervals = context.WorkingIntervals
+            var employeeWorkingIntervalsInSelectedWorkingDay = context.WorkingIntervals
                 .Where(employee => employee.Employee.Id.Equals(employeeId))
                 .Where(workingDay => workingDay.WorkingDay.Id == workingDayId)
                 .Include(obj => obj.WorkingDay)
                 .Include(obj => obj.Employee);
-
-            return workingIntervals;
+            return employeeWorkingIntervalsInSelectedWorkingDay;
         }
 
         public async Task<WorkingInterval> UpdateWorkingIntervalAsync(WorkingInterval workingInterval)
         {
             context.WorkingIntervals.Update(workingInterval);
-
             return workingInterval;
         }
 
         public async Task DeleteWorkingIntervalAsync(int workingIntervalId)
         {
             var workingInterval = await context.WorkingIntervals.FirstOrDefaultAsync(workingInterval => workingInterval.Id == workingIntervalId);
+
             context.WorkingIntervals.Remove(workingInterval);
         }
     }

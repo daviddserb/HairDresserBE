@@ -2,7 +2,6 @@
 using hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterval;
 using hairDresser.Application.WorkingIntervals.Commands.DeleteWorkingInterval;
 using hairDresser.Application.WorkingIntervals.Commands.UpdateWorkingInterval;
-using hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingIntervals;
 using hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingIntervalsByEmployeeId;
 using hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingIntervalsByEmployeeIdByDate;
 using hairDresser.Application.WorkingIntervals.Queries.GetWorkingIntervalById;
@@ -31,28 +30,10 @@ namespace hairDresser.Presentation.Controllers
             var command = _mapper.Map<CreateWorkingIntervalCommand>(workingIntervalInput);
 
             var workingInterval = await _mediator.Send(command);
-            // Working interval overlapping or not minimum 1 hour pause between them.
-            if (workingInterval.WorkingDay == null) return BadRequest();
 
             var mappedWorkingInterval = _mapper.Map<WorkingIntervalGetDto>(workingInterval);
 
-            return CreatedAtAction(nameof(GetWorkingIntervalById),
-                new { workingIntervalId = mappedWorkingInterval.Id },
-                mappedWorkingInterval);
-        }
-
-        [HttpGet]
-        [Route("all")]
-        public async Task<IActionResult> GetAllWorkingIntervals()
-        {
-            var query = new GetAllWorkingIntervalsQuery();
-
-            var allWorkingIntervals = await _mediator.Send(query);
-            if (!allWorkingIntervals.Any()) return NotFound();
-
-            var mappedWorkingIntervals = _mapper.Map<List<WorkingIntervalGetDto>>(allWorkingIntervals);
-
-            return Ok(mappedWorkingIntervals);
+            return CreatedAtAction(nameof(GetWorkingIntervalById), new { workingIntervalId = mappedWorkingInterval.Id }, mappedWorkingInterval);
         }
 
         [HttpGet]
@@ -62,7 +43,6 @@ namespace hairDresser.Presentation.Controllers
             var query = new GetWorkingIntervalByIdQuery { WorkingIntervalId = workingIntervalId };
 
             var workingInterval = await _mediator.Send(query);
-            if (workingInterval == null) return NotFound();
 
             var mappedWorkingInterval = _mapper.Map<WorkingIntervalGetDto>(workingInterval);
 
@@ -75,12 +55,11 @@ namespace hairDresser.Presentation.Controllers
         {
             var query = new GetAllWorkingIntervalsByEmployeeIdQuery{ EmployeeId = employeeId };
 
-            var allWorkingIntervalsByEmployeeId = await _mediator.Send(query);
-            if (!allWorkingIntervalsByEmployeeId.Any()) return NotFound("The employee has no working intervals!");
+            var employeeWorkingIntervals = await _mediator.Send(query);
 
-            var mappedWorkingIntervalsByEmployeeId = _mapper.Map<List<WorkingIntervalGetDto>>(allWorkingIntervalsByEmployeeId);
+            var mappedEmployeeWorkingIntervals = _mapper.Map<List<WorkingIntervalGetDto>>(employeeWorkingIntervals);
 
-            return Ok(mappedWorkingIntervalsByEmployeeId);
+            return Ok(mappedEmployeeWorkingIntervals);
         }
 
         [HttpGet]
@@ -96,6 +75,7 @@ namespace hairDresser.Presentation.Controllers
             var allWorkingIntervalsByEmployeeIdByDate = await _mediator.Send(query);
             if (!allWorkingIntervalsByEmployeeIdByDate.Any()) return NotFound();
 
+            // to do ??? !!!: sa modific WorkingIntervalGetDto, probabil sa sterg public EmployeeGetDto Employee { get; set; } si sa pun doar string numele/id Employee
             var mappedWorkingIntervalsByEmployeeIdByDate = _mapper.Map<List<WorkingIntervalGetDto>>(allWorkingIntervalsByEmployeeIdByDate);
 
             return Ok(mappedWorkingIntervalsByEmployeeIdByDate);
@@ -105,6 +85,7 @@ namespace hairDresser.Presentation.Controllers
         [Route("{workingIntervalId}")]
         public async Task<IActionResult> UpdateWorkingInterval(int workingIntervalId, [FromBody] WorkingIntervalPutDto editedWorkingInterval)
         {
+            // ??? if I update with a invalid working interval it's still saved in the database.
             var command = new UpdateWorkingIntervalCommand
             {
                 WorkingIntervalId = workingIntervalId,
@@ -113,10 +94,11 @@ namespace hairDresser.Presentation.Controllers
                 EndTime = editedWorkingInterval.EndTime
             };
 
-            var result = await _mediator.Send(command);
-            if (result == null) return NotFound();
+            var workingIntervalUpdated = await _mediator.Send(command);
 
-            return NoContent();
+            var mappedWorkingIntervalUpdated = _mapper.Map<WorkingIntervalGetDto>(workingIntervalUpdated);
+
+            return Ok(mappedWorkingIntervalUpdated);
         }
 
         [HttpDelete]
@@ -125,8 +107,7 @@ namespace hairDresser.Presentation.Controllers
         {
             var command = new DeleteWorkingIntervalCommand { WorkingIntervalId = workingIntervalId };
 
-            var handlerResult = await _mediator.Send(command);
-            if (handlerResult == null) return NotFound();
+            await _mediator.Send(command);
 
             return NoContent();
         }

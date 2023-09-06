@@ -10,7 +10,6 @@ using hairDresser.Application.Interfaces;
 using hairDresser.Application.WorkingDays.Commands.CreateWorkingDay;
 using hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays;
 using hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterval;
-using hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingIntervals;
 using hairDresser.Infrastructure;
 using hairDresser.Infrastructure.Repositories;
 using MediatR;

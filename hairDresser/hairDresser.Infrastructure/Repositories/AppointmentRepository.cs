@@ -1,12 +1,6 @@
 ﻿using hairDresser.Application.Interfaces;
-using hairDresser.Domain;
 using hairDresser.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace hairDresser.Infrastructure.Repositories
 {
@@ -63,7 +57,7 @@ namespace hairDresser.Infrastructure.Repositories
                 .Where(appointment => appointment.CustomerId == customerId)
                 .Where(appointment => appointment.isDeleted == null)
                 .Where(appointment => appointment.StartDate.Date == appointmentDate.Date)
-                .OrderBy(date => date.StartDate);
+                .OrderBy(appointment => appointment.StartDate);
         }
 
         public async Task<IQueryable<Appointment>> GetFinishedAppointmentsByCustomerIdAsync(string customerId)
@@ -154,11 +148,10 @@ namespace hairDresser.Infrastructure.Repositories
             await context.Reviews.AddAsync(review);
         }
 
-        // Soft delete, not permanently delete.
+        // Soft delete (mark the date when 'deleted'), not permanently delete.
         public async Task DeleteAppointmentAsync(int appointmentId)
         {
             var appointment = await context.Appointments.FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
-
             appointment.isDeleted = DateTime.Now;
 
             context.Appointments.Update(appointment);

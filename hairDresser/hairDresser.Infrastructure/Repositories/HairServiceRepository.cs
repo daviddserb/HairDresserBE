@@ -25,8 +25,7 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<HairService> GetHairServiceByIdAsync(int hairServiceId)
         {
-            return await context.HairServices
-                .FirstOrDefaultAsync(HairService => HairService.Id == hairServiceId);
+            return await context.HairServices.FirstOrDefaultAsync(hairService => hairService.Id == hairServiceId);
         }
 
         public async Task<IQueryable<EmployeeHairService>> GetAcquiredHairServicesByEmployeeIdAsync(string employeeId) {
@@ -38,17 +37,13 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<HairService>> GetMissingHairServicesByEmployeeIdAsync(string employeeId)
         {
-            var employeeMissingHairServices2 = context.HairServices
-                .Where(hs => !context.EmployeesHairServices.Any(ehs => ehs.EmployeeId == employeeId && ehs.HairServiceId == hs.Id));
-
+            var employeeMissingHairServices2 = context.HairServices.Where(hs => !context.EmployeesHairServices.Any(ehs => ehs.EmployeeId == employeeId && ehs.HairServiceId == hs.Id));
             return employeeMissingHairServices2;
         }
 
         public async Task<IQueryable<HairService>> GetAllHairServicesByIdsAsync(List<int> hairServicesIds)
         {
-            var hairServices = context.HairServices
-                .Where(hairService => hairServicesIds.Contains(hairService.Id));
-
+            var hairServices = context.HairServices.Where(hairService => hairServicesIds.Contains(hairService.Id));
             if (hairServices.Count() == hairServicesIds.Count()) return hairServices;
             else return null;
         }
@@ -64,8 +59,7 @@ namespace hairDresser.Infrastructure.Repositories
                 .Where(hairService => hairServicesIds.Contains(hairService.Id))
                 .ToListAsync();
 
-            int hairServicesDuration = hairServices
-                .Sum(hairService => hairService.Duration.Hours * 60 + hairService.Duration.Minutes);
+            int hairServicesDuration = hairServices.Sum(hairService => hairService.Duration.Hours * 60 + hairService.Duration.Minutes);
 
             return TimeSpan.FromMinutes(hairServicesDuration);
         }
@@ -81,8 +75,7 @@ namespace hairDresser.Infrastructure.Repositories
                 .Where(hairService => hairServicesIds.Contains(hairService.Id))
                 .ToListAsync();
 
-            decimal hairServicesPrice = hairServices
-                .Sum(hairService => hairService.Price);
+            decimal hairServicesPrice = hairServices.Sum(hairService => hairService.Price);
 
             return hairServicesPrice;
         }
@@ -94,8 +87,8 @@ namespace hairDresser.Infrastructure.Repositories
         }
         public async Task DeleteHairServiceAsync(int hairServiceId)
         {
-            var hairService = await context.HairServices
-                .FirstOrDefaultAsync(hairService => hairService.Id == hairServiceId);
+            var hairService = await context.HairServices.FirstOrDefaultAsync(hairService => hairService.Id == hairServiceId);
+
             context.HairServices.Remove(hairService);
         }
     }

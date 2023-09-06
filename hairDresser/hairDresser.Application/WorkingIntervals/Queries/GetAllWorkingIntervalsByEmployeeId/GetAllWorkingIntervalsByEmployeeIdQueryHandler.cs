@@ -21,10 +21,12 @@ namespace hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingInterval
 
         public async Task<IQueryable<WorkingInterval>> Handle(GetAllWorkingIntervalsByEmployeeIdQuery request, CancellationToken cancellationToken)
         {
-            var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
-            if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");
+            var userWithRole = await _unitOfWork.UserRepository.GetUserWithRoleByIdAsync(request.EmployeeId);
+            if (!userWithRole.Role.Contains("employee")) throw new NotFoundException($"The user with the '{request.EmployeeId}' id is not an employee!");
 
-            return await _unitOfWork.WorkingIntervalRepository.GetAllWorkingIntervalsByEmployeeIdAsync(request.EmployeeId);
+            var employeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetAllWorkingIntervalsByEmployeeIdAsync(request.EmployeeId);
+            if (!employeeWorkingIntervals.Any()) throw new ClientException("The employee has no working intervals!");
+            return employeeWorkingIntervals;
         }
     }
 }

@@ -3,11 +3,6 @@ using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace hairDresser.Infrastructure.Repositories
 {
@@ -38,15 +33,18 @@ namespace hairDresser.Infrastructure.Repositories
         {
             // Method 1:
             var user = await context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+
             // Method 2 (same result but using IdentityUser method):
             // var user2 = await _userManager.FindByIdAsync(userId);
+
             return user;
         }
 
         public async Task<UserWithRole> GetUserWithRoleByIdAsync(string userId)
         {
-            var user = await context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
+            var user = await context.Users.FirstOrDefaultAsync(user => user.Id == userId);
             if (user == null) throw new NotFoundException($"The user with the id '{userId}' does not exist!");
+
             var userWithRole = new UserWithRole
             {
                 Id = user.Id,
@@ -64,7 +62,6 @@ namespace hairDresser.Infrastructure.Repositories
             // userName because it's the name of the user (don't confuse it with username).
             var user = await _userManager.FindByNameAsync(userName);
             return user;
-
         }
 
         public async Task<IQueryable<UserWithRole>> GetAllUsersAsync()
@@ -94,11 +91,13 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<User>> GetAllUsersWithEmployeeRoleAsync()
         {
-            var allUsersWithEmployeeRole = await _userManager.GetUsersInRoleAsync("employee");
-            var allUsersWithEmployeeRole_Ids = allUsersWithEmployeeRole.Select(employee => employee.Id).ToList();
+            var usersWithEmployeeRole = await _userManager.GetUsersInRoleAsync("employee");
+            var usersIdsWithEmployeeRole = usersWithEmployeeRole
+                .Select(employee => employee.Id)
+                .ToList();
 
             var allEmployees = context.Users
-                .Where(user => allUsersWithEmployeeRole_Ids.Contains(user.Id))
+                .Where(user => usersIdsWithEmployeeRole.Contains(user.Id))
                 .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
                     .ThenInclude(hairServices => hairServices.HairService)
                 .Include(employeeWorkingInterval => employeeWorkingInterval.EmployeeWorkingIntervals.OrderBy(workingDay => workingDay.WorkingDayId).ThenBy(startTime => startTime.StartTime))
@@ -114,7 +113,7 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task DeleteUserAsync(string userId)
         {
-            var user = await context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
+            var user = await context.Users.FirstOrDefaultAsync(user => user.Id == userId);
             context.Users.Remove(user);
         }
 
@@ -161,9 +160,9 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task<List<int>> GetEmployeeHairServicesIdsAsync(string employeeId)
         {
             var employeeHairServicesIds = context.EmployeesHairServices
-            .Where(ehs => ehs.EmployeeId == employeeId)
-            .Select(ehs => ehs.HairServiceId)
-            .ToList();
+                .Where(ehs => ehs.EmployeeId == employeeId)
+                .Select(ehs => ehs.HairServiceId)
+                .ToList();
             return employeeHairServicesIds;
         }
 
