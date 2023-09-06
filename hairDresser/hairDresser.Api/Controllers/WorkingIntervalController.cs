@@ -85,7 +85,6 @@ namespace hairDresser.Presentation.Controllers
         [Route("{workingIntervalId}")]
         public async Task<IActionResult> UpdateWorkingInterval(int workingIntervalId, [FromBody] WorkingIntervalPutDto editedWorkingInterval)
         {
-            // ??? if I update with a invalid working interval it's still saved in the database.
             var command = new UpdateWorkingIntervalCommand
             {
                 WorkingIntervalId = workingIntervalId,

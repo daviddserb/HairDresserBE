@@ -30,7 +30,7 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsByEmployeeIdAsync(string employeeId)
         {
             var employeeWorkingIntervals = context.WorkingIntervals
-                .Where(employee => employee.Employee.Id.Equals(employeeId))
+                .Where(employee => employee.Employee.Id == employeeId)
                 .Include(workingDay => workingDay.WorkingDay)
                 .Include(employee => employee.Employee)
                 .OrderBy(workingDay => workingDay.WorkingDayId)
@@ -47,7 +47,7 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task<IQueryable<WorkingInterval>> GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(string employeeId, int workingDayId)
         {
             var employeeWorkingIntervalsInSelectedWorkingDay = context.WorkingIntervals
-                .Where(employee => employee.Employee.Id.Equals(employeeId))
+                .Where(employee => employee.Employee.Id == employeeId)
                 .Where(workingDay => workingDay.WorkingDay.Id == workingDayId)
                 .Include(obj => obj.WorkingDay)
                 .Include(obj => obj.Employee);

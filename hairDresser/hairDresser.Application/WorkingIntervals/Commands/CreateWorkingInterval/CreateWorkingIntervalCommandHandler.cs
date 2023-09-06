@@ -30,16 +30,15 @@ namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterva
             if (startTime > endTime) throw new ClientException($"The working interval start time '{startTime}' needs to be before the end time '{endTime}'!");
 
             TimeSpan workingIntervalMinimumDuration = new TimeSpan(04, 00, 00);
-            var diff = endTime - startTime;
             if (endTime - startTime < workingIntervalMinimumDuration) throw new ClientException($"The working interval minimum duration is {workingIntervalMinimumDuration}!");
 
-            var employeeWorkingIntervalsInSelectedWorkingDay = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, request.WorkingDayId);
-            foreach (var employeeExistingWorkingInterval in employeeWorkingIntervalsInSelectedWorkingDay)
+            var employeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, request.WorkingDayId);
+            foreach (var employeeInterval in employeeWorkingIntervals)
             {
                 // Check the new working interval to don't overlap with the existing ones and to have at least one hour pause between them.
                 TimeSpan minimumDurationBetweenWorkingIntervals = new TimeSpan(01, 00, 00);
-                bool overlap = startTime < employeeExistingWorkingInterval.EndTime + minimumDurationBetweenWorkingIntervals && employeeExistingWorkingInterval.StartTime - minimumDurationBetweenWorkingIntervals < endTime;
-                if (overlap) throw new ClientException($"The working interval ({employeeExistingWorkingInterval.StartTime} - {employeeExistingWorkingInterval.EndTime}) is overlapping or the pause between the working intervals isn't at least {minimumDurationBetweenWorkingIntervals}!");
+                bool overlap = startTime < employeeInterval.EndTime + minimumDurationBetweenWorkingIntervals && employeeInterval.StartTime - minimumDurationBetweenWorkingIntervals < endTime;
+                if (overlap) throw new ClientException($"The working interval ({employeeInterval.StartTime} - {employeeInterval.EndTime}) is overlapping or the pause between the working intervals isn't at least {minimumDurationBetweenWorkingIntervals}!");
             }
 
             var workingInterval = new WorkingInterval()

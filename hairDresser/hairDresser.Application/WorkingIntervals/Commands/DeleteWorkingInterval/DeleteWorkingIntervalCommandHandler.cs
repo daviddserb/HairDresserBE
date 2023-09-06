@@ -1,11 +1,7 @@
-﻿using hairDresser.Application.Interfaces;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace hairDresser.Application.WorkingIntervals.Commands.DeleteWorkingInterval
 {
@@ -21,8 +17,7 @@ namespace hairDresser.Application.WorkingIntervals.Commands.DeleteWorkingInterva
         public async Task<WorkingInterval> Handle(DeleteWorkingIntervalCommand request, CancellationToken cancellationToken)
         {
             var workingInterval = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalByIdAsync(request.WorkingIntervalId);
-
-            if (workingInterval == null) return null;
+            if (workingInterval == null) throw new NotFoundException($"There is no working interval registered with the id '{request.WorkingIntervalId}'!");
 
             await _unitOfWork.WorkingIntervalRepository.DeleteWorkingIntervalAsync(request.WorkingIntervalId);
             await _unitOfWork.SaveAsync();
