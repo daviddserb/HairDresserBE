@@ -37,7 +37,7 @@ namespace hairDresser.Presentation.Controllers
 
             var mappedHairService = _mapper.Map<HairServiceGetDto>(hairService);
 
-            return CreatedAtAction(nameof(GetHairServiceById), new { id = mappedHairService.Id }, mappedHairService);
+            return CreatedAtAction(nameof(GetHairServiceById), new { hairServiceId = mappedHairService.Id }, mappedHairService);
         }
 
         [HttpGet]
@@ -92,12 +92,11 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("all/by-ids")]
-        public async Task<IActionResult> GetAllHairServicesByIds([FromQuery] List<int> ids)
+        public async Task<IActionResult> GetAllHairServicesByIds([FromQuery] List<int> hairServicesIds)
         {
-            var query = new GetAllHairServicesByIdsQuery { HairServicesIds = ids };
+            var query = new GetAllHairServicesByIdsQuery { HairServicesIds = hairServicesIds };
 
             var hairServices = await _mediator.Send(query);
-            if (hairServices == null) return NotFound();
 
             var mappedhairServices = _mapper.Map<List<HairServiceGetDto>>(hairServices);
 
@@ -138,20 +137,20 @@ namespace hairDresser.Presentation.Controllers
                 Price = editedHairService.Price
             };
 
-            var result = await _mediator.Send(command);
-            if (result == null) return NotFound();
+            var hairServiceUpdated = await _mediator.Send(command);
 
-            return NoContent();
+            var mappedHairServiceUpdated = _mapper.Map<HairServiceGetDto>(hairServiceUpdated);
+
+            return Ok(mappedHairServiceUpdated);
         }
 
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> DeleteHairService(int id)
         {
-            var command = new DeleteHairServiceCommand { Id = id };
+            var command = new DeleteHairServiceCommand { HairServiceId = id };
 
-            var handlerResult = await _mediator.Send(command);
-            if (handlerResult == null) return NotFound();
+            await _mediator.Send(command);
 
             return NoContent();
         }

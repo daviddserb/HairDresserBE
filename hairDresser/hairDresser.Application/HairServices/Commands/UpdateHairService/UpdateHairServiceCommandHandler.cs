@@ -1,11 +1,7 @@
-﻿using hairDresser.Application.Interfaces;
+﻿using hairDresser.Application.CustomExceptions;
+using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace hairDresser.Application.HairServices.Commands.UpdateHairService
 {
@@ -21,8 +17,7 @@ namespace hairDresser.Application.HairServices.Commands.UpdateHairService
         public async Task<HairService> Handle(UpdateHairServiceCommand request, CancellationToken cancellationToken)
         {
             var hairService = await _unitOfWork.HairServiceRepository.GetHairServiceByIdAsync(request.Id);
-
-            if (hairService == null) return null;
+            if (hairService == null) throw new NotFoundException($"There is no hair service registered with the id '{request.Id}'!");
 
             hairService.Name = request.Name;
             hairService.Duration = TimeSpan.FromMinutes(request.DurationInMinutes);

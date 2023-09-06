@@ -1,12 +1,6 @@
 ﻿using hairDresser.Application.Interfaces;
-using hairDresser.Domain;
 using hairDresser.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace hairDresser.Infrastructure.Repositories
 {
@@ -59,40 +53,38 @@ namespace hairDresser.Infrastructure.Repositories
             else return null;
         }
 
+        /// <summary>
+        /// After modifying the method's body (the query), ensure the Integration Tests are working correctly. It's essential because translating the query into SQLite can potentially lead to issues.
+        /// </summary>
+        /// <param name="hairServicesIds"></param>
+        /// <returns></returns>
         public async Task<TimeSpan> GetDurationByHairServicesIdsAsync(List<int> hairServicesIds)
         {
-            // BEFORE:
-            //return context.HairServices
-            //    .Where(hairService => hairServicesIds.Contains(hairService.Id))
-            //    .Sum(hairServices => hairServices.Duration.Hours * 60 + hairServices.Duration.Minutes);
-
-            // AFTER (because in Integration Test, when calling this method with SQLite, there are some methods that are not compatible):
-            var selectedHairServices = await context.HairServices
+            var hairServices = await context.HairServices
                 .Where(hairService => hairServicesIds.Contains(hairService.Id))
                 .ToListAsync();
 
-            int selectedHairServicesTotalDurationInMinutes = selectedHairServices
+            int hairServicesDuration = hairServices
                 .Sum(hairService => hairService.Duration.Hours * 60 + hairService.Duration.Minutes);
 
-            return TimeSpan.FromMinutes(selectedHairServicesTotalDurationInMinutes);
+            return TimeSpan.FromMinutes(hairServicesDuration);
         }
 
+        /// <summary>
+        /// After modifying the method's body (the query), ensure the Integration Tests are working correctly. It's essential because translating the query into SQLite can potentially lead to issues.
+        /// </summary>
+        /// <param name="hairServicesIds"></param>
+        /// <returns></returns>
         public async Task<decimal> GetPriceByHairServicesIdsAsync(List<int> hairServicesIds)
         {
-            // BEFORE:
-            //return context.HairServices
-            //    .Where(hairService => hairServicesIds.Contains(hairService.Id))
-            //    .Sum(hairServices => hairServices.Price);
-
-            // AFTER (because in Integration Test, when calling this method with SQLite, there are some methods that are not compatible):
-            var selectedHairServices = await context.HairServices
+            var hairServices = await context.HairServices
                 .Where(hairService => hairServicesIds.Contains(hairService.Id))
                 .ToListAsync();
 
-            decimal selectedHairServicesTotalPrice = selectedHairServices
+            decimal hairServicesPrice = hairServices
                 .Sum(hairService => hairService.Price);
 
-            return selectedHairServicesTotalPrice;
+            return hairServicesPrice;
         }
 
         public async Task<HairService> UpdateHairServiceAsync(HairService hairService)
@@ -102,7 +94,8 @@ namespace hairDresser.Infrastructure.Repositories
         }
         public async Task DeleteHairServiceAsync(int hairServiceId)
         {
-            var hairService = await context.HairServices.FirstOrDefaultAsync(hairService => hairService.Id == hairServiceId);
+            var hairService = await context.HairServices
+                .FirstOrDefaultAsync(hairService => hairService.Id == hairServiceId);
             context.HairServices.Remove(hairService);
         }
     }

@@ -180,6 +180,8 @@ namespace hairDresser.Presentation.Controllers
 
             var userEdited = await _mediator.Send(command);
 
+            // to do !!! ??? - trebuie sa adaug mapare de la User la un UserGetDto sau ceva de genul
+
             return Ok(userEdited);
         }
 

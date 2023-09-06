@@ -10,6 +10,6 @@ namespace hairDresser.Application.HairServices.Commands.DeleteHairService
 {
     public class DeleteHairServiceCommand : IRequest<HairService>
     {
-        public int Id { get; set; }
+        public int HairServiceId { get; set; }
     }
 }
