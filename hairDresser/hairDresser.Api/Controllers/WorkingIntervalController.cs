@@ -75,7 +75,6 @@ namespace hairDresser.Presentation.Controllers
             var allWorkingIntervalsByEmployeeIdByDate = await _mediator.Send(query);
             if (!allWorkingIntervalsByEmployeeIdByDate.Any()) return NotFound();
 
-            // to do ??? !!!: sa modific WorkingIntervalGetDto, probabil sa sterg public EmployeeGetDto Employee { get; set; } si sa pun doar string numele/id Employee
             var mappedWorkingIntervalsByEmployeeIdByDate = _mapper.Map<List<WorkingIntervalGetDto>>(allWorkingIntervalsByEmployeeIdByDate);
 
             return Ok(mappedWorkingIntervalsByEmployeeIdByDate);
