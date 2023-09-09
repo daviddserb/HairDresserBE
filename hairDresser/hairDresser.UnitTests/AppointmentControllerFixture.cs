@@ -5,16 +5,12 @@ using hairDresser.Application.Appointments.Queries.GetAppointmentById;
 using hairDresser.Domain.Models;
 using hairDresser.Presentation.Controllers;
 using hairDresser.Presentation.Dto.AppointmentDtos;
+using hairDresser.Presentation.TimeLogger;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace hairDresser.UnitTests
 {
@@ -45,11 +41,7 @@ namespace hairDresser.UnitTests
             //Arrange:
             _mockMediator
                 .Setup(mediator => mediator.Send(It.IsAny<GetAppointmentByIdQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(
-                    new Appointment
-                    {
-                        Id = 1
-                    });
+                .ReturnsAsync(new Appointment { Id = 1 });
             //Act:
             var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
             var result = await controller.GetAppointmentById(1);
@@ -65,6 +57,7 @@ namespace hairDresser.UnitTests
             _mockMediator
                 .Setup(mediator => mediator.Send(It.IsAny<GetAllAppointmentsQuery>(), It.IsAny<CancellationToken>()))
                 .Verifiable();
+            MethodTimeLogger.Logger = _mockLogger.Object; // Initialize Logger
             //Act:
             var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
             var pagination = new GetAllAppointmentsQuery
@@ -87,11 +80,7 @@ namespace hairDresser.UnitTests
                 .Returns<GetAppointmentByIdQuery, CancellationToken>(async (appointment, cancelToken) =>
                 {
                     appointmentId = appointment.AppointmentId;
-                    return await Task.FromResult(
-                        new Appointment
-                        {
-                            Id = appointment.AppointmentId
-                        });
+                    return await Task.FromResult(new Appointment { Id = appointment.AppointmentId });
                 });
             //Act:
             var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
@@ -104,19 +93,13 @@ namespace hairDresser.UnitTests
         public async Task GetAppointmentById_ShouldReturnFoundAppointment()
         {
             //Arrange:
-            var appointment = new Appointment
-            {
-                Id = 1
-            };
+            var appointment = new Appointment { Id = 1 };
             _mockMediator
                 .Setup(mediator => mediator.Send(It.IsAny<GetAppointmentByIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(appointment);
             _mockMapper
                 .Setup(mapper => mapper.Map<AppointmentGetDto>(It.Is<Appointment>(app => app == appointment)))
-                .Returns(new AppointmentGetDto
-                {
-                    Id = 1
-                });
+                .Returns(new AppointmentGetDto { Id = 1 });
             //Act:
             var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
             var result = await controller.GetAppointmentById(5);
@@ -131,7 +114,6 @@ namespace hairDresser.UnitTests
             //Arrange:
             var appointmentPostDto = new AppointmentPostDto
             {
-                // Nu-i obligatoriu sa pun toate campurile.
                 CustomerId = "11223344-5566-7788-99AA-BBCCDDEEFF00",
                 EmployeeId = "11223344-5566-7788-99AA-BBCCDDEEFF01",
                 HairServicesIds = new List<int> { 1, 2 },

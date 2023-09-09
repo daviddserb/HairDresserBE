@@ -112,7 +112,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 var app = builder.Build();
-MethodTimeLogger.Logger = app.Logger; // ???
+
+MethodTimeLogger.Logger = app.Logger; // Initialize Logger
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
