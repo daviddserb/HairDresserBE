@@ -22,21 +22,17 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task CreateUserAsync(User user, string userPassowrd)
         {
             var createdUser = await _userManager.CreateAsync(user, userPassowrd);
-
-            // OAuth has some validations on its own columns from the DB Table. Some of the requirements:
-            // Username can't have white space.
-            // Password must have at least one: uppercase letter (A, ...), digit (1, ...) and alphanumeric character (symbols: #, @, %, ...).
-            if (!createdUser.Succeeded) throw new ClientException("Failed to create the account!");
+            // OAuth has some validations on its own columns, for example username can't have white space, and password must have at least one: uppercase, lowercase, digit, and alphanumeric character.
+            if (!createdUser.Succeeded)
+            {
+                var errorMessage = string.Join(", ", createdUser.Errors.Select(error => error.Description));
+                throw new ClientException($"Failed to create the account: {errorMessage}");
+            }
         }
 
         public async Task<User> GetUserByIdAsync(string userId)
         {
-            // Method 1:
             var user = await context.Users.FirstOrDefaultAsync(user => user.Id == userId);
-
-            // Method 2 (same result but using IdentityUser method):
-            // var user2 = await _userManager.FindByIdAsync(userId);
-
             return user;
         }
 

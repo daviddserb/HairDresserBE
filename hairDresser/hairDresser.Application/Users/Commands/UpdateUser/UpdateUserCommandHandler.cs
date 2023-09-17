@@ -2,11 +2,6 @@
 using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Commands.UpdateUser
 {
@@ -22,7 +17,21 @@ namespace hairDresser.Application.Users.Commands.UpdateUser
         public async Task<User> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _unitOfWork.UserRepository.GetUserByIdAsync(request.Id);
-            if (user == null) throw new NotFoundException($"The user with the id '{request.Id}' does not exist!");
+            if (user == null) throw new NotFoundException($"The user with the id '{request.Id}' is not registered!");
+
+            // Check if the new username is empty
+            if (string.IsNullOrEmpty(user.UserName)) throw new ClientException("Username can't be empty!");
+
+            // Check if the new username contains whitespace, which is an IdentityUser constraint when register user
+            if (user.UserName.Contains(" ")) throw new ClientException("Username can't contain whitespaces!");
+
+            // Check if the new username is taken by an existing user which is already in the database
+            var userNewUsername = await _unitOfWork.UserRepository.GetUserByUserNameAsync(request.Username);
+            if (userNewUsername != null) throw new ClientException("Username already exists!");
+
+            user.UserName = request.Username;
+            user.Address = request.Address;
+            user.PhoneNumber = request.Phone;
 
             await _unitOfWork.UserRepository.UpdateUserAsync(user);
             await _unitOfWork.SaveAsync();

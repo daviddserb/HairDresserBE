@@ -2,7 +2,7 @@
 
 namespace hairDresser.Presentation.Dto.UserDtos
 {
-    public class UserRoleDto
+    public class UserRolePostDto
     {
         [Required(ErrorMessage = "Username is required!")]
         public string Username { get; set; }

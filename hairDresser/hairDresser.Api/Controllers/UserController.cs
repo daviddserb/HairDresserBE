@@ -62,7 +62,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpPost]
         [Route("assign-role")]
-        public async Task<IActionResult> AssignRoleToUser(UserRoleDto userInfo)
+        public async Task<IActionResult> AssignRoleToUser(UserRolePostDto userInfo)
         {
             var command = _mapper.Map<AddRoleToUserCommand>(userInfo);
 
@@ -173,16 +173,15 @@ namespace hairDresser.Presentation.Controllers
             {
                 Id = id,
                 Username = editedUser.Username,
-                Email = editedUser.Email,
-                Phone = editedUser.Phone,
-                Address = editedUser.Address
+                Address = editedUser.Address,
+                Phone = editedUser.Phone
             };
 
             var userEdited = await _mediator.Send(command);
 
-            // to do !!! ??? - trebuie sa adaug mapare de la User la un UserGetDto sau ceva de genul
+            var mappedUserEdited = _mapper.Map<UserGetDto>(userEdited);
 
-            return Ok(userEdited);
+            return Ok(mappedUserEdited);
         }
 
         [HttpDelete]

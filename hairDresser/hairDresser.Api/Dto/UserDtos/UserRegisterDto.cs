@@ -10,13 +10,14 @@ namespace hairDresser.Presentation.Dto.UserDtos
         [Required(ErrorMessage = "Password is required!")]
         public string Password { get; set; }
 
-        // string? means nullable strings => makes the field not required.
-        public string? Phone { get; set; }
-
         [Required(ErrorMessage = "Email is required!")]
+        [EmailAddress(ErrorMessage = "Please enter a valid email address!")] // must follow a valid email format
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Address is required!")]
         public string Address { get; set; }
+
+        // dataype? means the field can be nullable => value is not necessarily required.
+        public string? Phone { get; set; }
     }
 }

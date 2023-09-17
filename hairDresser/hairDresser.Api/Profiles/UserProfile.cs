@@ -19,7 +19,7 @@ namespace hairDresser.Presentation.Profiles
             CreateMap<UserLoginDto, LoginUserCommand>();
             CreateMap<UserWithToken, UserGetDto>();
 
-            CreateMap<UserRoleDto, AddRoleToUserCommand>();
+            CreateMap<UserRolePostDto, AddRoleToUserCommand>();
 
             CreateMap<UserWithRole, UserGetDto>();
 
