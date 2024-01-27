@@ -11,9 +11,6 @@
 - Skills: .NET (C#), ASP.NET Core Web API, Entity Framework Core, Microsoft SQL Server, and LINQ.
 ---
 ![image](https://github.com/daviddserb/HairDresserBE/assets/83017887/4131394f-808b-417e-aa12-1445e4667692)
-
 ![image](https://github.com/daviddserb/HairDresserBE/assets/83017887/74b503bd-56ae-4561-be00-4752ab352514)
-
 ![image](https://github.com/daviddserb/HairDresserBE/assets/83017887/3cedd981-dec7-48ec-80b0-b023fd1a9d3d)
-
 ![image](https://github.com/daviddserb/HairDresserBE/assets/83017887/0c5ca76d-9a88-435c-81aa-9cf604b81559)
