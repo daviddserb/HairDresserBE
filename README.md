@@ -6,7 +6,7 @@
 - Followed a Clean Architecture project setup, integrated the Repository pattern to facilitate the separation of concerns, and leveraged the CQRS pattern with the MediatR library for efficient and decoupled application communication.
 - To secure the data from the Web API I utilized Authentication and Authorization through OAuth 2.0 and JWT (JSON Web Token) and sent through the Bearer Token.
 - To ensure efficient Web API Testing I utilized the xUnit library with the AAA approach for both Unit and Integration Tests.
-- The API is used by the Front-End (Angular with Material UI): github.com/daviddserb/HairDresserFE/tree/master
+- The API is used by the Front-End (Angular with Material UI): https://github.com/daviddserb/HairDresserFE/tree/master
 ---
 - Skills: .NET (C#), ASP.NET Core Web API, Entity Framework Core, Microsoft SQL Server, and LINQ.
 ---
