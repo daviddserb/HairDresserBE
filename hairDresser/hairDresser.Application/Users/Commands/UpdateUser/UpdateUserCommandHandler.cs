@@ -31,7 +31,6 @@ namespace hairDresser.Application.Users.Commands.UpdateUser
 
             user.UserName = request.Username;
             user.Address = request.Address;
-            user.PhoneNumber = request.Phone;
 
             await _unitOfWork.UserRepository.UpdateUserAsync(user);
             await _unitOfWork.SaveAsync();

@@ -173,8 +173,7 @@ namespace hairDresser.Presentation.Controllers
             {
                 Id = id,
                 Username = editedUser.Username,
-                Address = editedUser.Address,
-                Phone = editedUser.Phone
+                Address = editedUser.Address
             };
 
             var userEdited = await _mediator.Send(command);

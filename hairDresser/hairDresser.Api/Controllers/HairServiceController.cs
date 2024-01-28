@@ -11,6 +11,7 @@ using hairDresser.Application.HairServices.Queries.GetMissingHairServicesByEmplo
 using hairDresser.Application.HairServices.Queries.GetPriceByHairServicesIds;
 using hairDresser.Presentation.Dto.HairServiceDtos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace hairDresser.Presentation.Controllers
@@ -42,6 +43,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("all")]
+        [Authorize]
         public async Task<IActionResult> GetAllHairServices()
         {
             var allHairServices = await _mediator.Send(new GetAllHairServicesQuery());

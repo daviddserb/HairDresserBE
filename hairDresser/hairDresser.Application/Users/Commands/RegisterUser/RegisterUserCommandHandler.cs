@@ -23,8 +23,8 @@ namespace hairDresser.Application.Users.Commands.RegisterUser
             {
                 UserName = request.Username,
                 Email = request.Email,
-                PhoneNumber = request.Phone,
                 Address = request.Address,
+                PhoneNumber = request.Phone
             };
 
             await _unitOfWork.UserRepository.CreateUserAsync(user, request.Password);
