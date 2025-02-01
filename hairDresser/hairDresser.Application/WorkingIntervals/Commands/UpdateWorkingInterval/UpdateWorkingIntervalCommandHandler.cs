@@ -28,7 +28,7 @@ namespace hairDresser.Application.WorkingIntervals.Commands.UpdateWorkingInterva
             if (endTime - startTime < workingIntervalMinimumDuration) throw new ClientException($"The working interval minimum duration is {workingIntervalMinimumDuration}!");
 
             var employeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(workingInterval.EmployeeId, request.WorkingDayId);
-            
+
             // Exclude the working interval that is selected to be updated.
             var updatedEmployeeWorkingIntervals = employeeWorkingIntervals
                 .Where(interval => interval.Id != request.WorkingIntervalId)

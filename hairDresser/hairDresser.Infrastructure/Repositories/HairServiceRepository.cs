@@ -28,7 +28,8 @@ namespace hairDresser.Infrastructure.Repositories
             return await context.HairServices.FirstOrDefaultAsync(hairService => hairService.Id == hairServiceId);
         }
 
-        public async Task<IQueryable<EmployeeHairService>> GetAcquiredHairServicesByEmployeeIdAsync(string employeeId) {
+        public async Task<IQueryable<EmployeeHairService>> GetAcquiredHairServicesByEmployeeIdAsync(string employeeId)
+        {
             var employeeHairServices = context.EmployeesHairServices
                 .Where(employeeHairService => employeeHairService.EmployeeId == employeeId)
                 .Include(employeeHairService => employeeHairService.HairService);

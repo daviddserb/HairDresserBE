@@ -1,15 +1,4 @@
-﻿using hairDresser.Application.Appointments.Commands.CreateAppointment;
-using hairDresser.Application.Appointments.Queries.GetAllAppointments;
-using hairDresser.Application.Appointments.Queries.GetAllAppointmentsByCustomerId;
-using hairDresser.Application.Appointments.Queries.GetAppointmentById;
-using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByCustomerId;
-using hairDresser.Application.HairServices.Commands.CreateHairService;
-using hairDresser.Application.HairServices.Queries;
-using hairDresser.Application.HairServices.Queries.GetAllHairServicesByIds;
-using hairDresser.Application.Interfaces;
-using hairDresser.Application.WorkingDays.Commands.CreateWorkingDay;
-using hairDresser.Application.WorkingDays.Queries.GetAllWorkingDays;
-using hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterval;
+﻿using hairDresser.Application.Interfaces;
 using hairDresser.Infrastructure;
 using hairDresser.Infrastructure.Repositories;
 using MediatR;

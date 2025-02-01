@@ -1,5 +1,4 @@
 ﻿using hairDresser.Presentation.Dto.HairServiceDtos;
-using System.ComponentModel.DataAnnotations;
 
 namespace hairDresser.Presentation.Dto.AppointmentHairServiceDtos
 {

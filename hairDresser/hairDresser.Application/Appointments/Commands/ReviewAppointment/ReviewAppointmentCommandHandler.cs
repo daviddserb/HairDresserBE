@@ -2,11 +2,6 @@
 using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace hairDresser.Application.Appointments.Commands.ReviewAppointment
 {
@@ -22,7 +17,7 @@ namespace hairDresser.Application.Appointments.Commands.ReviewAppointment
         {
             var customerAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByCustomerIdAsync(request.CustomerId);
             if (customerAppointments.All(appointment => appointment.Id != request.AppointmentId)) throw new ClientException($"The appointment with the id '{request.AppointmentId}' does not belong to the selected customer!");
-            
+
             var appointment = await _unitOfWork.AppointmentRepository.GetAppointmentByIdAsync(request.AppointmentId);
             if (appointment == null) throw new NotFoundException($"The appointment with the id '{request.AppointmentId}' does not exist!");
             if (appointment.ReviewId != null) throw new ClientException($"The appointment with the id '{request.AppointmentId}' already has a review!");

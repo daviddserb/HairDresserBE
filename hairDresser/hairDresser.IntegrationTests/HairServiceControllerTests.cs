@@ -1,12 +1,8 @@
 ﻿using hairDresser.Presentation.Dto.HairServiceDtos;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace hairDresser.IntegrationTests
 {
@@ -48,7 +44,7 @@ namespace hairDresser.IntegrationTests
 
             var response = await client.PostAsync("api/hairservice",
                 new StringContent(JsonConvert.SerializeObject(newHairService), Encoding.UTF8, "application/json"));
-            
+
             var result = await response.Content.ReadAsStringAsync();
             var hairService = JsonConvert.DeserializeObject<HairServiceGetDto>(result);
 

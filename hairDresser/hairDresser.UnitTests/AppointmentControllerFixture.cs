@@ -47,7 +47,7 @@ namespace hairDresser.UnitTests
             var result = await controller.GetAppointmentById(1);
             var okResult = result as OkObjectResult;
             //Assert:
-            Assert.Equal((int) HttpStatusCode.OK, okResult.StatusCode);
+            Assert.Equal((int)HttpStatusCode.OK, okResult.StatusCode);
         }
 
         [Fact]

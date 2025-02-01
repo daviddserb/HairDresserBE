@@ -14,7 +14,7 @@ namespace hairDresser.Presentation.Profiles
 
             CreateMap<WorkingInterval, WorkingIntervalGetDto>().ReverseMap();
 
-            CreateMap<WorkingIntervalPutDto, UpdateWorkingIntervalCommand> ().ReverseMap();
+            CreateMap<WorkingIntervalPutDto, UpdateWorkingIntervalCommand>().ReverseMap();
         }
     }
 }

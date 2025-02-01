@@ -2,11 +2,6 @@
 using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingIntervalsByEmployeeIdByDate
 {
@@ -25,7 +20,7 @@ namespace hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingInterval
             if (!userWithRole.Role.Contains("employee")) throw new NotFoundException($"The user with the '{request.EmployeeId}' id is not an registered employee!");
 
             var workingDay = await _unitOfWork.WorkingDayRepository.GetWorkingDayByIdAsync(request.WorkingDayId);
-            if(workingDay == null) throw new NotFoundException($"The working day with the '{request.WorkingDayId}' id is not registered!");
+            if (workingDay == null) throw new NotFoundException($"The working day with the '{request.WorkingDayId}' id is not registered!");
 
             var employeeWorkingIntervalsInSelectedDay = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, request.WorkingDayId);
             if (!employeeWorkingIntervalsInSelectedDay.Any()) throw new ClientException("The employee has no working intervals registered in the selected day!");

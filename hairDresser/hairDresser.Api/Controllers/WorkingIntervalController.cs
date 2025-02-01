@@ -53,7 +53,7 @@ namespace hairDresser.Presentation.Controllers
         [Route("all/{employeeId}")]
         public async Task<IActionResult> GetAllWorkingIntervalsByEmployeeId(string employeeId)
         {
-            var query = new GetAllWorkingIntervalsByEmployeeIdQuery{ EmployeeId = employeeId };
+            var query = new GetAllWorkingIntervalsByEmployeeIdQuery { EmployeeId = employeeId };
 
             var employeeWorkingIntervals = await _mediator.Send(query);
 
@@ -87,7 +87,7 @@ namespace hairDresser.Presentation.Controllers
             var command = new UpdateWorkingIntervalCommand
             {
                 WorkingIntervalId = workingIntervalId,
-                WorkingDayId= editedWorkingInterval.WorkingDayId,
+                WorkingDayId = editedWorkingInterval.WorkingDayId,
                 StartTime = editedWorkingInterval.StartTime,
                 EndTime = editedWorkingInterval.EndTime
             };

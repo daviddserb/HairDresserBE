@@ -69,9 +69,9 @@ builder.Services.AddIdentity<User, IdentityRole>()
 builder.Services
     .AddAuthentication(options =>
     {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     })
     //Add the support we need, what we need to validate for JWT (https://jwt.io/).
     .AddJwtBearer(options =>
@@ -109,7 +109,7 @@ builder.Services.AddCors(options =>
 });
 
 //(because of some errors with LINQ)
-builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+builder.Services.AddControllersWithViews().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 var app = builder.Build();
 
@@ -136,4 +136,4 @@ app.MapControllers();
 app.Run();
 
 //To make the file (Program.cs), which is a class, visible.
-public partial class Program {}
+public partial class Program { }

@@ -1,5 +1,4 @@
 ﻿using hairDresser.Presentation.CustomDataValidations;
-using hairDresser.Presentation.Dto.AppointmentHairServiceDtos;
 using System.ComponentModel.DataAnnotations;
 
 namespace hairDresser.Presentation.Dto.AppointmentDtos

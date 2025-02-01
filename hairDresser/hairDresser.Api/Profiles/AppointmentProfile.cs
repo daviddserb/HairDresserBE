@@ -3,7 +3,6 @@ using hairDresser.Application.Appointments.Commands.CreateAppointment;
 using hairDresser.Domain.Models;
 using hairDresser.Presentation.Dto.AppointmentDtos;
 using hairDresser.Presentation.Dto.AppointmentHairServiceDtos;
-using hairDresser.Presentation.Dto.EmployeeDtos;
 
 namespace hairDresser.Presentation.Profiles
 {

@@ -53,7 +53,7 @@ namespace hairDresser.Presentation.Controllers
             var mappedAppointment = _mapper.Map<AppointmentGetDto>(appointment);
 
             _logger.LogInformation("Finish process: Appointment successfully created.");
-            return CreatedAtAction(nameof(GetAppointmentById), new {appointmentId = mappedAppointment.Id}, mappedAppointment);
+            return CreatedAtAction(nameof(GetAppointmentById), new { appointmentId = mappedAppointment.Id }, mappedAppointment);
         }
 
         ///<summary>
@@ -182,13 +182,14 @@ namespace hairDresser.Presentation.Controllers
 
             return Ok(mappedAppointmentReviewed);
         }
-        
+
         [HttpDelete]
         [Route("{customerId}/{appointmentId}")]
         [Authorize(Roles = "customer")]
         public async Task<IActionResult> DeleteAppointment(string customerId, int appointmentId)
         {
-            var command = new DeleteAppointmentCommand {
+            var command = new DeleteAppointmentCommand
+            {
                 CustomerId = customerId,
                 AppointmentId = appointmentId
             };

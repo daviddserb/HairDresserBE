@@ -62,15 +62,16 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<UserWithRole>> GetAllUsersAsync()
         {
-            var users = _userManager.Users.Select(user => new UserWithRole
-            {
-                Id = user.Id,
-                Username = user.UserName,
-                Email = user.Email,
-                Address = user.Address,
-                Phone = user.PhoneNumber,
-                Role = string.Join(", ", _userManager.GetRolesAsync(user).Result.ToArray())
-            });
+            var users = _userManager.Users
+                .Select(user => new UserWithRole
+                {
+                    Id = user.Id,
+                    Username = user.UserName,
+                    Email = user.Email,
+                    Address = user.Address,
+                    Phone = user.PhoneNumber,
+                    Role = string.Join(", ", _userManager.GetRolesAsync(user).Result.ToArray())
+                });
             return users;
         }
 

@@ -1,11 +1,6 @@
 ﻿using hairDresser.Application.CustomExceptions;
 using hairDresser.Application.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace hairDresser.Application.Users.Commands.DeleteEmployeeHairService
 {

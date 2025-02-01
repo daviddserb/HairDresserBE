@@ -1,6 +1,4 @@
 ﻿using hairDresser.Application.CustomExceptions;
-using Microsoft.AspNetCore.Http;
-using System.Diagnostics;
 using System.Net;
 
 namespace hairDresser.Presentation.Middleware
@@ -44,7 +42,7 @@ namespace hairDresser.Presentation.Middleware
             }
         }
 
-        private Task HandleNotFoundException (HttpContext httpContext, NotFoundException exception)
+        private Task HandleNotFoundException(HttpContext httpContext, NotFoundException exception)
         {
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -56,7 +54,7 @@ namespace hairDresser.Presentation.Middleware
             }.ToString());
         }
 
-        private Task HandleClientException (HttpContext httpContext, ClientException exception)
+        private Task HandleClientException(HttpContext httpContext, ClientException exception)
         {
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;

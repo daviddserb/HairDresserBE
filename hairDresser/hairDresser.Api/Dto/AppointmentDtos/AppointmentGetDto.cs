@@ -1,6 +1,4 @@
 ﻿using hairDresser.Presentation.Dto.AppointmentHairServiceDtos;
-using hairDresser.Presentation.Dto.CustomerDtos;
-using hairDresser.Presentation.Dto.EmployeeDtos;
 using hairDresser.Presentation.Dto.ReviewDtos;
 
 namespace hairDresser.Presentation.Dto.AppointmentDtos
