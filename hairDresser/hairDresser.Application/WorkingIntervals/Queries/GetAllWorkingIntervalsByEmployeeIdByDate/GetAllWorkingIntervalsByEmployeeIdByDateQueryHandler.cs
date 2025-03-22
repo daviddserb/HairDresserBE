@@ -19,7 +19,7 @@ namespace hairDresser.Application.WorkingIntervals.Queries.GetAllWorkingInterval
             var userWithRole = await _unitOfWork.UserRepository.GetUserWithRoleByIdAsync(request.EmployeeId);
             if (!userWithRole.Role.Contains("employee")) throw new NotFoundException($"The user with the '{request.EmployeeId}' id is not an registered employee!");
 
-            var workingDay = await _unitOfWork.WorkingDayRepository.GetWorkingDayByIdAsync(request.WorkingDayId);
+            var workingDay = await _unitOfWork.WorkingDayRepository.GetWorkingDayById(request.WorkingDayId);
             if (workingDay == null) throw new NotFoundException($"The working day with the '{request.WorkingDayId}' id is not registered!");
 
             var employeeWorkingIntervalsInSelectedDay = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, request.WorkingDayId);

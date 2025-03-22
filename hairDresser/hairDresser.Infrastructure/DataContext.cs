@@ -12,7 +12,6 @@ namespace hairDresser.Infrastructure
         public DbSet<HairService> HairServices => Set<HairService>();
         public DbSet<WorkingInterval> WorkingIntervals => Set<WorkingInterval>();
         public DbSet<Review> Reviews => Set<Review>();
-        public DbSet<WorkingDay> WorkingDays => Set<WorkingDay>();
 
         // Even if the many-to-many connection table is automatically created in the DB, if you set it here it will help you to access it.
         public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();

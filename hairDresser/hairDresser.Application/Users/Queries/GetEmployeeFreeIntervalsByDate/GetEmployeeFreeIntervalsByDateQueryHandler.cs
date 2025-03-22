@@ -37,9 +37,9 @@ namespace hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate
             var nameOfDay = appointmentDate.ToString("dddd");
             Console.WriteLine($"\nName of the day based on the selected date is= '{nameOfDay}'");
 
-            var workingDay = await _unitOfWork.WorkingDayRepository.GetWorkingDayByNameAsync(nameOfDay);
+            var workingDay = await _unitOfWork.WorkingDayRepository.GetWorkingDayByName(nameOfDay);
 
-            var employeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, workingDay.Id);
+            var employeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, (int)workingDay);
 
             if (!employeeWorkingIntervals.Any()) throw new NotFoundException("The selected employee has no working intervals in the selected day!");
 

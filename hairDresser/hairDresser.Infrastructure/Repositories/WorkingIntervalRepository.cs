@@ -33,7 +33,7 @@ namespace hairDresser.Infrastructure.Repositories
                 .Where(employee => employee.Employee.Id == employeeId)
                 .Include(workingDay => workingDay.WorkingDay)
                 .Include(employee => employee.Employee)
-                .OrderBy(workingDay => workingDay.WorkingDayId)
+                .OrderBy(workingDay => workingDay)
                 .ThenBy(startTime => startTime.StartTime);
             return employeeWorkingIntervals;
         }
@@ -48,8 +48,7 @@ namespace hairDresser.Infrastructure.Repositories
         {
             var employeeWorkingIntervalsInSelectedWorkingDay = context.WorkingIntervals
                 .Where(employee => employee.Employee.Id == employeeId)
-                .Where(workingDay => workingDay.WorkingDay.Id == workingDayId)
-                .Include(obj => obj.WorkingDay)
+                .Where(workingDay => (int)workingDay.WorkingDay == workingDayId)
                 .Include(obj => obj.Employee);
             return employeeWorkingIntervalsInSelectedWorkingDay;
         }

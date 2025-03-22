@@ -38,7 +38,7 @@ namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterva
 
             var workingInterval = new WorkingInterval()
             {
-                WorkingDayId = request.WorkingDayId,
+                WorkingDay = (WorkingDay)request.WorkingDayId,
                 EmployeeId = request.EmployeeId,
                 StartTime = startTime,
                 EndTime = endTime,

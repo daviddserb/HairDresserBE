@@ -1,36 +1,32 @@
 ﻿using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace hairDresser.Infrastructure.Repositories
 {
     public class WorkingDayRepository : IWorkingDayRepository
     {
-        private readonly DataContext context;
-
-        public WorkingDayRepository(DataContext context)
+        public Task<IEnumerable<WorkingDay>> GetAllWorkingDays()
         {
-            this.context = context;
+            var workingDays = Enum.GetValues(typeof(WorkingDay)).Cast<WorkingDay>();
+            return Task.FromResult(workingDays);
         }
 
-        public async Task CreateWorkingDayAsync(WorkingDay workingDay)
+        public Task<WorkingDay?> GetWorkingDayById(int workingDayId)
         {
-            await context.WorkingDays.AddAsync(workingDay);
+            if (Enum.IsDefined(typeof(WorkingDay), workingDayId))
+            {
+                return Task.FromResult<WorkingDay?>((WorkingDay)workingDayId);
+            }
+            return Task.FromResult<WorkingDay?>(null);
         }
 
-        public async Task<IQueryable<WorkingDay>> GetAllWorkingDaysAsync()
+        public Task<WorkingDay?> GetWorkingDayByName(string workingDayName)
         {
-            return context.WorkingDays;
-        }
-
-        public async Task<WorkingDay> GetWorkingDayByIdAsync(int workingDayId)
-        {
-            return await context.WorkingDays.FirstOrDefaultAsync(workingDay => workingDay.Id == workingDayId);
-        }
-
-        public async Task<WorkingDay> GetWorkingDayByNameAsync(string workingDayName)
-        {
-            return await context.WorkingDays.FirstOrDefaultAsync(workingDay => workingDay.Name == workingDayName);
+            if (Enum.TryParse<WorkingDay>(workingDayName, true, out var result))
+            {
+                return Task.FromResult<WorkingDay?>(result);
+            }
+            return Task.FromResult<WorkingDay?>(null);
         }
     }
 }

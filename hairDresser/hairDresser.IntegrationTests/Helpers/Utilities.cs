@@ -132,37 +132,12 @@ namespace hairDresser.IntegrationTests.Helpers
             };
             db.UserRoles.AddRange(role1_customer1, role1_customer2, role2_employee1, role2_employee2);
 
-            var workingDay1 = new WorkingDay
-            {
-                Id = 1,
-                Name = "Monday"
-            };
-            var workingDay2 = new WorkingDay
-            {
-                Id = 2,
-                Name = "Tuesday"
-            };
-            var workingDay3 = new WorkingDay
-            {
-                Id = 3,
-                Name = "Wednesday"
-            };
-            var workingDay4 = new WorkingDay
-            {
-                Id = 4,
-                Name = "Thursday"
-            };
-            var workingDay5 = new WorkingDay
-            {
-                Id = 5,
-                Name = "Friday"
-            };
-            db.WorkingDays.AddRange(workingDay1, workingDay2, workingDay3, workingDay4, workingDay5);
+            var workingDay4 = WorkingDay.Thursday;
 
             var workingInterval1 = new WorkingInterval
             {
                 Id = 1,
-                WorkingDayId = 4,
+                WorkingDay = workingDay4,
                 EmployeeId = "fdf45d4c-da75-4a63-aff6-cd9add4d327f",
                 StartTime = new TimeSpan(09, 00, 00),
                 EndTime = new TimeSpan(13, 00, 00)
@@ -170,7 +145,7 @@ namespace hairDresser.IntegrationTests.Helpers
             var workingInterval2 = new WorkingInterval
             {
                 Id = 2,
-                WorkingDayId = 4,
+                WorkingDay = workingDay4,
                 EmployeeId = "fdf45d4c-da75-4a63-aff6-cd9add4d327f",
                 StartTime = new TimeSpan(14, 00, 00),
                 EndTime = new TimeSpan(19, 00, 00)

@@ -1,10 +1,11 @@
 ﻿namespace hairDresser.Domain.Models
 {
-    public class WorkingDay
+    public enum WorkingDay
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-
-        public ICollection<WorkingInterval> WorkingIntervals { get; set; }
+        Monday = 1,
+        Tuesday = 2,
+        Wednesday = 3,
+        Thursday = 4,
+        Friday = 5,
     }
 }

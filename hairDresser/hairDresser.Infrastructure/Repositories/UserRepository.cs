@@ -96,9 +96,11 @@ namespace hairDresser.Infrastructure.Repositories
             var allEmployees = context.Users
                 .Where(user => usersIdsWithEmployeeRole.Contains(user.Id))
                 .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
-                    .ThenInclude(hairServices => hairServices.HairService)
-                .Include(employeeWorkingInterval => employeeWorkingInterval.EmployeeWorkingIntervals.OrderBy(workingDay => workingDay.WorkingDayId).ThenBy(startTime => startTime.StartTime))
-                    .ThenInclude(workingDay => workingDay.WorkingDay);
+                .ThenInclude(hairServices => hairServices.HairService)
+                .Include(employeeWorkingInterval => employeeWorkingInterval.EmployeeWorkingIntervals
+                    .OrderBy(workingDay => workingDay)
+                    .ThenBy(startTime => startTime.StartTime))
+                .ThenInclude(workingDay => workingDay.WorkingDay);
             return allEmployees;
         }
 

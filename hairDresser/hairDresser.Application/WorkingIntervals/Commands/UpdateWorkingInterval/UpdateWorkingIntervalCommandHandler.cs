@@ -42,7 +42,7 @@ namespace hairDresser.Application.WorkingIntervals.Commands.UpdateWorkingInterva
                 if (overlap) throw new ClientException($"The working interval ({employeeInterval.StartTime} - {employeeInterval.EndTime}) is overlapping or the pause between the working intervals isn't at least {minimumDurationBetweenWorkingIntervals}!");
             }
 
-            workingInterval.WorkingDayId = request.WorkingDayId;
+            workingInterval.WorkingDay = (WorkingDay)request.WorkingDayId;
             workingInterval.StartTime = TimeSpan.Parse(request.StartTime);
             workingInterval.EndTime = TimeSpan.Parse(request.EndTime);
 
