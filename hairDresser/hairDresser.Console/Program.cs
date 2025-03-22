@@ -7,8 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 // di = Dependency Injection
 var diContainer = new ServiceCollection()
     //Facem legatura cu server-ul nostru din DB.
-    //.AddDbContext<DataContext>(options => options.UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDb;Trusted_Connection=True;MultipleActiveResultSets=True;"))
-    .AddDbContext<DataContext>()
+    //.AddDbContext<DataContext>()
 
     // De fiecare data cand vei vedea ca cineva depinde de IHairServiceRepository, creezi o instanta de HairServiceRepository (la fel si pt. restul).
     .AddScoped<IUnitOfWork, UnitOfWork>()

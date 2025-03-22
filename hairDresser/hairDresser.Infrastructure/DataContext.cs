@@ -6,6 +6,10 @@ namespace hairDresser.Infrastructure
 {
     public class DataContext : IdentityDbContext<User>
     {
+        // Explicit empty constructor needed to create objects when making migrations
+        public DataContext() { }
+
+        // Required to allow EFC to inject the configuration
         public DataContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Appointment> Appointments => Set<Appointment>();
@@ -17,14 +21,11 @@ namespace hairDresser.Infrastructure
         public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();
         public DbSet<AppointmentHairService> AppointmentsHairServices => Set<AppointmentHairService>();
 
-        // If I run the application in:
-        // - Console => OnConfiguring() method must run.
-        // - API => OnConfiguring() method must not run (error: "Multiple database connections").
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
-        //{
-        //    optionBuilder
-        //        .UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDB;Trusted_Connection=True;MultipleActiveResultSets=True;");
-        //}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
+        {
+            optionBuilder
+                .UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDB;Trusted_Connection=True;MultipleActiveResultSets=True;");
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

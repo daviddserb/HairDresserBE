@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hairDresser.Infrastructure;
 
@@ -11,9 +12,10 @@ using hairDresser.Infrastructure;
 namespace hairDresser.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250322093927_RemoveWorkingDayTable")]
+    partial class RemoveWorkingDayTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
