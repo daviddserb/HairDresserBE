@@ -107,7 +107,6 @@ namespace hairDresser.IntegrationTests.Helpers
                 Name = "employee"
             };
             db.Roles.AddRange(role1, role2);
-            db.SaveChanges();
 
             // Add roles to users
             var role1_customer1 = new IdentityUserRole<string>

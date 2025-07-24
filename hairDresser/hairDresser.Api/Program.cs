@@ -56,8 +56,6 @@ builder.Services.AddScoped<IWorkingIntervalRepository, WorkingIntervalRepository
 builder.Services.AddScoped<IWorkingDayRepository, WorkingDayRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-// ??? TODO - not working (hard-coded db connection string in DataContext.
-// ??? TODO - after making it work, also hide appsettings.json from git
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 

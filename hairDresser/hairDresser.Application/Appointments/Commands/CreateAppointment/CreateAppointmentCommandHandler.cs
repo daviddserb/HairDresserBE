@@ -46,7 +46,7 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 
             var workingDay = await _unitOfWork.WorkingDayRepository.GetWorkingDayByName(dayOfWeek);
             var employeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, (int)workingDay);
-            if (!employeeWorkingIntervals.Any()) throw new NotFoundException($"The employee '{employee.Username}' has no working intervals for ${dayOfWeek}!");
+            if (!employeeWorkingIntervals.Any()) throw new NotFoundException($"The employee '{employee.Username}' has no working intervals for {dayOfWeek}!");
 
             TimeSpan appointmentStartTime = request.StartDate.TimeOfDay;
             TimeSpan appointmentEndTime = request.EndDate.TimeOfDay;

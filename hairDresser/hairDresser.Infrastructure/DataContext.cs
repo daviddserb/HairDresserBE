@@ -21,12 +21,6 @@ namespace hairDresser.Infrastructure
         public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();
         public DbSet<AppointmentHairService> AppointmentsHairServices => Set<AppointmentHairService>();
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
-        {
-            optionBuilder
-                .UseSqlServer(@"Server=DESKTOP-BUA6NME;Database=HairDresserDB;Trusted_Connection=True;MultipleActiveResultSets=True;");
-        }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

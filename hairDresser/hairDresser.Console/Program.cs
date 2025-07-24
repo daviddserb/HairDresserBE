@@ -39,8 +39,6 @@ var mediator = diContainer.GetRequiredService<IMediator>();
 //    Console.WriteLine("02 - GetAppointmentById");
 //    Console.WriteLine("03 - GetAllAppointmentsByCustomerId");
 //    Console.WriteLine("04 - GetInWorkAppointmentsByCustomerId");
-//    //Console.WriteLine("05 - UpdateAppointment");
-//    //Console.WriteLine("06 - DeleteAppointment");
 
 //    Console.WriteLine("\nCRUD Employee:");
 //    Console.WriteLine("10 - CreateEmployee");
@@ -238,7 +236,6 @@ var mediator = diContainer.GetRequiredService<IMediator>();
 //                else
 //                {
 //                    Console.WriteLine("All employees who can help you:");
-//                    //???Cum pot accesa specializarile unui employee?
 //                    foreach (var employee in validEmployees)
 //                    {
 //                        Console.WriteLine($"{employee.Id} - name= '{employee.Name}', specializations= '?'");

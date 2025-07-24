@@ -64,9 +64,6 @@ namespace hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate
                 Console.WriteLine(intervals);
             }
 
-            // ???
-            // Am lista asta doar de testare a intervalelor. !!! Ca sa scap de ea, as putea sa parsez lista de EmployeeFreeInterval, dar trebuie sa invat sa vad cum fac asta.
-            // var validIntervals = new List<(DateTime startDate, DateTime endDate)>();
             var employeeFreeIntervalList = new List<EmployeeFreeInterval>();
             Console.WriteLine("\nCheck for valid intervals:");
             for (int i = 0; i < possibleIntervals.Count - 1; i += 2)
@@ -79,7 +76,6 @@ namespace hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate
                 while ((startOfInterval += duration) <= endOfInterval)
                 {
                     Console.WriteLine(copy_startOfInterval.TimeOfDay + " - " + startOfInterval.TimeOfDay);
-                    //validIntervals.Add((copy_startOfInterval, startOfInterval));
                     employeeFreeIntervalList.Add(new EmployeeFreeInterval { StartDate = copy_startOfInterval, EndDate = startOfInterval });
                     copy_startOfInterval = startOfInterval;
                 }
@@ -97,19 +93,17 @@ namespace hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate
                 Console.WriteLine($"start= '{customerAppointments.StartDate}', end= '{customerAppointments.EndDate}'");
             }
 
-            // Check, all the possible free intervals from the employee in the selected date, to don't overlap with the appointments from the customer in the selected date.
+            // Check all the possible free intervals from the employee in the selected date, to don't overlap with the appointments from the customer.
             for (int i = 0; i < employeeFreeIntervalList.Count; ++i)
             {
-                //Console.WriteLine($"EMPLOYEE: start= '{employeeFreeIntervalList[i].StartDate}', end= '{employeeFreeIntervalList[i].EndDate}'");
                 foreach (var customerAppointments in customerAppointmentsInSelectedDate)
                 {
-                    //Console.WriteLine($"CUSTOMER: start= '{customerAppointments.StartDate}', end= '{customerAppointments.EndDate}'");
                     bool overlap = employeeFreeIntervalList[i].StartDate < customerAppointments.EndDate && customerAppointments.StartDate < employeeFreeIntervalList[i].EndDate;
-                    //Console.WriteLine("overlap= " + overlap);
                     if (overlap)
                     {
                         employeeFreeIntervalList.RemoveAt(i);
-                        --i; // ! Because otherwise it will jump over the next element when it will remove the current one (think about how the algorithm of removing works and it makes sense).
+                        // Need to decrement if it's overlaping because otherwise it will jump over to the next element when it will remove the current one.
+                        --i;
                         break;
                     }
                 }
