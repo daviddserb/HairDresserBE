@@ -13,7 +13,7 @@ namespace hairDresser.IntegrationTests
             var principal = new ClaimsPrincipal();
             principal.AddIdentity(new ClaimsIdentity(new[]
             {
-                // No need to add "correct" Claims like this: new Claim(ClaimTypes.Role, "admin"). You just need to add a random Claim for the fake evaluator to bypass [Authorize] Attribute.
+                //No need to add a "correct" claim, just need to add a random claim for the fake evaluator to bypass the [Authorize] Attribute.
                 new Claim("Permission", "CanViewPage"),
             }, testScheme));
 

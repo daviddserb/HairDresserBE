@@ -27,10 +27,12 @@ namespace hairDresser.UnitTests
             _mockMediator
                 .Setup(mediator => mediator.Send(It.IsAny<GetAppointmentByIdQuery>(), It.IsAny<CancellationToken>()))
                 .Verifiable();
+
             //Act:
             var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
             int appointmentId = 1;
             await controller.GetAppointmentById(appointmentId);
+
             //Assert:
             _mockMediator.Verify(x => x.Send(It.IsAny<GetAppointmentByIdQuery>(), It.IsAny<CancellationToken>()), Times.Once());
         }
@@ -42,10 +44,12 @@ namespace hairDresser.UnitTests
             _mockMediator
                 .Setup(mediator => mediator.Send(It.IsAny<GetAppointmentByIdQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new Appointment { Id = 1 });
+
             //Act:
             var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
             var result = await controller.GetAppointmentById(1);
             var okResult = result as OkObjectResult;
+
             //Assert:
             Assert.Equal((int)HttpStatusCode.OK, okResult.StatusCode);
         }
@@ -57,7 +61,8 @@ namespace hairDresser.UnitTests
             _mockMediator
                 .Setup(mediator => mediator.Send(It.IsAny<GetAllAppointmentsQuery>(), It.IsAny<CancellationToken>()))
                 .Verifiable();
-            MethodTimeLogger.Logger = _mockLogger.Object; // Initialize Logger
+            MethodTimeLogger.Logger = _mockLogger.Object;
+
             //Act:
             var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
             var pagination = new GetAllAppointmentsQuery
@@ -66,6 +71,7 @@ namespace hairDresser.UnitTests
                 PageSize = 1
             };
             await controller.GetAllAppointments(pagination);
+
             //Assert:
             _mockMediator.Verify(x => x.Send(It.IsAny<GetAllAppointmentsQuery>(), It.IsAny<CancellationToken>()), Times.Once());
         }
@@ -73,8 +79,8 @@ namespace hairDresser.UnitTests
         [Fact]
         public async Task GetAppointmentById_GetAppointmentByIdQueryWithCorrectAppointmentIdIsCalled()
         {
-            var appointmentId = 0;
             //Arrange:
+            var appointmentId = 0;
             _mockMediator
                 .Setup(mediator => mediator.Send(It.IsAny<GetAppointmentByIdQuery>(), It.IsAny<CancellationToken>()))
                 .Returns<GetAppointmentByIdQuery, CancellationToken>(async (appointment, cancelToken) =>
@@ -82,11 +88,13 @@ namespace hairDresser.UnitTests
                     appointmentId = appointment.AppointmentId;
                     return await Task.FromResult(new Appointment { Id = appointment.AppointmentId });
                 });
+
             //Act:
             var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
             await controller.GetAppointmentById(1);
+
             //Assert:
-            Assert.Equal(appointmentId, 1);
+            Assert.Equal(1, appointmentId);
         }
 
         [Fact]
@@ -100,10 +108,12 @@ namespace hairDresser.UnitTests
             _mockMapper
                 .Setup(mapper => mapper.Map<AppointmentGetDto>(It.Is<Appointment>(app => app == appointment)))
                 .Returns(new AppointmentGetDto { Id = 1 });
+
             //Act:
             var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
             var result = await controller.GetAppointmentById(5);
             var okResult = result as OkObjectResult;
+
             //Assert:
             Assert.Equal(appointment.Id, ((AppointmentGetDto)okResult.Value).Id);
         }
@@ -149,10 +159,12 @@ namespace hairDresser.UnitTests
                     StartDate = DateTime.Now.AddHours(1),
                     EndDate = DateTime.Now.AddHours(7)
                 });
-            var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
+
             //Act:
+            var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
             var result = await controller.CreateAppointmentAsync(appointmentPostDto);
             var okResult = result as CreatedAtActionResult;
+
             //Assert:
             Assert.Equal(appointmentPostDto.CustomerId, ((AppointmentGetDto)okResult.Value).CustomerId);
         }

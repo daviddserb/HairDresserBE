@@ -8,6 +8,6 @@
 
         public string Comments { get; set; }
 
-        public Appointment Appointment { get; set; } // navigation property for the Appointment
+        public Appointment Appointment { get; set; }
     }
 }

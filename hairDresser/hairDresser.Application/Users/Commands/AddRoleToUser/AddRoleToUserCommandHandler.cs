@@ -19,7 +19,6 @@ namespace hairDresser.Application.Users.Commands.AddRoleToUser
             if (user == null) throw new NotFoundException("Account does not exist!");
 
             var role = await _unitOfWork.UserRepository.GetRoleByNameAsync(request.Role);
-            // If role doesn't exist then create it.
             if (role == null)
             {
                 await _unitOfWork.UserRepository.CreateRoleAsync(request.Role);

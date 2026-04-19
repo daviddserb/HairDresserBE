@@ -6,10 +6,10 @@ namespace hairDresser.Infrastructure
 {
     public class DataContext : IdentityDbContext<User>
     {
-        // Explicit empty constructor needed to create objects when making migrations
+        //Explicit empty constructor needed to create objects when making migrations.
         public DataContext() { }
 
-        // Required to allow EFC to inject the configuration
+        //Required to allow EFC to inject the configuration.
         public DataContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Appointment> Appointments => Set<Appointment>();
@@ -17,7 +17,7 @@ namespace hairDresser.Infrastructure
         public DbSet<WorkingInterval> WorkingIntervals => Set<WorkingInterval>();
         public DbSet<Review> Reviews => Set<Review>();
 
-        // Even if the many-to-many connection table is automatically created in the DB, if you set it here it will help you to access it.
+        //Even if the many-to-many table is automatically created in the DB, if you set it here it will help you to access it.
         public DbSet<EmployeeHairService> EmployeesHairServices => Set<EmployeeHairService>();
         public DbSet<AppointmentHairService> AppointmentsHairServices => Set<AppointmentHairService>();
 
@@ -29,7 +29,7 @@ namespace hairDresser.Infrastructure
                 .HasIndex(hairService => hairService.Name)
                 .IsUnique();
 
-            // Configuring Foreign Keys With Fluent API (with Collections in the User class).
+            //Configuring FKs with Fluent API.
             builder.Entity<Appointment>()
                 .HasOne(u => u.Customer)
                 .WithMany(app => app.CustomerAppointments)
@@ -41,7 +41,7 @@ namespace hairDresser.Infrastructure
                 .HasForeignKey(u => u.EmployeeId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // Configure one-to-one relationship: Appointments with Reviews, so the ReviewId from the Appointments table needs to be unique.
+            //Configure one-to-one relationship: Appointments with Reviews => Appointments.ReviewId must to be unique.
             builder.Entity<Appointment>()
                 .HasIndex(a => a.ReviewId)
                 .IsUnique();

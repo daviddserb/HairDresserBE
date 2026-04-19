@@ -77,9 +77,9 @@ builder.Services
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidIssuer = "https://localhost:7192", //Issuer = who creates the token.
-            ValidAudience = "https://localhost:4200", //Audience = Who is the Token intended for.
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdee-312423d-dsa213321")), //Random key.
+            ValidIssuer = "https://localhost:7192", //who creates the token (back-end).
+            ValidAudience = "https://localhost:4200", //who is the token intended for (front-end).
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("abcdee-312423d-dsa213321")),//Random key value.
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,

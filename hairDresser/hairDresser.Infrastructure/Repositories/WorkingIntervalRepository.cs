@@ -39,7 +39,7 @@ namespace hairDresser.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// After modifying the method's body (the query), ensure the Integration Tests are working correctly. It's essential because translating the query into SQLite can potentially lead to issues.
+        /// If modifying the query, ensure the Integration Tests are working correctly. It's essential because translating the query into SQLite can potentially lead to issues.
         /// </summary>
         /// <param name="employeeId"></param>
         /// <param name="workingDayId"></param>

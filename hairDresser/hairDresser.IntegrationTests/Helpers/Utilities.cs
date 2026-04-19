@@ -7,7 +7,7 @@ namespace hairDresser.IntegrationTests.Helpers
     public static class Utilities
     {
         /// <summary>
-        /// Populate the In-Memory Database, where the Tables and Columns are the ones from the Real Database, so the values need to respect the constraints.
+        /// Populate the in-memory db, where the tables, columns, relationships, constraints and so on must be the same as from the real database.
         /// </summary>
         /// <param name="db"></param>
         public static void InitializeDbForTests(DataContext db)
@@ -83,7 +83,6 @@ namespace hairDresser.IntegrationTests.Helpers
             };
             db.Users.AddRange(customer1, customer2, employee1, employee2);
 
-            // Add hair services to employees
             var hairService1_employee2 = new EmployeeHairService
             {
                 EmployeeId = employee2.Id,
@@ -108,7 +107,6 @@ namespace hairDresser.IntegrationTests.Helpers
             };
             db.Roles.AddRange(role1, role2);
 
-            // Add roles to users
             var role1_customer1 = new IdentityUserRole<string>
             {
                 UserId = customer1.Id,

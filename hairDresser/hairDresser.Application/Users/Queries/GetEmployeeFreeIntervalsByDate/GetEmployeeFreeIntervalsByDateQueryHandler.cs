@@ -93,7 +93,7 @@ namespace hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate
                 Console.WriteLine($"start= '{customerAppointments.StartDate}', end= '{customerAppointments.EndDate}'");
             }
 
-            // Check all the possible free intervals from the employee in the selected date, to don't overlap with the appointments from the customer.
+            //Check all possible free intervals from the employee in the selected date, to don't overlap with the appointments from the customer.
             for (int i = 0; i < employeeFreeIntervalList.Count; ++i)
             {
                 foreach (var customerAppointments in customerAppointmentsInSelectedDate)
@@ -102,7 +102,7 @@ namespace hairDresser.Application.Users.Queries.GetEmployeeFreeIntervalsByDate
                     if (overlap)
                     {
                         employeeFreeIntervalList.RemoveAt(i);
-                        // Need to decrement if it's overlaping because otherwise it will jump over to the next element when it will remove the current one.
+                        //Need to decrement if it's overlaping because otherwise it will jump over to the next element when it will remove the current one.
                         --i;
                         break;
                     }

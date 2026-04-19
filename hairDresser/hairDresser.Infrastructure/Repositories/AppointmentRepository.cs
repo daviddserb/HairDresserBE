@@ -148,7 +148,7 @@ namespace hairDresser.Infrastructure.Repositories
             await context.Reviews.AddAsync(review);
         }
 
-        // Soft delete (mark the date when 'deleted'), not permanently delete.
+        //Soft delete = mark the date when appointment canceled, not permanently delete the record.
         public async Task DeleteAppointmentAsync(int appointmentId)
         {
             var appointment = await context.Appointments.FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);

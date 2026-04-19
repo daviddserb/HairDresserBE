@@ -22,7 +22,8 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task CreateUserAsync(User user, string userPassowrd)
         {
             var createdUser = await _userManager.CreateAsync(user, userPassowrd);
-            // OAuth has some validations on its own columns, for example username can't have white space, and password must have at least one: uppercase, lowercase, digit, and alphanumeric character.
+
+            //OAuth has some validations on its own columns, for example username can't have white space, and password must have at least one: uppercase, lowercase, digit, and alphanumeric character.
             if (!createdUser.Succeeded)
             {
                 var errorMessage = string.Join(", ", createdUser.Errors.Select(error => error.Description));
@@ -55,7 +56,6 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<User> GetUserByUserNameAsync(string userName)
         {
-            // userName because it's the name of the user (don't confuse it with username).
             var user = await _userManager.FindByNameAsync(userName);
             return user;
         }
@@ -121,7 +121,6 @@ namespace hairDresser.Infrastructure.Repositories
             return await _userManager.CheckPasswordAsync(user, userPassword);
         }
 
-        // User Roles:
         public async Task CreateRoleAsync(string roleName)
         {
             await _roleManager.CreateAsync(new IdentityRole
@@ -133,9 +132,9 @@ namespace hairDresser.Infrastructure.Repositories
         public async Task AddRoleToUserAsync(User user, string roleName)
         {
             var addRoleToUser = await _userManager.AddToRoleAsync(user, roleName);
+
             if (!addRoleToUser.Succeeded)
             {
-                // This can be possible, for example, when you try to add the same role twice to the same user.
                 throw new ClientException($"Failed to add the '{roleName}' role to the '{user.UserName}' user!");
             }
         }
@@ -145,7 +144,6 @@ namespace hairDresser.Infrastructure.Repositories
             return await _roleManager.FindByNameAsync(roleName);
         }
 
-        // EmployeeHairService:
         public async Task<IQueryable<User>> GetAllEmployeesByHairServicesIdsAsync(List<int> hairServicesIds)
         {
             var validEmployees = context.Users
@@ -167,7 +165,6 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<EmployeeHairService> CheckIfEmployeeHairServiceIdExistsAsync(int employeeHairServiceId)
         {
-            // Get the hair service IDs of the specific employee
             return await context.EmployeesHairServices.FirstOrDefaultAsync(employeeHairService => employeeHairService.Id == employeeHairServiceId);
         }
 

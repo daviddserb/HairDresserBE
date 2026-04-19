@@ -11,8 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 namespace hairDresser.IntegrationTests
 {
     /// <summary>
-    /// Sets the enviroment for testing.
-    /// In our case, we prepare a copy of the Real Database (Tables and Columns) to a In-Memory Database using SQLite.
+    /// Set the enviroment for testing.
+    /// In our case, we prepare a copy of the real db following all its constraints to the in-memory db using SQLite.
     /// </summary>
     /// <typeparam name="TProgram"></typeparam>
     public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
@@ -35,8 +35,8 @@ namespace hairDresser.IntegrationTests
 
                 //Create a new service provider.
                 var serviceProvider = new ServiceCollection()
-                .AddEntityFrameworkSqlite()
-                .BuildServiceProvider();
+                    .AddEntityFrameworkSqlite()
+                    .BuildServiceProvider();
 
                 services.AddDbContext<DataContext>(options =>
                 {
@@ -63,7 +63,7 @@ namespace hairDresser.IntegrationTests
                 }
             });
 
-            // To bypass the [Authorize] Attribute from the Controller.
+            //Bypass the [Authorize] Attribute from the Controller.
             builder.ConfigureTestServices(services =>
             {
                 services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();

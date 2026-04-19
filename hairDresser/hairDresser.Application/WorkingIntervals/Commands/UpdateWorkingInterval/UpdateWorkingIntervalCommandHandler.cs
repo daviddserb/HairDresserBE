@@ -29,14 +29,14 @@ namespace hairDresser.Application.WorkingIntervals.Commands.UpdateWorkingInterva
 
             var employeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(workingInterval.EmployeeId, request.WorkingDayId);
 
-            // Exclude the working interval that is selected to be updated.
+            //Exclude the working interval that is selected to be updated.
             var updatedEmployeeWorkingIntervals = employeeWorkingIntervals
                 .Where(interval => interval.Id != request.WorkingIntervalId)
                 .ToList();
 
             foreach (var employeeInterval in updatedEmployeeWorkingIntervals)
             {
-                // Check the new working interval to don't overlap with the existing ones and to have at least one hour pause between them.
+                //Check the new working interval to don't overlap with the existing ones and to have at least one hour pause between them.
                 TimeSpan minimumDurationBetweenWorkingIntervals = new TimeSpan(01, 00, 00);
                 bool overlap = startTime < employeeInterval.EndTime + minimumDurationBetweenWorkingIntervals && employeeInterval.StartTime - minimumDurationBetweenWorkingIntervals < endTime;
                 if (overlap) throw new ClientException($"The working interval ({employeeInterval.StartTime} - {employeeInterval.EndTime}) is overlapping or the pause between the working intervals isn't at least {minimumDurationBetweenWorkingIntervals}!");

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 
 namespace hairDresser.IntegrationTests
@@ -10,20 +11,42 @@ namespace hairDresser.IntegrationTests
     {
         private static WebApplicationFactory<Program> _factory = new CustomWebApplicationFactory<Program>();
 
-        [Fact]
-        public async Task GetAllAppointments_ShouldReturnOkReponse()
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(1, 5)]
+        [InlineData(2, 3)]
+        public async Task GetAllAppointments_ShouldReturnOkReponse(int pageNumber, int pageSize)
         {
             //Arrange:
             var client = _factory.CreateClient();
+
             //Act:
-            var response = await client.GetAsync("api/appointment/all?PageNumber=1&PageSize=1"); // hard-coded the parameter values
+            var response = await client.GetAsync($"api/appointment/all?PageNumber={pageNumber}&PageSize={pageSize}");
+
             //Assert:
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
+        public async Task GetAllAppointments_ShouldReturnCorrectPageSize()
+        {
+            //Arrange:
+            var client = _factory.CreateClient();
+
+            //Act:
+            var response = await client.GetAsync("api/appointment/all?PageNumber=1&PageSize=1");
+            var result = await response.Content.ReadFromJsonAsync<List<AppointmentPostDto>>();
+
+            //Assert:
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+            Assert.Single(result);
+        }
+
+        [Fact]
         public async Task CreateAppointment_ShouldReturnCreatedAppointment()
         {
+            //Arrange:
             var client = _factory.CreateClient();
 
             var currentDate = DateTime.Now;
@@ -41,21 +64,25 @@ namespace hairDresser.IntegrationTests
                 EndDate = currentDate.AddMinutes(37)
             };
 
+            //Act: 
             var response = await client.PostAsync("api/appointment", new StringContent(JsonConvert.SerializeObject(newAppointment), Encoding.UTF8, "application/json"));
-
             var result = await response.Content.ReadAsStringAsync();
             var appointment = JsonConvert.DeserializeObject<AppointmentGetDto>(result);
 
+            //Assert:
             Assert.Equal(newAppointment.StartDate, appointment.StartDate);
         }
 
         [Fact]
         public async Task DeleteAppointment_ShouldReturnNoContent()
         {
+            //Assert:
             var client = _factory.CreateClient();
 
+            //Act:
             var response = await client.DeleteAsync("api/appointment/1827e7ba-a97b-4326-ab6b-a847573d86e6/1");
 
+            //Assert:
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 

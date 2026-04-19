@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
 
-        public string CustomerId { get; set; } // scalar property
+        public string CustomerId { get; set; } //scalar property
         public User Customer { get; set; } //navigation property
 
         public string EmployeeId { get; set; }

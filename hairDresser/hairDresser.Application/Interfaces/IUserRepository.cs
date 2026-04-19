@@ -23,13 +23,10 @@ namespace hairDresser.Application.Interfaces
 
         Task<bool> CheckUserPasswordAsync(User user, string userPassword);
 
-
-        // User Roles:
         Task CreateRoleAsync(string roleName);
         Task AddRoleToUserAsync(User user, string roleName);
         Task<IdentityRole> GetRoleByNameAsync(string roleName);
 
-        // EmployeeHairService:
         Task AddHairServiceToEmployeeAsync(List<EmployeeHairService> employee);
 
         Task<IQueryable<User>> GetAllEmployeesByHairServicesIdsAsync(List<int> hairServicesIds);
