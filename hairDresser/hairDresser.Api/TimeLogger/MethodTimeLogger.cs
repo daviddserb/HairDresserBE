@@ -2,9 +2,6 @@
 
 namespace hairDresser.Presentation.TimeLogger
 {
-    /// <summary>
-    /// Change the printing of the time method's time from Trace (Debugger) to Console.
-    /// </summary>
     public static class MethodTimeLogger
     {
         public static ILogger Logger;

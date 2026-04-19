@@ -22,7 +22,6 @@ namespace hairDresser.Application.Appointments.Commands.DeleteAppointment
             var appointment = await _unitOfWork.AppointmentRepository.GetAppointmentByIdAsync(request.AppointmentId);
             if (appointment == null) throw new NotFoundException($"There is no appointment with the id '{request.AppointmentId}'!");
             if (appointment.isDeleted != null) throw new ClientException($"The appointment with the id '{request.AppointmentId}' already was canceled!");
-            // Allow appointments to be canceled only if the start date of the appointment is at least 1 day ahead of the current time when trying to cancel it.
             if (!(appointment.StartDate > DateTime.Now.AddDays(1))) throw new ClientException($"Appointments can be canceled only 24 hours before it starts!");
 
             await _unitOfWork.AppointmentRepository.DeleteAppointmentAsync(request.AppointmentId);

@@ -5,7 +5,6 @@ using MediatR;
 
 namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 {
-    // Implement IRequestHandler who was 2 parameters: the request command/query (must), and the return of the request (optional)
     public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointmentCommand, Appointment>
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -51,37 +50,34 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
             TimeSpan appointmentStartTime = request.StartDate.TimeOfDay;
             TimeSpan appointmentEndTime = request.EndDate.TimeOfDay;
             bool atLeastOneIntervalValid = false;
-            // Check if Appointment Interval is valid in the Employee's Working Interval.
+            //Check if Appointment Interval is valid in the Employee's Working Interval.
             foreach (var interval in employeeWorkingIntervals)
             {
-                // If valid
                 if (appointmentStartTime >= interval.StartTime && appointmentEndTime <= interval.EndTime)
                 {
                     atLeastOneIntervalValid = true;
 
                     var employeeAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByEmployeeIdByDateAsync(request.EmployeeId, request.StartDate);
-                    // Check if Appointment Interval is overlapping with the existing Employee's Appointments in that day.
+                    //Check if Appointment Interval is overlapping with the existing Employee's Appointments in that day.
                     foreach (var employeeAppointment in employeeAppointments)
                     {
                         bool appointmentsOverlap = appointmentStartTime < employeeAppointment.EndDate.TimeOfDay && appointmentEndTime > employeeAppointment.StartDate.TimeOfDay;
                         if (appointmentsOverlap == true) throw new ClientException($"The appointment interval is overlaping with the employee '{employee.Username}' current appointments!");
                     }
 
-                    break; // Appointment Interval can be valid only in a singular Employee's Working Interval.
+                    break; //Appointment interval can be valid only in a singular Employee's Working Interval (no need to check all intervals).
                 }
             }
             if (atLeastOneIntervalValid == false)
             {
-                // Create a list of formatted time intervals
                 var formattedIntervals = employeeWorkingIntervals
                     .Select(interval => $"{interval.StartTime} - {interval.EndTime}")
                     .ToList();
-                // Combine the formatted intervals into a comma-separated string
                 var intervals = string.Join(", ", formattedIntervals);
                 throw new ClientException($"The appointment's interval '{appointmentStartTime.ToString("hh\\:mm\\:ss")} - {appointmentEndTime.ToString("hh\\:mm\\:ss")}' is not available for the employee {employee.Username}'s working intervals: '{intervals}'");
             }
 
-            // Check if Appointment Interval is overlapping with the existing Customer's Appointments in that day.
+            //Check if Appointment Interval is overlapping with the existing Customer's Appointments in that day.
             var customerAppointments = await _unitOfWork.AppointmentRepository.GetAllAppointmentsByCustomerIdByDateAsync(request.CustomerId, request.StartDate);
             foreach (var customerAppointment in customerAppointments)
             {
@@ -89,19 +85,20 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
                 if (appointmentsOverlap == true) throw new ClientException($"The appointment interval is overlaping with the customer '{customer.Username}' current appointments!");
             }
 
-            var appointment = new Appointment();
-            appointment.CustomerId = customer.Id;
-            appointment.EmployeeId = employee.Id;
-            appointment.StartDate = request.StartDate;
-            appointment.EndDate = request.EndDate;
-            appointment.Price = request.Price;
-            appointment.AppointmentHairServices = hairServices
-                .Select(hairService => new AppointmentHairService()
-                {
-                    // Save only HairServiceId because AppointmentId still doesn't exist. It will exist only after the row is inserted in the Appointments table, but EFC will know how to make the link between the Appointment table (Id column) to the AppointmentsHairService table (AppointmentId column).
-                    HairServiceId = hairService.Id
-                })
-                .ToList();
+            var appointment = new Appointment
+            {
+                CustomerId = customer.Id,
+                EmployeeId = employee.Id,
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+                Price = request.Price,
+                AppointmentHairServices = hairServices
+                    .Select(hairService => new AppointmentHairService
+                    {
+                        HairServiceId = hairService.Id
+                    })
+                    .ToList()
+            };
 
             await _unitOfWork.AppointmentRepository.CreateAppointmentAsync(appointment);
             await _unitOfWork.SaveAsync();

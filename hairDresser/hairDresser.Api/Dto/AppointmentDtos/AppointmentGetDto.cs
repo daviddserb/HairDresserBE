@@ -5,8 +5,6 @@ namespace hairDresser.Presentation.Dto.AppointmentDtos
 {
     public class AppointmentGetDto
     {
-        // All the properties that are selected to give on the command get of appointments.
-
         public int Id { get; set; }
 
         public string CustomerId { get; set; }

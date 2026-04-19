@@ -10,7 +10,7 @@ namespace hairDresser.Presentation.Dto.HairServiceDtos
 
         [Required(ErrorMessage = "Duration is required")]
         [Range(1, 1439, ErrorMessage = "Duration must be between 1 and 1439 minutes")]
-        // Changend the Duration property data type from TimeSpan to int because Angular doesn't support TimeSpan or something like this.
+        //Changed Duration property data type from TimeSpan to be supported in Angular.
         public int DurationInMinutes { get; set; }
 
         [Required(ErrorMessage = "Price is required")]

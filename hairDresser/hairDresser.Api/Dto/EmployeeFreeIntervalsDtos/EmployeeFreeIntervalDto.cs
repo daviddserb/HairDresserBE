@@ -6,7 +6,7 @@
 
         public int Year { get; set; }
         public int Month { get; set; }
-        public int Date { get; set; } // a number that represents the day of the month (1, 2, 3, ..., 31).
+        public int Date { get; set; }
 
         public int DurationInMinutes { get; set; }
 

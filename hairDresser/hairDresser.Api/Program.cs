@@ -63,8 +63,6 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<DataContext>();
 
-//Authentication = verify if the user is authenticated, if they are who they say they are (for example they need to be logged in with an account).
-//Authorization = verify if the user has access to what they say they have (for example they need a specific role).
 builder.Services
     .AddAuthentication(options =>
     {
@@ -72,7 +70,6 @@ builder.Services
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     })
-    //Add the support we need, what we need to validate for JWT (https://jwt.io/).
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -88,14 +85,14 @@ builder.Services
     });
 builder.Services.AddAuthorization();
 
-//Add MediatR which scans all the messages (Queries and Commands) and all the handlers from inside
+//Add MediatR which scans all the messages (Queries and Commands) and all the handlers from inside.
 //In order to tell the MediatR where to go to scan, we can give a single interface/class (IHairServiceRepository) from the layer that we want MediatR to operate and he will scan all of files from that layer (Application).
 builder.Services.AddMediatR(typeof(IHairServiceRepository));
 
-//Add AutoMapper
+//Add AutoMapper.
 builder.Services.AddAutoMapper(typeof(Program));
 
-//Add AddCors to be able to call the API from the client (front-end)
+//Add AddCors to be able to call the API from the client (front-end).
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
@@ -107,12 +104,13 @@ builder.Services.AddCors(options =>
         });
 });
 
-//(because of some errors with LINQ)
+//Added because of some errors with LINQ.
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 var app = builder.Build();
 
-MethodTimeLogger.Logger = app.Logger; // Initialize Logger
+//Initialize Time Logger.
+MethodTimeLogger.Logger = app.Logger;
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -123,7 +121,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("CorsPolicy"); //Links with the builder.Services.AddCors(CorsPolicy)...
+app.UseCors("CorsPolicy");
 
 app.UseMyMiddleware();
 
@@ -134,5 +132,4 @@ app.MapControllers();
 
 app.Run();
 
-//To make the file (Program.cs), which is a class, visible.
 public partial class Program { }

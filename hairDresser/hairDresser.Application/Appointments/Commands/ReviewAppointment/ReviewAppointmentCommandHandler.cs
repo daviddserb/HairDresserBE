@@ -28,7 +28,6 @@ namespace hairDresser.Application.Appointments.Commands.ReviewAppointment
                 Rating = request.Rating,
                 Comments = request.Comments
             };
-            // Associate the review with the appointment -> will be saved the Id from the Review to the ReviewId from Appointment because of mapping from Review navigation property.
             appointment.Review = review;
 
             await _unitOfWork.AppointmentRepository.ReviewAppointmentAsync(review);

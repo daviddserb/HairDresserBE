@@ -18,14 +18,10 @@ namespace hairDresser.Application.Users.Commands.UpdateUser
         {
             var user = await _unitOfWork.UserRepository.GetUserByIdAsync(request.Id);
             if (user == null) throw new NotFoundException($"The user with the id '{request.Id}' is not registered!");
-
-            // Check if the new username is empty
             if (string.IsNullOrEmpty(user.UserName)) throw new ClientException("Username can't be empty!");
-
-            // Check if the new username contains whitespace, which is an IdentityUser constraint when register user
+            //Check if the new username contains whitespace, which is an IdentityUser constraint
             if (user.UserName.Contains(" ")) throw new ClientException("Username can't contain whitespaces!");
 
-            // Check if the new username is taken by an existing user which is already in the database
             var userNewUsername = await _unitOfWork.UserRepository.GetUserByUserNameAsync(request.Username);
             if (userNewUsername != null) throw new ClientException("Username already exists!");
 

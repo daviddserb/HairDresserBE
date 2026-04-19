@@ -12,9 +12,6 @@ namespace hairDresser.Presentation.Dto.WorkingIntervalDtos
         [Required]
         public string EmployeeId { get; set; }
 
-        /// <summary>
-        /// Use string instead of TimeSpan because it's a struct that represents a duration of time as a number of ticks.
-        /// </summary>
         [Required]
         [DefaultValue("08:30:00")]
         public string StartTime { get; set; }

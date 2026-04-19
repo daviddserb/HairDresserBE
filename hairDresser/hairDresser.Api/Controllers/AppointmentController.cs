@@ -34,20 +34,13 @@ namespace hairDresser.Presentation.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        /// Customers Create Appointments
-        /// </summary>
-        /// <param name="appointmentInput"></param>
-        /// <returns>Returns the created appointment</returns>
         [HttpPost]
         [Authorize(Roles = "customer")]
         public async Task<IActionResult> CreateAppointmentAsync([FromBody] AppointmentPostDto appointmentInput)
         {
             _logger.LogInformation("Start process: Create appointment...");
-            // Map the object type, which it changes the type from AppointmentPostDto to CreateAppointmentCommand and match (map) as well the properties, by data type and name.
             var command = _mapper.Map<CreateAppointmentCommand>(appointmentInput);
 
-            // Send() method calls the Handler => will have the result (return) from the Handle method.
             var appointment = await _mediator.Send(command);
 
             var mappedAppointment = _mapper.Map<AppointmentGetDto>(appointment);
@@ -56,13 +49,11 @@ namespace hairDresser.Presentation.Controllers
             return CreatedAtAction(nameof(GetAppointmentById), new { appointmentId = mappedAppointment.Id }, mappedAppointment);
         }
 
-        ///<summary>
-        ///Get All Users from the Database.
-        ///</summary>
         [HttpGet]
         [Route("all")]
         [Authorize(Roles = "admin")]
-        [Time("Retrieved appointments")] // The library (MethodTimer.Fody), at the moment, in it's message, doesn't accept object property as a parameter ({paginationQuery.PageSize})
+        //The library (MethodTimer.Fody), at the moment, in it's message, doesn't accept object property as a parameter ({paginationQuery.PageSize})
+        [Time("Retrieved appointments")]
         public async Task<IActionResult> GetAllAppointments([FromQuery] GetAllAppointmentsQuery paginationQuery)
         {
             var allAppointments = await _mediator.Send(paginationQuery);

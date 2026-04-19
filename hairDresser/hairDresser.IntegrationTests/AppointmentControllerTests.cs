@@ -53,7 +53,7 @@ namespace hairDresser.IntegrationTests
             while (currentDate.Hour != 9) currentDate = currentDate.AddHours(1);
             while (currentDate.DayOfWeek != DayOfWeek.Thursday) currentDate = currentDate.AddDays(1);
 
-            // Appointment data input must be valid in order for the test to succeed.
+            //Appointment data input must be valid in order for the test to succeed.
             var newAppointment = new AppointmentPostDto
             {
                 CustomerId = "80a9c339-2b14-4024-b548-1f782adbda25",
