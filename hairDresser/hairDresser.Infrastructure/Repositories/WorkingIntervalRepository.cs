@@ -18,22 +18,18 @@ namespace hairDresser.Infrastructure.Repositories
             await context.WorkingIntervals.AddAsync(workingInterval);
         }
 
-        // ???TODO - test if this method works (might not work because of the Include of WorkingDay, which before was a db table and no an enum).
         public async Task<WorkingInterval> GetWorkingIntervalByIdAsync(int workingIntervalId)
         {
             var workingInterval = await context.WorkingIntervals
-                .Include(obj => obj.WorkingDay)
                 .Include(obj => obj.Employee)
                 .FirstOrDefaultAsync(workingInterval => workingInterval.Id == workingIntervalId);
             return workingInterval;
         }
 
-        // ???TODO - test if this method works (might not work because of the Include of WorkingDay, which before was a db table and no an enum).
         public async Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsByEmployeeIdAsync(string employeeId)
         {
             var employeeWorkingIntervals = context.WorkingIntervals
                 .Where(employee => employee.Employee.Id == employeeId)
-                .Include(workingDay => workingDay.WorkingDay)
                 .Include(employee => employee.Employee)
                 .OrderBy(workingDay => workingDay)
                 .ThenBy(startTime => startTime.StartTime);
