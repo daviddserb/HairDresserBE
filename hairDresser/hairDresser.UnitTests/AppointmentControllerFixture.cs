@@ -2,6 +2,7 @@
 using hairDresser.Application.Appointments.Commands.CreateAppointment;
 using hairDresser.Application.Appointments.Queries.GetAllAppointments;
 using hairDresser.Application.Appointments.Queries.GetAppointmentById;
+using hairDresser.Application.CustomExceptions;
 using hairDresser.Domain.Models;
 using hairDresser.Presentation.Controllers;
 using hairDresser.Presentation.Dto.AppointmentDtos;
@@ -21,20 +22,66 @@ namespace hairDresser.UnitTests
         private readonly Mock<ILogger<AppointmentController>> _mockLogger = new Mock<ILogger<AppointmentController>>();
 
         [Fact]
-        public async Task GetAppointmentById_GetAppointmentByIdQueryIsCalled()
+        public async Task GetAppointmentById_ShouldSendCorrectQuery()
         {
             //Arrange:
-            _mockMediator
-                .Setup(mediator => mediator.Send(It.IsAny<GetAppointmentByIdQuery>(), It.IsAny<CancellationToken>()))
-                .Verifiable();
+            var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
+            int appointmentId = 5;
 
             //Act:
-            var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
-            int appointmentId = 1;
             await controller.GetAppointmentById(appointmentId);
 
             //Assert:
-            _mockMediator.Verify(x => x.Send(It.IsAny<GetAppointmentByIdQuery>(), It.IsAny<CancellationToken>()), Times.Once());
+            _mockMediator.Verify(x =>
+                x.Send(It.Is<GetAppointmentByIdQuery>(q => q.AppointmentId == appointmentId),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task GetAppointmentById_ShouldMapAppointmentToDto()
+        {
+            //Arrange:
+            var appointment = new Appointment { Id = 1 };
+
+            _mockMediator
+                .Setup(x => x.Send(It.IsAny<GetAppointmentByIdQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(appointment);
+
+            _mockMapper
+                .Setup(x => x.Map<AppointmentGetDto>(appointment))
+                .Returns(new AppointmentGetDto());
+
+            //Act:
+            var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
+            await controller.GetAppointmentById(1);
+
+            //Assert:
+            _mockMapper.Verify(x => x.Map<AppointmentGetDto>(appointment), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetAppointmentById_ShouldReturnMappedDto()
+        {
+            //Arrange:
+            var appointment = new Appointment { Id = 1 };
+            var mappedDto = new AppointmentGetDto { Id = 1 };
+
+            _mockMediator
+                .Setup(x => x.Send(It.IsAny<GetAppointmentByIdQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(appointment);
+
+            _mockMapper
+                .Setup(x => x.Map<AppointmentGetDto>(appointment))
+                .Returns(mappedDto);
+
+            //Act:
+            var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
+            var result = await controller.GetAppointmentById(1);
+            var okResult = result as OkObjectResult;
+
+            //Assert:
+            Assert.Equal(mappedDto, okResult.Value);
         }
 
         [Fact]
@@ -52,6 +99,21 @@ namespace hairDresser.UnitTests
 
             //Assert:
             Assert.Equal((int)HttpStatusCode.OK, okResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetAppointmentById_WhenAppointmentNotFound_ShouldThrowNotFoundException()
+        {
+            //Arrange:
+            _mockMediator
+                .Setup(x => x.Send(It.IsAny<GetAppointmentByIdQuery>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new NotFoundException("Not found"));
+
+            // Act:
+            var controller = new AppointmentController(_mockMediator.Object, _mockMapper.Object, _mockLogger.Object);
+
+            //Assert:
+            await Assert.ThrowsAsync<NotFoundException>(() => controller.GetAppointmentById(1));
         }
 
         [Fact]
