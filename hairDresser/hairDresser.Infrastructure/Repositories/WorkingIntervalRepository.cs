@@ -28,12 +28,11 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<IQueryable<WorkingInterval>> GetAllWorkingIntervalsByEmployeeIdAsync(string employeeId)
         {
-            var employeeWorkingIntervals = context.WorkingIntervals
-                .Where(employee => employee.Employee.Id == employeeId)
-                .Include(employee => employee.Employee)
-                .OrderBy(workingDay => workingDay)
-                .ThenBy(startTime => startTime.StartTime);
-            return employeeWorkingIntervals;
+            var employeeWorkingIntervalsOrdered = context.WorkingIntervals
+                .Where(wi => wi.Employee.Id == employeeId)
+                .OrderBy(wi => wi.WorkingDay)
+                    .ThenBy(wi => wi.StartTime);
+            return employeeWorkingIntervalsOrdered;
         }
 
         /// <summary>
