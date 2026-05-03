@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Users\Queries\GetAllUsersWithCustomerRole\**" />
+    <EmbeddedResource Remove="Users\Queries\GetAllUsersWithCustomerRole\**" />
+    <None Remove="Users\Queries\GetAllUsersWithCustomerRole\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\hairDresser.Domain\hairDresser.Domain.csproj" />
   </ItemGroup>
 
@@ -15,10 +21,6 @@
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.10.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Users\Queries\GetAllUsersWithCustomerRole\" />
   </ItemGroup>
 
 </Project>

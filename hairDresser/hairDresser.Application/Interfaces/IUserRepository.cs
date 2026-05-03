@@ -15,7 +15,7 @@ namespace hairDresser.Application.Interfaces
         Task<IList<string>> GetUserRolesAsync(User user);
 
         Task<IQueryable<User>> GetAllUsersWithCustomerRoleAsync();
-        Task<IQueryable<User>> GetAllUsersWithEmployeeRoleAsync();
+        Task<List<User>> GetAllUsersWithEmployeeRoleAsync();
 
         Task<User> UpdateUserAsync(User user);
 

@@ -86,22 +86,30 @@ namespace hairDresser.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<IQueryable<User>> GetAllUsersWithEmployeeRoleAsync()
+        public async Task<List<User>> GetAllUsersWithEmployeeRoleAsync()
         {
             var usersWithEmployeeRole = await _userManager.GetUsersInRoleAsync("employee");
-            var usersIdsWithEmployeeRole = usersWithEmployeeRole
-                .Select(employee => employee.Id)
+
+            var userIds = usersWithEmployeeRole
+                .Select(u => u.Id)
                 .ToList();
 
-            var allEmployees = context.Users
-                .Where(user => usersIdsWithEmployeeRole.Contains(user.Id))
-                .Include(employeeHairServices => employeeHairServices.EmployeeHairServices)
-                .ThenInclude(hairServices => hairServices.HairService)
-                .Include(employeeWorkingInterval => employeeWorkingInterval.EmployeeWorkingIntervals
-                    .OrderBy(workingDay => workingDay)
-                    .ThenBy(startTime => startTime.StartTime))
-                .ThenInclude(workingDay => workingDay.WorkingDay);
-            return allEmployees;
+            var employees = await context.Users
+                .Where(u => userIds.Contains(u.Id))
+                .Include(u => u.EmployeeHairServices)
+                    .ThenInclude(ehs => ehs.HairService)
+                .Include(u => u.EmployeeWorkingIntervals)
+                    .ToListAsync();
+
+            foreach (var employee in employees)
+            {
+                employee.EmployeeWorkingIntervals = employee.EmployeeWorkingIntervals
+                    .OrderBy(w => w.WorkingDay)
+                    .ThenBy(w => w.StartTime)
+                    .ToList();
+            }
+
+            return employees;
         }
 
         public async Task<User> UpdateUserAsync(User user)

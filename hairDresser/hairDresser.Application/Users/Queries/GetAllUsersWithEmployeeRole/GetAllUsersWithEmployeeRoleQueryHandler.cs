@@ -5,7 +5,7 @@ using MediatR;
 
 namespace hairDresser.Application.Users.Queries.GetAllUsersWithEmployeeRole
 {
-    public class GetAllUsersWithEmployeeRoleQueryHandler : IRequestHandler<GetAllUsersWithEmployeeRoleQuery, IQueryable<User>>
+    public class GetAllUsersWithEmployeeRoleQueryHandler : IRequestHandler<GetAllUsersWithEmployeeRoleQuery, List<User>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -14,7 +14,7 @@ namespace hairDresser.Application.Users.Queries.GetAllUsersWithEmployeeRole
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IQueryable<User>> Handle(GetAllUsersWithEmployeeRoleQuery request, CancellationToken cancellationToken)
+        public async Task<List<User>> Handle(GetAllUsersWithEmployeeRoleQuery request, CancellationToken cancellationToken)
         {
             var allEmployees = await _unitOfWork.UserRepository.GetAllUsersWithEmployeeRoleAsync();
             if (!allEmployees.Any()) throw new NotFoundException("No employees found!");
