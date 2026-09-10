@@ -26,8 +26,9 @@ namespace hairDresser.Application.Users.Commands.LoginUser
 
             var authClaims = new List<Claim>
             {
-                new Claim("username", request.Username),
-                new Claim("password", request.Password)
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, request.Username),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
             var userRoles = await _unitOfWork.UserRepository.GetUserRolesAsync(user);
