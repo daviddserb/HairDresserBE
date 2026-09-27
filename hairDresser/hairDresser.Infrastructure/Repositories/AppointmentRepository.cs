@@ -116,17 +116,21 @@ namespace hairDresser.Infrastructure.Repositories
                 .Include(employees => employees.Employee);
         }
 
-        public async Task<IQueryable<Appointment>> GetFinishedAppointmentsByEmployeeIdAsync(string employeeId)
+        public async Task<List<Appointment>> GetFinishedAppointmentsByEmployeeIdAsync(string employeeId)
         {
-            return context.Appointments
-                .Where(appointment => appointment.EmployeeId == employeeId)
-                .Where(date => date.StartDate < DateTime.Now.Date)
+            return await context.Appointments
+                .AsNoTracking()
+                .Where(appointment =>
+                    appointment.EmployeeId == employeeId &&
+                    appointment.isDeleted == null &&
+                    appointment.EndDate < DateTime.Now)
                 .OrderBy(date => date.StartDate)
                 .Include(customers => customers.Customer)
                 .Include(employees => employees.Employee)
                 .Include(appointmentHairServices => appointmentHairServices.AppointmentHairServices)
                     .ThenInclude(hairServices => hairServices.HairService)
-                .Include(review => review.Review);
+                .Include(review => review.Review)
+                .ToListAsync();
         }
 
         public async Task<IQueryable<Appointment>> GetInWorkAppointmentsByEmployeeIdAsync(string employeeId)

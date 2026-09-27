@@ -5,7 +5,7 @@ using MediatR;
 
 namespace hairDresser.Application.Appointments.Queries.GetFinishedAppointmentsByEmployeeId
 {
-    public class GetFinishedAppointmentsByEmployeeIdQueryHandler : IRequestHandler<GetFinishedAppointmentsByEmployeeIdQuery, IQueryable<Appointment>>
+    public class GetFinishedAppointmentsByEmployeeIdQueryHandler : IRequestHandler<GetFinishedAppointmentsByEmployeeIdQuery, List<Appointment>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -14,7 +14,7 @@ namespace hairDresser.Application.Appointments.Queries.GetFinishedAppointmentsBy
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IQueryable<Appointment>> Handle(GetFinishedAppointmentsByEmployeeIdQuery request, CancellationToken cancellationToken)
+        public async Task<List<Appointment>> Handle(GetFinishedAppointmentsByEmployeeIdQuery request, CancellationToken cancellationToken)
         {
             var employee = await _unitOfWork.UserRepository.GetUserByIdAsync(request.EmployeeId);
             if (employee == null) throw new NotFoundException($"The employee with the id '{request.EmployeeId}' does not exist!");

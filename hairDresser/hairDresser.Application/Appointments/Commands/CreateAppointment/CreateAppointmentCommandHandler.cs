@@ -9,10 +9,14 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
     public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointmentCommand, Appointment>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICacheService _cacheService;
 
-        public CreateAppointmentCommandHandler(IUnitOfWork unitOfWork)
+        public CreateAppointmentCommandHandler(
+            IUnitOfWork unitOfWork,
+            ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
 
         public async Task<Appointment> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
@@ -102,6 +106,8 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
 
             await _unitOfWork.AppointmentRepository.CreateAppointmentAsync(appointment);
             await _unitOfWork.SaveAsync();
+
+            await _cacheService.RemoveAsync($"FinishedAppointments:Employee:{appointment.EmployeeId}", cancellationToken);
 
             return await _unitOfWork.AppointmentRepository.GetAppointmentByIdAsync(appointment.Id);
         }

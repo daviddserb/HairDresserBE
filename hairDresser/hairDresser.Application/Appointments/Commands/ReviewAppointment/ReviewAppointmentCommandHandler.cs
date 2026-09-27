@@ -8,10 +8,14 @@ namespace hairDresser.Application.Appointments.Commands.ReviewAppointment
     public class ReviewAppointmentCommandHandler : IRequestHandler<ReviewAppointmentCommand, Appointment>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICacheService _cacheService;
 
-        public ReviewAppointmentCommandHandler(IUnitOfWork unitOfWork)
+        public ReviewAppointmentCommandHandler(
+            IUnitOfWork unitOfWork,
+            ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
         public async Task<Appointment> Handle(ReviewAppointmentCommand request, CancellationToken cancellationToken)
         {
@@ -32,6 +36,8 @@ namespace hairDresser.Application.Appointments.Commands.ReviewAppointment
 
             await _unitOfWork.AppointmentRepository.ReviewAppointmentAsync(review);
             await _unitOfWork.SaveAsync();
+
+            await _cacheService.RemoveAsync($"FinishedAppointments:Employee:{appointment.EmployeeId}", cancellationToken);
 
             return appointment;
         }

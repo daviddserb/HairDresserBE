@@ -8,10 +8,14 @@ namespace hairDresser.Application.Appointments.Commands.DeleteAppointment
     public class DeleteAppointmentCommandHandler : IRequestHandler<DeleteAppointmentCommand, Appointment>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICacheService _cacheService;
 
-        public DeleteAppointmentCommandHandler(IUnitOfWork unitOfWork)
+        public DeleteAppointmentCommandHandler(
+            IUnitOfWork unitOfWork,
+            ICacheService cacheService)
         {
             _unitOfWork = unitOfWork;
+            _cacheService = cacheService;
         }
 
         public async Task<Appointment> Handle(DeleteAppointmentCommand request, CancellationToken cancellationToken)
@@ -26,6 +30,8 @@ namespace hairDresser.Application.Appointments.Commands.DeleteAppointment
 
             await _unitOfWork.AppointmentRepository.DeleteAppointmentAsync(request.AppointmentId);
             await _unitOfWork.SaveAsync();
+
+            await _cacheService.RemoveAsync($"FinishedAppointments:Employee:{appointment.EmployeeId}", cancellationToken);
 
             return appointment;
         }

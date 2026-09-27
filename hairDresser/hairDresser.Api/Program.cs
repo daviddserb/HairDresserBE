@@ -1,6 +1,8 @@
+using hairDresser.Application.Caching;
 using hairDresser.Application.Interfaces;
 using hairDresser.Domain.Models;
 using hairDresser.Infrastructure;
+using hairDresser.Infrastructure.Caching;
 using hairDresser.Infrastructure.Repositories;
 using hairDresser.Presentation.Middleware;
 using hairDresser.Presentation.TimeLogger;
@@ -84,6 +86,11 @@ builder.Services
         };
     });
 builder.Services.AddAuthorization();
+
+//Add caching
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<ICacheService, MemoryCacheService>();
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
 
 //Add MediatR which scans all the messages (Queries and Commands) and all the handlers from inside.
 //In order to tell the MediatR where to go to scan, we can give a single interface/class (IHairServiceRepository) from the layer that we want MediatR to operate and he will scan all of files from that layer (Application).

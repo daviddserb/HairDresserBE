@@ -13,7 +13,7 @@ namespace hairDresser.Presentation.CustomDataValidations
 
     public sealed class DateGreaterThanAttribute : ValidationAttribute
     {
-        private const string _defaultErrorMessage = "'{0}' must be greater than #test '{1}'";
+        private const string _defaultErrorMessage = "'{0}' must be greater than '{1}'";
         private string _basePropertyName;
 
         public DateGreaterThanAttribute(string basePropertyName) : base(_defaultErrorMessage)
