@@ -1,4 +1,4 @@
-﻿namespace hairDresser.Domain.Models
+﻿namespace hairDresser.Domain.Constants
 {
     public enum WorkingDay
     {

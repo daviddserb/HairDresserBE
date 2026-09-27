@@ -1,4 +1,6 @@
-﻿namespace hairDresser.Domain.Models
+﻿using hairDresser.Domain.Constants;
+
+namespace hairDresser.Domain.Models
 {
     public class WorkingInterval
     {

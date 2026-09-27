@@ -1,4 +1,4 @@
-﻿using hairDresser.Domain.Models;
+﻿using hairDresser.Domain.Constants;
 
 namespace hairDresser.Application.Interfaces
 {

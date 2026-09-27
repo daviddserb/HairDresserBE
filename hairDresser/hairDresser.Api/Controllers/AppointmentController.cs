@@ -10,6 +10,7 @@ using hairDresser.Application.Appointments.Queries.GetFinishedAppointmentsByCust
 using hairDresser.Application.Appointments.Queries.GetFinishedAppointmentsByEmployeeId;
 using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByCustomerId;
 using hairDresser.Application.Appointments.Queries.GetInWorkAppointmentsByEmployeeId;
+using hairDresser.Domain.Constants;
 using hairDresser.Presentation.Dto.AppointmentDtos;
 using hairDresser.Presentation.Dto.ReviewDtos;
 using MediatR;
@@ -35,7 +36,7 @@ namespace hairDresser.Presentation.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "customer")]
+        [Authorize(Roles = UserRoles.Customer)]
         public async Task<IActionResult> CreateAppointmentAsync([FromBody] AppointmentPostDto appointmentInput)
         {
             _logger.LogInformation("Start process: Create appointment...");
@@ -51,7 +52,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpGet]
         [Route("all")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = UserRoles.Admin)]
         //The library (MethodTimer.Fody), at the moment, in it's message, doesn't accept object property as a parameter ({paginationQuery.PageSize})
         [Time("Retrieved appointments")]
         public async Task<IActionResult> GetAllAppointments([FromQuery] GetAllAppointmentsQuery paginationQuery)
@@ -156,7 +157,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpPost]
         [Route("{appointmentId}/review")]
-        [Authorize(Roles = "customer")]
+        [Authorize(Roles = UserRoles.Customer)]
         public async Task<IActionResult> ReviewAppointment(int appointmentId, [FromBody] ReviewPostDto reviewInput)
         {
             var command = new ReviewAppointmentCommand
@@ -176,7 +177,7 @@ namespace hairDresser.Presentation.Controllers
 
         [HttpDelete]
         [Route("{customerId}/{appointmentId}")]
-        [Authorize(Roles = "customer")]
+        [Authorize(Roles = UserRoles.Customer)]
         public async Task<IActionResult> DeleteAppointment(string customerId, int appointmentId)
         {
             var command = new DeleteAppointmentCommand

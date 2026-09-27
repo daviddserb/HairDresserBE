@@ -1,5 +1,6 @@
 ﻿using hairDresser.Application.CustomExceptions;
 using hairDresser.Application.Interfaces;
+using hairDresser.Domain.Constants;
 using hairDresser.Domain.Models;
 using MediatR;
 

@@ -1,4 +1,5 @@
-﻿using hairDresser.Domain.Models;
+﻿using hairDresser.Domain.Constants;
+using hairDresser.Domain.Models;
 using hairDresser.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 
@@ -98,12 +99,12 @@ namespace hairDresser.IntegrationTests.Helpers
             var role1 = new IdentityRole
             {
                 Id = "e99e57d1-3805-4f7b-a139-94dc8791a999",
-                Name = "customer"
+                Name = UserRoles.Customer
             };
             var role2 = new IdentityRole
             {
                 Id = "2dfc8605-fc95-40a4-8bb0-0ec6e270bdf8",
-                Name = "employee"
+                Name = UserRoles.Employee
             };
             db.Roles.AddRange(role1, role2);
 

@@ -1,5 +1,6 @@
 ﻿using hairDresser.Application.CustomExceptions;
 using hairDresser.Application.Interfaces;
+using hairDresser.Domain.Constants;
 using hairDresser.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -88,7 +89,7 @@ namespace hairDresser.Infrastructure.Repositories
 
         public async Task<List<User>> GetAllUsersWithEmployeeRoleAsync()
         {
-            var usersWithEmployeeRole = await _userManager.GetUsersInRoleAsync("employee");
+            var usersWithEmployeeRole = await _userManager.GetUsersInRoleAsync(UserRoles.Employee);
 
             var userIds = usersWithEmployeeRole
                 .Select(u => u.Id)

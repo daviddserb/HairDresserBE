@@ -1,5 +1,6 @@
 ﻿using hairDresser.Application.CustomExceptions;
 using hairDresser.Application.Interfaces;
+using hairDresser.Domain.Constants;
 using hairDresser.Domain.Models;
 using MediatR;
 
@@ -17,15 +18,14 @@ namespace hairDresser.Application.WorkingIntervals.Commands.CreateWorkingInterva
         public async Task<WorkingInterval> Handle(CreateWorkingIntervalCommand request, CancellationToken cancellationToken)
         {
             var userWithRole = await _unitOfWork.UserRepository.GetUserWithRoleByIdAsync(request.EmployeeId);
-            if (!userWithRole.Role.Contains("employee")) throw new NotFoundException($"The user with the '{request.EmployeeId}' id is not an employee!");
+            if (!userWithRole.Role.Contains(UserRoles.Employee)) throw new NotFoundException($"The user with the '{request.EmployeeId}' id is not an employee!");
 
             TimeSpan startTime = TimeSpan.Parse(request.StartTime);
             TimeSpan endTime = TimeSpan.Parse(request.EndTime);
 
             if (startTime > endTime) throw new ClientException($"The working interval start time '{startTime}' needs to be before the end time '{endTime}'!");
 
-            TimeSpan workingIntervalMinimumDuration = new TimeSpan(04, 00, 00);
-            if (endTime - startTime < workingIntervalMinimumDuration) throw new ClientException($"The working interval minimum duration is {workingIntervalMinimumDuration}!");
+            if ((endTime - startTime) < WorkingIntervalRules.MinimumDuration) throw new ClientException($"The working interval minimum duration is {WorkingIntervalRules.MinimumDuration}!");
 
             var employeeWorkingIntervals = await _unitOfWork.WorkingIntervalRepository.GetWorkingIntervalsByEmployeeIdByWorkingDayIdAsync(request.EmployeeId, request.WorkingDayId);
             foreach (var employeeInterval in employeeWorkingIntervals)

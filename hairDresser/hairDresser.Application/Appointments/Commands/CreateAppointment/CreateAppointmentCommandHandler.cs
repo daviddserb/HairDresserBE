@@ -1,5 +1,6 @@
 ﻿using hairDresser.Application.CustomExceptions;
 using hairDresser.Application.Interfaces;
+using hairDresser.Domain.Constants;
 using hairDresser.Domain.Models;
 using MediatR;
 
@@ -17,14 +18,13 @@ namespace hairDresser.Application.Appointments.Commands.CreateAppointment
         public async Task<Appointment> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
         {
             var customer = await _unitOfWork.UserRepository.GetUserWithRoleByIdAsync(request.CustomerId);
-            if (customer.Role != "customer") throw new NotFoundException($"Only customers can make appointments. The user '{customer.Username}' is not a customer!");
+            if (customer.Role != UserRoles.Customer) throw new NotFoundException($"Only customers can make appointments. The user '{customer.Username}' is not a customer!");
 
-            const int limitCustomerAppointmentsPerMonth = 7;
             var customerAppointmentsLastMonth = await _unitOfWork.AppointmentRepository.CountCustomerAppointmentsLastMonthAsync(request.CustomerId);
-            if (customerAppointmentsLastMonth >= limitCustomerAppointmentsPerMonth) throw new ClientException($"Customers can only make '{limitCustomerAppointmentsPerMonth}' appointments/month!");
+            if (customerAppointmentsLastMonth >= AppointmentRules.CustomerMaxAppointmentsPerMonth) throw new ClientException($"Customers can only make '{AppointmentRules.CustomerMaxAppointmentsPerMonth}' appointments/month!");
 
             var employee = await _unitOfWork.UserRepository.GetUserWithRoleByIdAsync(request.EmployeeId);
-            if (employee.Role != "employee") throw new NotFoundException($"Only employees can receive appointments. The user '{employee.Username}' is not a employee!");
+            if (employee.Role != UserRoles.Employee) throw new NotFoundException($"Only employees can receive appointments. The user '{employee.Username}' is not a employee!");
 
             var hairServices = await _unitOfWork.HairServiceRepository.GetAllHairServicesByIdsAsync(request.HairServicesIds);
             if (hairServices == null) throw new NotFoundException($"Not all hair services ids '{String.Join(", ", request.HairServicesIds)}' are valid!");

@@ -1,5 +1,5 @@
 ﻿using hairDresser.Application.Interfaces;
-using hairDresser.Domain.Models;
+using hairDresser.Domain.Constants;
 
 namespace hairDresser.Infrastructure.Repositories
 {
